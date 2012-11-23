@@ -1,0 +1,322 @@
+
+.bandeauDynamiqueInner {
+  margin: 0;
+  background-color: #F1F1F1;
+  font:13px/1.231 Verdana, Arial, Helvetica, sans-serif;
+}
+
+.bandeauDynamiqueInner a {
+  color: #263F82;
+}
+
+/* Portal Page Bar */
+.portalPageBarLinks {position:absolute; right: 0; top: 0; z-index: 2; background-color: #f7edd8; padding:0; }
+/* for IE7 IE8, force the width: force the width and make it auto for browsers handling :not selector (all browsers except IE lt 9) */ 
+.portalPageBarLinks { width: 15em; }
+.portalPageBarLinks:not([dummy]) { width: auto; }
+.focused .portalPageBarLinks { padding-top: 0; }
+
+
+/*********************************************************************************/
+#portalPageBarAccount > a > span {
+    background: url("https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/arrow_down.png") no-repeat center right;
+    padding-right: 1em;
+}
+
+#portalPageBarAccount {
+    display: block;
+    float: left;
+    height: 32px;
+}
+.focused #portalPageBarAccount {
+    height: 30px;
+}
+
+#portalPageBarAccount:after {
+    background: url("https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/logout.png") no-repeat -20px 0;
+    content: " ";
+    display: inline-block;
+    float: right;
+    height: 20px;
+    width: 1px;
+    margin-top: 5px;
+}
+
+#portalPageBarAccount > a {
+    display: inline-block;
+    padding: 0 6px;
+    line-height: 32px;
+}
+.focused #portalPageBarAccount > a {
+    line-height: 30px;
+}
+
+#portalPageBarAccount > a,
+#portalPageBarAccountInner a {
+    text-decoration: none;
+}
+
+#portalPageBarAccount > a:hover, #portalPageBarAccount.open a {
+    background-color: #e7ddc8;
+}
+
+#portalPageBarAccount.open a {
+    border-right: 1px solid #d7cdb8;
+    border-left: 1px solid #d7cdb8;
+    padding: 0 5px;
+}
+
+#portalPageBarAccountInner {
+    display: none;
+    position: absolute;
+    background-color: #e7ddc8;
+    top: 31px;
+    right: 33px;
+    border: 1px solid #d7cdb8;
+    -moz-border-radius : 5px 0 5px 5px;
+    border-radius : 5px 0 5px 5px;
+    z-index: -1;
+    white-space: nowrap;
+}
+#portalPageBarAccountInner.open {
+    display: block;
+}
+.focused #portalPageBarAccountInner {
+    top: 29px;
+}
+
+#portalPageBarAccountInner a:hover {
+    color: #000 !important;
+}
+
+#portalPageBarAccountInner ul {
+    margin: 1em;
+    padding: 0;
+}
+#portalPageBarAccountInner li {
+    list-style: none;
+}
+
+li.portalPageBarAccountDescr, .portalPageBarLinks a {
+    padding: 0 0.5em;
+}
+
+li.portalPageBarAccountAnchor {
+    margin-top: 0.5em;
+    line-height: 2em;
+}
+
+li.portalPageBarAccountLogout {
+    border-top: 1px dotted #999999; 
+    padding-top: 1em;
+    margin-top: 1em;
+}
+
+
+/*********************************************************************************/
+#portalPageBarLogin a {
+    line-height: 2.5em;
+    margin: 6px;
+}
+
+.portalPageBarLogout {
+    display: block;
+    float: right;
+    height: 32px;
+}
+.focused .portalPageBarLogout {
+    height: 30px;
+}
+
+/* replace "Deconnexion" with an icon */
+.portalPageBarLogout a {
+    background: url("https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/logout.png") no-repeat 0 0;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 6px;
+}
+.focused .portalPageBarLogout a {
+    margin: 5px 6px;
+}
+
+.portalPageBarLogout:hover {
+    background-color: #e7ddc8;
+}
+.portalPageBarLogout span {
+    display: none;
+}
+
+/*********************************************************************************/
+.portalLogo {
+ padding: 0;
+ height: 95px;
+ background-color: #F7EDD8;
+}
+.focused .portalLogo { 
+ height: 40px;
+}
+
+.portalTitleUP1 {
+    display: block;
+    position: absolute;
+    left: 250px;
+    top: 0px;
+    width: 500px;
+    height: 90px;
+}
+
+.focused .portalTitleUP1 {
+    left: 96px;
+    top: 0px;
+    width: 100px;
+    height: 30px;
+}
+
+
+/*********************************************************************************/
+body {
+ margin-top: 0;
+ margin-left: 0;
+ margin-right: 0;
+}
+
+.bandeauDynamiqueMenu {
+ margin: 0;
+ padding-left: 0;
+ height: 28px;
+ display: block;
+}
+
+.bandeauDynamiqueMenu a, .bandeauDynamiqueMenu span {
+ padding:0.3em 0.2em 0.9em 0.2em;
+ color:#555;
+ text-decoration:none;
+}
+
+.bandeauDynamiqueMenu, .bandeauDynamiqueMenu > li {
+   background: url(https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/background_menu-h.png) repeat-x scroll right top #98B6C1; 
+   border-bottom: 1px solid #FFFFFF;
+}
+
+.bandeauDynamiqueMenu > li {
+ position:relative; 
+ padding: 5px 11px 0px 11px;
+ display: block;
+ float: left;
+ height: 23px;
+}
+
+*:first-child+html .bandeauDynamiqueMenu > li {
+ padding:0;
+} /* hack needed for IE7 */
+
+.bandeauDynamiqueMenu > li.activeTab,
+.bandeauDynamiqueMenu > li:hover {
+ background:#f1f1f1;
+ color:#fff;
+ margin-top: -10px;
+ padding: 5px 10px;
+ border-left: 1px solid #999999;
+ border-right: 1px solid #999999;
+ border-top: 1px solid #999999;
+ border-bottom: 0px solid transparent!important;
+ height: 28px;
+ -moz-border-radius : 5px 5px 0 0;
+ border-radius : 5px 5px 0 0;
+ -webkit-border-radius : 5px 5px 0 0;
+}
+.bandeauDynamiqueMenu > li:hover span,
+.bandeauDynamiqueMenu > li.activeTab span,
+.bandeauDynamiqueMenu > li:hover a,
+.bandeauDynamiqueMenu > li.activeTab a {
+ background-colort:#f1f1f1;
+ color:#213885 !important;
+}
+.bandeauDynamiqueMenu > li:hover { 
+ z-index: 1;
+ } /* above activeTab in case of multi-line */
+
+/* subrow */
+.bandeauDynamiqueMenu li ul {
+ padding:0.5em 0;
+}
+.bandeauDynamiqueMenu li:hover ul { display: block; }
+
+.bandeauDynamiqueMenu li ul li {
+ list-style-type:none;
+ display:inline;
+}
+.bandeauDynamiqueMenu li ul a {
+   padding:0em 1em;
+   text-decoration:none; 
+   color:#acc9e6 !important;
+   text-shadow:1px 1px 1px rgba(0,0,0,.5);
+}
+.bandeauDynamiqueMenu li ul a:hover {
+ color:#eee !important;
+}
+
+/* Flyout Navigation */
+.bandeauDynamiqueMenu li ul {
+   width:200px; position:absolute; z-index:100000; display:none;
+   padding:0;
+   background:transparent; 
+   top: 37px !important; 
+   left: -1px !important;
+}
+
+.bandeauDynamiqueMenu li ul li {
+ list-style:none;
+}
+.bandeauDynamiqueMenu li ul li {
+  display:list-item; position:static; padding:0;
+}
+.bandeauDynamiqueMenu li ul li a {
+  display:block;
+}
+
+.bandeauDynamiqueMenu li ul {
+  padding:2px;
+  background-color:#f1f1f1;
+  border-bottom: 1px solid #999999;
+  border-left: 1px solid #999999;
+  border-right: 1px solid #999999;
+  border-top: 1px dotted #999999; 
+  -moz-border-radius : 0 5px 5px 5px;
+  border-radius : 0 5px 5px 5px;
+  -webkit-border-radius : 0 5px 5px 5px;
+}
+.bandeauDynamiqueMenu li ul li {
+  border-top: 1px dotted #999999 !important;
+}
+.bandeauDynamiqueMenu li ul li:first-child { 
+  border-top: none !important; 
+}
+.bandeauDynamiqueMenu li ul li a {
+ padding:4px 4px 4px 25px; 
+ color:#213885 !important; 
+ font-weight:normal; 
+ font-size:100%;
+ background-color:#f1f1f1;
+ background-position:5px 3px;
+ background-repeat:no-repeat;
+ background-image:url(https://esup.univ-paris1.fr/ResourceServingWebapp/rs/famfamfam/silk/1.3/application.png);
+ text-decoration:none;
+ text-align:left;
+ display:block;
+ border: 0px solid #555 !important;
+ text-shadow:none;
+}
+.bandeauDynamiqueMenu li ul li a:hover {
+ color:#000000 !important; 
+}
+
+
+
+.bandeauDynamiqueMenu > li {
+    display: block;
+    position: relative;
+    float: left;
+}
