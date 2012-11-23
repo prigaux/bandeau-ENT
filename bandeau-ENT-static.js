@@ -122,8 +122,6 @@ var currentApp = window.bandeau_ENT.current;
 
 if (currentApp == "redirect-first" && LAYOUT && LAYOUT[0]) {
     document.location.href = APPS[LAYOUT[0].apps[0]].url;
-} else if (!PERSON.uid && 0) {
-    set_div_innerHTML("<a href='" + via_CAS(APPS[currentApp].url) + "'>Connection</a>");
 } else {
     css = "<link rel='stylesheet' href='" + BANDEAU_ENT_URL + "/bandeau-ENT.css' type='text/css' />";
     specificCss = specificCssHtml();
