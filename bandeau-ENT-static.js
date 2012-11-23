@@ -43,12 +43,10 @@ function simpleMap(a, fn) {
     return r;
 }
 
-function addslashes(s) {
+function escapeQuotes(s) {
     var str = s;
-    str=str.replace(/\\/g,'\\\\');
-    str=str.replace(/\'/g,'\\\'');
-    str=str.replace(/\"/g,'\\"');
-    str=str.replace(/\0/g,'\\0');
+    str=str.replace(/\'/g,'&#39;');
+    str=str.replace(/\"/g,'&quot;');
     return str;
 }
 
@@ -73,7 +71,7 @@ function via_CAS(url) {
 }
 
 function computeLink(app) {
-    var a = "<a title='" + addslashes(app.description) + "' href='" + app.url + "'>" + addslashes(app.text) + "</a>";
+    var a = "<a title='" + escapeQuotes(app.description) + "' href='" + app.url + "'>" + escapeQuotes(app.text) + "</a>";
     return "<li>" + a + "</li>";
 }
 
@@ -84,7 +82,7 @@ function computeMenu(currentApp) {
 	});
     
 	var className = simpleContains(tab.apps, currentApp) ? "activeTab" : "inactiveTab";
-	return "<li class='" + className + "'><span>" + addslashes(tab.title) + "</span><ul>" + sub_li_list.join("\n") + "</ul></li>";
+	return "<li class='" + className + "'><span>" + escapeQuotes(tab.title) + "</span><ul>" + sub_li_list.join("\n") + "</ul></li>";
     });
     return "<ul class='bandeau_ENT_Menu'>\n" + li_list.join("\n") + "\n</ul>";
 }
