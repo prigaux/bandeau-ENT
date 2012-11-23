@@ -104,7 +104,6 @@ function set_div_innerHTML(content) {
 var currentApp = window.bandeau_ENT.current;
 
 if (currentApp == "redirect-first" && LAYOUT && LAYOUT[0]) {
-    set_div_innerHTML("document.location.href = '" + LAYOUT[0].title + "'");
     document.location.href = APPS[LAYOUT[0].apps[0]].url;
 } else if (!PERSON.uid && 0) {
     set_div_innerHTML("<a href='" + via_CAS(APPS[currentApp].url) + "'>Connection</a>");
