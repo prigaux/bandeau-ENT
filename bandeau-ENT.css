@@ -3,9 +3,14 @@
   margin: 0;
   background-color: #F1F1F1;
   font:13px/1.231 Verdana, Arial, Helvetica, sans-serif;
-  
-  /* force sane values */
-  text-align: left;
+}  
+/* force sane values */
+.bandeau_ENT_Inner, .bandeau_ENT_Inner span {
+  text-align: left !important;
+
+  font-size:13px/1.231 !important;
+  font-family: Verdana, Arial, Helvetica, sans-serif !important;
+  font-weight: normal !important;
 }
 
 .bandeau_ENT_Inner a {
