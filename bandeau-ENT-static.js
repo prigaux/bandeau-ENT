@@ -108,7 +108,7 @@ if (currentApp == "redirect-first" && LAYOUT && LAYOUT[0]) {
 } else {
     css = "<link rel='stylesheet' href='" + BANDEAU_ENT_URL + "/bandeau-ENT.css' type='text/css' />";
     menu = computeMenu(currentApp);
-    clear = "<div style='clear: both; height: 1em'></div>";
+    clear = "<p style='clear: both; height: 1em'></p>";
     content = css + "\n\n<div class='bandeau_ENT_Inner focused'>" + BANDEAU_HEADER + menu + clear + "</div>";
     set_div_innerHTML(content);
 
