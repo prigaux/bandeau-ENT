@@ -98,6 +98,25 @@ function set_div_innerHTML(content) {
     elt.innerHTML = content;
 }
 
+function loadCSS (url) {
+    var elt = document.createElement("link");
+    elt.setAttribute("rel", "stylesheet");
+    elt.setAttribute("type", "text/css");
+    elt.setAttribute("href", url);
+    document.getElementsByTagName("head")[0].appendChild(elt);
+};
+
+function specificCssHtml() {
+    if (window['cssToLoadIfInsideIframe']) {
+	var v = window['cssToLoadIfInsideIframe'];
+	if (typeof v === "string")
+	    return "<link rel='stylesheet' href='" + v + "' type='text/css' />"
+    }
+    return '';
+
+}
+
+
 
 var currentApp = window.bandeau_ENT.current;
 
@@ -107,9 +126,10 @@ if (currentApp == "redirect-first" && LAYOUT && LAYOUT[0]) {
     set_div_innerHTML("<a href='" + via_CAS(APPS[currentApp].url) + "'>Connection</a>");
 } else {
     css = "<link rel='stylesheet' href='" + BANDEAU_ENT_URL + "/bandeau-ENT.css' type='text/css' />";
+    specificCss = specificCssHtml();
     menu = computeMenu(currentApp);
     clear = "<p style='clear: both; height: 1em'></p>";
-    content = css + "\n\n<div class='bandeau_ENT_Inner focused'>" + BANDEAU_HEADER + menu + clear + "</div>";
+    content = css + specificCss + "\n\n<div class='bandeau_ENT_Inner focused'>" + BANDEAU_HEADER + menu + clear + "</div>";
     set_div_innerHTML(content);
 
     document.getElementById('portalPageBarAccount').onclick = bandeau_ENT_toggleOpen;
