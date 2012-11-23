@@ -3,6 +3,9 @@
   margin: 0;
   background-color: #F1F1F1;
   font:13px/1.231 Verdana, Arial, Helvetica, sans-serif;
+  
+  /* force sane values */
+  text-align: left;
 }
 
 .bandeau_ENT_Inner a {
