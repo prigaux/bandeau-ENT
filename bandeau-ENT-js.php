@@ -1,25 +1,6 @@
 <? 
 
-$ldap_server='ldap.univ-paris1.fr ldap2.univ-paris1.fr fangorn.univ-paris1.fr';
-$ou_people="ou=people,dc=univ-paris1,dc=fr";
-
-$minimal_attrs = array('displayName', 'uid', 'mail');
-
 include_once "config.inc.php";
-
-$cas_login_url = "https://cas.univ-paris1.fr/cas/login";
-$ent_base_url = "https://esup.univ-paris1.fr";
-$bandeau_ENT_url = "https://wsgroups.univ-paris1.fr/bandeau-ENT";
-
-$test = true;
-if ($test) {
-  $cas_login_url = "https://cas-test.univ-paris1.fr/cas/login";
-  $ent_base_url = "https://uportal3-test.univ-paris1.fr";
-  $bandeau_ENT_url = "https://ticetest.univ-paris1.fr/bandeau-ENT";
-
-  $APPS["caccueil-pers"]["url"] = "$bandeau_ENT_url/accueil-ent-pers.html";
-  $APPS["caccueil-etu"]["url"] = "$bandeau_ENT_url/accueil-ent-etu.html";
-}
 
 $APPS["redirect-first"] = 
     array("text" => "",
