@@ -48,9 +48,9 @@ function debug_msg($msg) {
   $debug_msgs .= "// $msg\n";
 }
 
-function ent_url($fname) {
+function ent_url($fname, $isGuest = false) {
   global $ent_base_url;
-  return $ent_base_url . "/Login?uP_fname=$fname";
+  return $ent_base_url . ($isGuest ? "/Guest" : "/Login") . "?uP_fname=$fname";
 }
 
 function is_admin($uid) {
@@ -125,26 +125,26 @@ function computeGroups($person) {
 }
 
 
-function get_url($app, $appId) {
+function get_url($app, $appId, $isGuest) {
   global $cas_login_url;
   if (isset($app['url']))
     return isset($app['force_CAS']) ? via_CAS($app['force_CAS'], $app['url']) : $app['url'];
   else
-    return via_CAS($cas_login_url, ent_url($appId));
+    return $isGuest ? ent_url($appId, true) : via_CAS($cas_login_url, ent_url($appId));
 }
 
-function exportApp($app, $appId) {
+function exportApp($app, $appId, $isGuest) {
   return array("description" => $app['description'],
 	       "text" => $app['text'],
-	       "url" => get_url($app, $appId));
+	       "url" => get_url($app, $appId, $isGuest));
 }
 
-function exportApps() {
+function exportApps($isGuest) {
   global $APPS;
 
   $r = array();
   foreach ($APPS as $appId => $app) {
-    $r[$appId] = exportApp($app, $appId);
+    $r[$appId] = exportApp($app, $appId, $isGuest);
   }
   return $r;
 }
@@ -293,7 +293,8 @@ $uid = get_uid();
 $person = $uid ? getLdapInfo("uid=$uid") : array();
 
 $layout = computeLayout($person);
-
+$bandeauHeader = computeBandeauHeader($person);
+$exportApps = exportApps(!$person);
 
 if (!get_real_uid()) {
   setcookie("MOD_CAS_G", "", 1, "/"); // remove mod-auth-cas gateway cookie to force asking again
@@ -305,8 +306,8 @@ echo "(function () {\n\n";
 echo "var CAS_LOGIN_URL = " . json_encode($cas_login_url) . ";\n\n";
 echo "var BANDEAU_ENT_URL = " . json_encode($bandeau_ENT_url) . ";\n\n";
 echo "var PERSON = " . ($person ? json_encode($person) : "{}") . ";\n\n";
-echo "var BANDEAU_HEADER = " . json_encode(computeBandeauHeader($person)) . ";\n\n";
-echo "var APPS = " . json_encode(exportApps()) . ";\n\n";
+echo "var BANDEAU_HEADER = " . json_encode($bandeauHeader) . ";\n\n";
+echo "var APPS = " . json_encode($exportApps) . ";\n\n";
 echo "var LAYOUT = " . json_encode($layout) . ";\n\n";
 readfile('bandeau-ENT-static.js');
 echo "}())\n";
