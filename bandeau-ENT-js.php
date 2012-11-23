@@ -9,23 +9,23 @@ include_once "config.inc.php";
 
 $cas_login_url = "https://cas.univ-paris1.fr/cas/login";
 $ent_base_url = "https://esup.univ-paris1.fr";
-$bandeau_dynamique_url = "https://wsgroups.univ-paris1.fr/test-bandeau-dynamique";
+$bandeau_ENT_url = "https://wsgroups.univ-paris1.fr/bandeau-ENT";
 
 $test = true;
 if ($test) {
   $cas_login_url = "https://cas-test.univ-paris1.fr/cas/login";
   $ent_base_url = "https://uportal3-test.univ-paris1.fr";
-  $bandeau_dynamique_url = "https://ticetest.univ-paris1.fr/test-bandeau-dynamique";
+  $bandeau_ENT_url = "https://ticetest.univ-paris1.fr/bandeau-ENT";
 
-  $APPS["caccueil-pers"]["url"] = "$bandeau_dynamique_url/accueil-ent-pers.html";
-  $APPS["caccueil-etu"]["url"] = "$bandeau_dynamique_url/accueil-ent-etu.html";
+  $APPS["caccueil-pers"]["url"] = "$bandeau_ENT_url/accueil-ent-pers.html";
+  $APPS["caccueil-etu"]["url"] = "$bandeau_ENT_url/accueil-ent-etu.html";
 }
 
 $APPS["redirect-first"] = 
     array("text" => "",
 	  "description" => "",
 	  "users" => array(), "groups" => array(),
-	  "url" => "$bandeau_dynamique_url/ent.html");
+	  "url" => "$bandeau_ENT_url/ent.html");
 
 
 function compute_wanted_attributes() {
@@ -303,12 +303,12 @@ header('Content-type: application/javascript; charset=utf8');
 echo "$debug_msgs\n";
 echo "(function () {\n\n";
 echo "var CAS_LOGIN_URL = " . json_encode($cas_login_url) . ";\n\n";
-echo "var BANDEAU_DYNAMIQUE_URL = " . json_encode($bandeau_dynamique_url) . ";\n\n";
+echo "var BANDEAU_ENT_URL = " . json_encode($bandeau_ENT_url) . ";\n\n";
 echo "var PERSON = " . ($person ? json_encode($person) : "{}") . ";\n\n";
 echo "var BANDEAU_HEADER = " . json_encode(computeBandeauHeader($person)) . ";\n\n";
 echo "var APPS = " . json_encode(exportApps()) . ";\n\n";
 echo "var LAYOUT = " . json_encode($layout) . ";\n\n";
-readfile('bandeauDynamique-static.js');
+readfile('bandeau-ENT-static.js');
 echo "}())\n";
 
 ?>

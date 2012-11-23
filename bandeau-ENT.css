@@ -1,11 +1,11 @@
 
-.bandeauDynamiqueInner {
+.bandeau_ENT_Inner {
   margin: 0;
   background-color: #F1F1F1;
   font:13px/1.231 Verdana, Arial, Helvetica, sans-serif;
 }
 
-.bandeauDynamiqueInner a {
+.bandeau_ENT_Inner a {
   color: #263F82;
 }
 
@@ -182,25 +182,25 @@ body {
  margin-right: 0;
 }
 
-.bandeauDynamiqueMenu {
+.bandeau_ENT_Menu {
  margin: 0;
  padding-left: 0;
  height: 28px;
  display: block;
 }
 
-.bandeauDynamiqueMenu a, .bandeauDynamiqueMenu span {
+.bandeau_ENT_Menu a, .bandeau_ENT_Menu span {
  padding:0.3em 0.2em 0.9em 0.2em;
  color:#555;
  text-decoration:none;
 }
 
-.bandeauDynamiqueMenu, .bandeauDynamiqueMenu > li {
+.bandeau_ENT_Menu, .bandeau_ENT_Menu > li {
    background: url(https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/background_menu-h.png) repeat-x scroll right top #98B6C1; 
    border-bottom: 1px solid #FFFFFF;
 }
 
-.bandeauDynamiqueMenu > li {
+.bandeau_ENT_Menu > li {
  position:relative; 
  padding: 5px 11px 0px 11px;
  display: block;
@@ -208,12 +208,12 @@ body {
  height: 23px;
 }
 
-*:first-child+html .bandeauDynamiqueMenu > li {
+*:first-child+html .bandeau_ENT_Menu > li {
  padding:0;
 } /* hack needed for IE7 */
 
-.bandeauDynamiqueMenu > li.activeTab,
-.bandeauDynamiqueMenu > li:hover {
+.bandeau_ENT_Menu > li.activeTab,
+.bandeau_ENT_Menu > li:hover {
  background:#f1f1f1;
  color:#fff;
  margin-top: -10px;
@@ -227,39 +227,39 @@ body {
  border-radius : 5px 5px 0 0;
  -webkit-border-radius : 5px 5px 0 0;
 }
-.bandeauDynamiqueMenu > li:hover span,
-.bandeauDynamiqueMenu > li.activeTab span,
-.bandeauDynamiqueMenu > li:hover a,
-.bandeauDynamiqueMenu > li.activeTab a {
+.bandeau_ENT_Menu > li:hover span,
+.bandeau_ENT_Menu > li.activeTab span,
+.bandeau_ENT_Menu > li:hover a,
+.bandeau_ENT_Menu > li.activeTab a {
  background-colort:#f1f1f1;
  color:#213885 !important;
 }
-.bandeauDynamiqueMenu > li:hover { 
+.bandeau_ENT_Menu > li:hover { 
  z-index: 1;
  } /* above activeTab in case of multi-line */
 
 /* subrow */
-.bandeauDynamiqueMenu li ul {
+.bandeau_ENT_Menu li ul {
  padding:0.5em 0;
 }
-.bandeauDynamiqueMenu li:hover ul { display: block; }
+.bandeau_ENT_Menu li:hover ul { display: block; }
 
-.bandeauDynamiqueMenu li ul li {
+.bandeau_ENT_Menu li ul li {
  list-style-type:none;
  display:inline;
 }
-.bandeauDynamiqueMenu li ul a {
+.bandeau_ENT_Menu li ul a {
    padding:0em 1em;
    text-decoration:none; 
    color:#acc9e6 !important;
    text-shadow:1px 1px 1px rgba(0,0,0,.5);
 }
-.bandeauDynamiqueMenu li ul a:hover {
+.bandeau_ENT_Menu li ul a:hover {
  color:#eee !important;
 }
 
 /* Flyout Navigation */
-.bandeauDynamiqueMenu li ul {
+.bandeau_ENT_Menu li ul {
    width:200px; position:absolute; z-index:100000; display:none;
    padding:0;
    background:transparent; 
@@ -267,17 +267,17 @@ body {
    left: -1px !important;
 }
 
-.bandeauDynamiqueMenu li ul li {
+.bandeau_ENT_Menu li ul li {
  list-style:none;
 }
-.bandeauDynamiqueMenu li ul li {
+.bandeau_ENT_Menu li ul li {
   display:list-item; position:static; padding:0;
 }
-.bandeauDynamiqueMenu li ul li a {
+.bandeau_ENT_Menu li ul li a {
   display:block;
 }
 
-.bandeauDynamiqueMenu li ul {
+.bandeau_ENT_Menu li ul {
   padding:2px;
   background-color:#f1f1f1;
   border-bottom: 1px solid #999999;
@@ -288,13 +288,13 @@ body {
   border-radius : 0 5px 5px 5px;
   -webkit-border-radius : 0 5px 5px 5px;
 }
-.bandeauDynamiqueMenu li ul li {
+.bandeau_ENT_Menu li ul li {
   border-top: 1px dotted #999999 !important;
 }
-.bandeauDynamiqueMenu li ul li:first-child { 
+.bandeau_ENT_Menu li ul li:first-child { 
   border-top: none !important; 
 }
-.bandeauDynamiqueMenu li ul li a {
+.bandeau_ENT_Menu li ul li a {
  padding:4px 4px 4px 25px; 
  color:#213885 !important; 
  font-weight:normal; 
@@ -309,13 +309,13 @@ body {
  border: 0px solid #555 !important;
  text-shadow:none;
 }
-.bandeauDynamiqueMenu li ul li a:hover {
+.bandeau_ENT_Menu li ul li a:hover {
  color:#000000 !important; 
 }
 
 
 
-.bandeauDynamiqueMenu > li {
+.bandeau_ENT_Menu > li {
     display: block;
     position: relative;
     float: left;

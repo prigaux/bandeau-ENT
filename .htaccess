@@ -1,4 +1,4 @@
-<Files "bandeauDynamique-js.php" >
+<Files "bandeau-ENT-js.php" >
     Order allow,deny
     Allow from all
     AuthType CAS
