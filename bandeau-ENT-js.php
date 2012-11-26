@@ -1,6 +1,11 @@
 <? 
 
+require_once 'CAS.php';
+
 include_once "config.inc.php";
+
+$cas_login_url = "https://$cas_host$cas_context/login";
+
 
 $APPS["redirect-first"] = 
     array("text" => "",
@@ -38,12 +43,93 @@ function is_admin($uid) {
   return true;
 }
 
-function get_real_uid() {
-  return isset($_SERVER["HTTP_CAS_USER"]) ? $_SERVER["HTTP_CAS_USER"] : ''; # CAS-User
+function removeParameterFromUrl($parameterName, $url) {
+   $parameterName = preg_quote($parameterName);
+   return preg_replace("/(&|\?)$parameterName(=[^&]*)?/", '', $url);
+}
+
+function getAndUnset(&$a, $prop) {
+  if (isset($a[$prop])) {
+    $v = $a[$prop];
+    unset($a[$prop]);
+    return $v;
+  } else {
+    return null;
+  }
+}
+
+function formattedElapsedTime($prev) {
+  $now = microtime(true);
+  return sprintf("%dms", ($now - $prev) * 1000);
+}
+
+function initPhpCAS($host, $port, $context, $CA_certificate_file) {
+  phpCAS::client(SAML_VERSION_1_1, $host, intval($port), $context, false);
+  if ($CA_certificate_file)
+    phpCAS::setCasServerCACert($CA_certificate_file);
+  else
+    phpCAS::setNoCasServerValidation();
+  //phpCAS::setLang(PHPCAS_LANG_FRENCH);
+}
+
+function toggle_auth_checked_in_redirect() {
+  $url = phpCAS::getServiceURL();
+  $without_auth_checked = removeParameterFromUrl('auth_checked', $url);
+  $adding = $url == $without_auth_checked;
+  if ($adding) {
+    $url .= (strpos($url, '?') === false ? '?' : '&') . 'auth_checked=true';
+  } else {    
+    $url = $without_auth_checked;
+    debug_msg("removing auth_checked from url to have a clean final url: $url");
+  }
+  phpCAS::setFixedServiceURL($url);
+  return $adding;
+}
+ 
+function checkAuthentication_raw() {
+  if (isset($_GET["auth_checked"]) && !isset($_COOKIE["PHPSESSID"])) {
+    debug_msg("cookie disabled or not accepted"); 
+
+    // do not redirect otherwise it will dead-loop:
+    phpCAS::setNoClearTicketsFromUrl();
+
+    $_SESSION['time_before_verifying_CAS_ticket'] = microtime(true);
+    return phpCAS::isAuthenticated();
+
+  } else {
+
+    // Either:
+    // - add "auth_checked" in url before redirecting to CAS
+    // - remove it after CAS before redirecting to final URL
+    $added = toggle_auth_checked_in_redirect();
+
+    if ($added) {
+      $_SESSION['time_before_adding_auth_checked'] = microtime(true);
+    } else {
+      $_SESSION['time_before_verifying_CAS_ticket'] = microtime(true);
+      $_SESSION['time_before_redirecting_to_CAS'] = getAndUnset($_SESSION, 'time_before_adding_auth_checked');
+    }
+    return phpCAS::checkAuthentication();
+  }
+}
+
+function checkAuthentication() {
+  $isAuthenticated = checkAuthentication_raw();
+
+  $before_all = getAndUnset($_SESSION, 'time_before_redirecting_to_CAS');
+  $before_verif = getAndUnset($_SESSION, 'time_before_verifying_CAS_ticket');
+  if ($before_verif)
+    debug_msg("CAS ticket verification time: " . formattedElapsedTime($before_verif));
+  if ($before_all)
+    debug_msg("total CAS authentication time: " . formattedElapsedTime($before_all));
+
+  //setcookie("PHPSESSID", "", 1, "/"); // remove cookie to force asking again
+
+  return $isAuthenticated;
 }
 
 function get_uid() {
-  $uid = get_real_uid();
+  $uid = phpCAS::getUser();
   debug_msg("uid is $uid");
   if (isset($_GET['uid'])) {
 	  if (is_admin($uid)) return $_GET['uid'];
@@ -270,16 +356,17 @@ EOD;
   return sprintf($s, $portalPageBarLinks, $portal_logo, $accueil_url, $bandeau_ent_url);
 }
 
-$uid = get_uid();
+$request_start_time = microtime(true);
+initPhpCAS($cas_host, '443', $cas_context, $CA_certificate_file);
+$uid = checkAuthentication() ? get_uid() : '';
 $person = $uid ? getLdapInfo("uid=$uid") : array();
 
 $layout = computeLayout($person);
 $bandeauHeader = computeBandeauHeader($person);
 $exportApps = exportApps(!$person);
 
-if (!get_real_uid()) {
-  setcookie("MOD_CAS_G", "", 1, "/"); // remove mod-auth-cas gateway cookie to force asking again
-}
+
+debug_msg("request time: " . formattedElapsedTime($request_start_time));
 
 header('Content-type: application/javascript; charset=utf8');
 echo "$debug_msgs\n";

@@ -1,8 +1,0 @@
-<Files "bandeau-ENT-js.php" >
-    Order allow,deny
-    Allow from all
-    AuthType CAS
-    CASGateway /
-    require valid-user
-</Files>
-
