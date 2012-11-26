@@ -44,6 +44,7 @@
     height: 30px;
 }
 
+/*
 #portalPageBarAccount:after {
     background: url("https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/logout.png") no-repeat -20px 0;
     content: " ";
@@ -53,6 +54,7 @@
     width: 1px;
     margin-top: 5px;
 }
+*/
 
 #portalPageBarAccount > a {
     display: inline-block;
