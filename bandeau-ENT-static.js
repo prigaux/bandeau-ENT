@@ -50,6 +50,10 @@ function escapeQuotes(s) {
     return str;
 }
 
+function replaceAll(s, target, replacement) {
+    return s.split(target).join(replacement);
+}
+
 function bandeau_ENT_toggleOpen() {
     toggleClass(document.getElementById('portalPageBarAccount'), 'open');
     toggleClass(document.getElementById('portalPageBarAccountInner'), 'open');
@@ -68,6 +72,11 @@ function bandeau_ENT_toggleOpen() {
 
 function via_CAS(url) {
   return CAS_LOGIN_URL + "?service=" + encodeURIComponent(url);
+}
+
+function computeHeader() {
+    var logout_url = BANDEAU_ENT_URL + '/logout.php?service=' + encodeURIComponent(ENT_LOGOUT_URL);
+    return replaceAll(BANDEAU_HEADER, "<%logout_url%>", logout_url);
 }
 
 function computeLink(app) {
@@ -125,10 +134,11 @@ if (currentApp == "redirect-first" && LAYOUT && LAYOUT[0]) {
 } else {
     bandeauCss = "<link rel='stylesheet' href='" + BANDEAU_ENT_URL + "/bandeau-ENT.css' type='text/css' > </link>";
     specificCss = specificCssHtml();
+    header = computeHeader();
     menu = computeMenu(currentApp);
     clear = "<p style='clear: both;'></p>";
     // NB: bandeauCss loaded AFTER the <div> for IE8
-    content = bandeauCss + specificCss + "\n\n<div class='bandeau_ENT_Inner focused'>" + BANDEAU_HEADER + menu + clear + "</div>" + "\n\n" + bandeauCss;
+    content = bandeauCss + specificCss + "\n\n<div class='bandeau_ENT_Inner focused'>" + header + menu + clear + "</div>" + "\n\n" + bandeauCss;
     set_div_innerHTML(content);
 
     document.getElementById('portalPageBarAccount').onclick = bandeau_ENT_toggleOpen;

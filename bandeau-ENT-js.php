@@ -292,7 +292,7 @@ function computeBandeauHeaderLinks($person) {
 	    </a>
 	  </li>
 	  <li class='portalPageBarAccountAnchor portalPageBarAccountLogout'>
-	    <a title='Se déconnecter et sortir du portail' href='%s'>
+	    <a title='Se déconnecter et sortir du portail' href='<%%logout_url%%>'>
 	      <span>Déconnexion</span>
 	    </a>
 	  </li>
@@ -300,7 +300,7 @@ function computeBandeauHeaderLinks($person) {
       </div>
 
       <span class='portalPageBarLogout'>
-	<a title='Se déconnecter et sortir du portail' href='%s'>
+	<a title='Se déconnecter et sortir du portail' href='<%%logout_url%%>'>
 	  <span>Déconnexion</span>
 	</a>
       </span>
@@ -308,9 +308,8 @@ EOD;
 
   global $cas_login_url, $ent_base_url, $bandeau_ENT_url;
   $activation_url = via_CAS($cas_login_url, ent_url('CActivation'));
-  $logout_url = $bandeau_ENT_url . '/logout.php?service=' . urlencode($ent_base_url . '/Logout');
   return sprintf($s, $person["displayName"][0], $person["mail"][0], $person["uid"][0], 
-		 $activation_url, $logout_url, $logout_url);
+		 $activation_url);
 }
  
 function computeBandeauHeaderLinksAnonymous() {
@@ -373,6 +372,7 @@ echo "$debug_msgs\n";
 echo "(function () {\n\n";
 echo "var CAS_LOGIN_URL = " . json_encode($cas_login_url) . ";\n\n";
 echo "var BANDEAU_ENT_URL = " . json_encode($bandeau_ENT_url) . ";\n\n";
+echo "var ENT_LOGOUT_URL = " . json_encode($ent_base_url . '/Logout') . ";\n\n";
 echo "var PERSON = " . ($person ? json_encode($person) : "{}") . ";\n\n";
 echo "var BANDEAU_HEADER = " . json_encode($bandeauHeader) . ";\n\n";
 echo "var APPS = " . json_encode($exportApps) . ";\n\n";
