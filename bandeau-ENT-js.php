@@ -351,9 +351,9 @@ EOD;
   $portalPageBarLinks = $person ? computeBandeauHeaderLinks($person) : computeBandeauHeaderLinksAnonymous();
   $accueil_url = $ent_base_url . '/render.userLayoutRootNode.uP?uP_root=root&amp;uP_sparam=activeTab&amp;activeTab=1';
   $portal_logo = $ent_base_url . '/media/skins/universality/uportal3/images/portal_logo_slim.png';
-  $bandeau_ent_url = $ent_base_url . '/media/skins/universality/uportal3/images/background-bandeau-slim-ENT.png';
+  $ent_logo = $ent_base_url . '/media/skins/universality/uportal3/images/background-bandeau-slim-ENT.png';
 
-  return sprintf($s, $portalPageBarLinks, $portal_logo, $accueil_url, $bandeau_ent_url);
+  return sprintf($s, $portalPageBarLinks, $portal_logo, $accueil_url, $ent_logo);
 }
 
 $request_start_time = microtime(true);
