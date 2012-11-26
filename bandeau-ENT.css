@@ -245,7 +245,6 @@ body {
 .bandeau_ENT_Menu > li.activeTab span,
 .bandeau_ENT_Menu > li:hover a,
 .bandeau_ENT_Menu > li.activeTab a {
- background-colort:#f1f1f1;
  color:#213885 !important;
 }
 .bandeau_ENT_Menu > li:hover { 
