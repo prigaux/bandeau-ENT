@@ -17,6 +17,10 @@
   color: #263F82;
 }
 
+.bandeau_ENT_Inner img {
+  border: 0;
+}
+
 /* Portal Page Bar */
 .portalPageBarLinks {position:absolute; right: 0; top: 0; z-index: 2; background-color: #f7edd8; padding:0; }
 /* for IE7 IE8, force the width: force the width and make it auto for browsers handling :not selector (all browsers except IE lt 9) */ 
@@ -270,9 +274,11 @@ body {
 .bandeau_ENT_Menu li ul {
    width:200px; position:absolute; z-index:100000; display:none;
    padding:0;
+   margin: 0; /* needed on IE8, no drawbacks on others */
    background:transparent; 
-   top: 37px !important; 
-   left: -1px !important;
+   top: 37px; 
+   top: 20px\9; /* for IE8 */
+   left: -1px;
 }
 
 .bandeau_ENT_Menu li ul li {

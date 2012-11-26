@@ -110,7 +110,7 @@ function specificCssHtml() {
     if (window['cssToLoadIfInsideIframe']) {
 	var v = window['cssToLoadIfInsideIframe'];
 	if (typeof v === "string")
-	    return "<link rel='stylesheet' href='" + v + "' type='text/css' />"
+	    return "<link rel='stylesheet' href='" + v + "' type='text/css' ></link>"
     }
     return '';
 
@@ -123,11 +123,12 @@ var currentApp = window.bandeau_ENT.current;
 if (currentApp == "redirect-first" && LAYOUT && LAYOUT[0]) {
     document.location.href = APPS[LAYOUT[0].apps[0]].url;
 } else {
-    css = "<link rel='stylesheet' href='" + BANDEAU_ENT_URL + "/bandeau-ENT.css' type='text/css' />";
+    bandeauCss = "<link rel='stylesheet' href='" + BANDEAU_ENT_URL + "/bandeau-ENT.css' type='text/css' > </link>";
     specificCss = specificCssHtml();
     menu = computeMenu(currentApp);
-    clear = "<p style='clear: both; height: 1em'></p>";
-    content = css + specificCss + "\n\n<div class='bandeau_ENT_Inner focused'>" + BANDEAU_HEADER + menu + clear + "</div>";
+    clear = "<p style='clear: both;'></p>";
+    // NB: bandeauCss loaded AFTER the <div> for IE8
+    content = bandeauCss + specificCss + "\n\n<div class='bandeau_ENT_Inner focused'>" + BANDEAU_HEADER + menu + clear + "</div>" + "\n\n" + bandeauCss;
     set_div_innerHTML(content);
 
     document.getElementById('portalPageBarAccount').onclick = bandeau_ENT_toggleOpen;
