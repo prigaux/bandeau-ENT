@@ -306,9 +306,9 @@ function computeBandeauHeaderLinks($person) {
       </span>
 EOD;
 
-  global $cas_login_url, $ent_base_url;
+  global $cas_login_url, $ent_base_url, $bandeau_ENT_url;
   $activation_url = via_CAS($cas_login_url, ent_url('CActivation'));
-  $logout_url = $ent_base_url . '/Logout';
+  $logout_url = $bandeau_ENT_url . '/logout.php?service=' . urlencode($ent_base_url . '/Logout');
   return sprintf($s, $person["displayName"][0], $person["mail"][0], $person["uid"][0], 
 		 $activation_url, $logout_url, $logout_url);
 }
