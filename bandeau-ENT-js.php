@@ -6,6 +6,9 @@ include_once "config.inc.php";
 
 $cas_login_url = "https://$cas_host$cas_context/login";
 
+function time_before_forcing_CAS_authentication_again($different_referrer) {
+  return $different_referrer ? 10 : 120; // seconds
+}
 
 $APPS["redirect-first"] = 
     array("text" => "",
@@ -77,46 +80,51 @@ function initPhpCAS($host, $port, $context, $CA_certificate_file) {
 function toggle_auth_checked_in_redirect() {
   $url = phpCAS::getServiceURL();
   $without_auth_checked = removeParameterFromUrl('auth_checked', $url);
-  $adding = $url == $without_auth_checked;
-  if ($adding) {
+  if ($url == $without_auth_checked) {
     $url .= (strpos($url, '?') === false ? '?' : '&') . 'auth_checked=true';
   } else {    
     $url = $without_auth_checked;
     debug_msg("removing auth_checked from url to have a clean final url: $url");
   }
   phpCAS::setFixedServiceURL($url);
-  return $adding;
 }
  
-function checkAuthentication_raw() {
-  if (isset($_GET["auth_checked"]) && !isset($_COOKIE["PHPSESSID"])) {
-    debug_msg("cookie disabled or not accepted"); 
-
-    // do not redirect otherwise it will dead-loop:
-    phpCAS::setNoClearTicketsFromUrl();
+function checkAuthentication_raw($noCache, $haveTicket) {
+  if (isset($_GET["auth_checked"])) {
+    $noCookies = !isset($_COOKIE["PHPSESSID"]);
+    if ($noCookies)
+      debug_msg("cookie disabled or not accepted"); 
 
     $_SESSION['time_before_verifying_CAS_ticket'] = microtime(true);
-    return phpCAS::isAuthenticated();
+    $_SESSION['time_before_redirecting_to_CAS'] = getAndUnset($_SESSION, 'time_before_adding_auth_checked');
 
-  } else {
-
-    // Either:
-    // - add "auth_checked" in url before redirecting to CAS
-    // - remove it after CAS before redirecting to final URL
-    $added = toggle_auth_checked_in_redirect();
-
-    if ($added) {
-      $_SESSION['time_before_adding_auth_checked'] = microtime(true);
-    } else {
-      $_SESSION['time_before_verifying_CAS_ticket'] = microtime(true);
-      $_SESSION['time_before_redirecting_to_CAS'] = getAndUnset($_SESSION, 'time_before_adding_auth_checked');
+    if ($noCookies || $noCache) {
+      // do not redirect otherwise 
+      // - if noCookies, it will dead-loop
+      // - if noCache, we must not clean url otherwise "cleanup SESSION" will be done after final redirect to clean URL
+      phpCAS::setNoClearTicketsFromUrl();
+    } else if ($haveTicket) {   
+      // remove "auth_checked" after CAS before redirecting to final URL
+      toggle_auth_checked_in_redirect();
     }
-    return phpCAS::checkAuthentication();
+
+    $isAuthenticated = phpCAS::isAuthenticated();
+    $wasPreviouslyAuthenticated = false;
+  } else {
+    // add "auth_checked" in url before redirecting to CAS
+    toggle_auth_checked_in_redirect();
+
+    $_SESSION['time_before_adding_auth_checked'] = microtime(true);
+    $isAuthenticated = phpCAS::checkAuthentication();
+
+    // NB: if we reach this point, we are either in "wasPreviouslyAuthenticated" case or after final redirect to clean URL
+    $noCookies = false;
   }
+  return array($isAuthenticated, $noCookies);
 }
 
-function checkAuthentication() {
-  $isAuthenticated = checkAuthentication_raw();
+function checkAuthentication($noCache, $haveTicket) {
+  list ($isAuthenticated, $noCookies) = checkAuthentication_raw($noCache, $haveTicket);
 
   $before_all = getAndUnset($_SESSION, 'time_before_redirecting_to_CAS');
   $before_verif = getAndUnset($_SESSION, 'time_before_verifying_CAS_ticket');
@@ -125,9 +133,9 @@ function checkAuthentication() {
   if ($before_all)
     debug_msg("total CAS authentication time: " . formattedElapsedTime($before_all));
 
-  //setcookie("PHPSESSID", "", 1, "/"); // remove cookie to force asking again
+  $wasPreviouslyAuthenticated = $before_verif === null;
 
-  return $isAuthenticated;
+  return array($isAuthenticated, $noCookies, $wasPreviouslyAuthenticated);
 }
 
 function get_uid() {
@@ -357,28 +365,90 @@ EOD;
   return sprintf($s, $portalPageBarLinks, $portal_logo, $accueil_url, $ent_logo);
 }
 
+function url2host($url) {
+  $p = parse_url($url);
+  return $p ? $p["host"] : null;
+}
+
+function referer_hostname_changed() {
+  if (!isset($_SERVER['HTTP_REFERER'])) return false;
+
+  $current_host = url2host($_SERVER['HTTP_REFERER']);
+  debug_msg("current_host $current_host");
+  if (isset($_SESSION["prev_host"])) {
+    debug_msg("prev_host " . $_SESSION["prev_host"]);
+    $changed = $_SESSION["prev_host"] != $current_host;
+    if ($changed) debug_msg("referer_hostname_changed: previous=" . $_SESSION["prev_host"] . " current=$current_host");
+  } else {
+    $changed = false;
+  }
+  $_SESSION["prev_host"] = $current_host;
+  return $changed;
+}
+
+function is_old() {
+  $max_age = time_before_forcing_CAS_authentication_again(referer_hostname_changed());
+  $now = time();
+  $is_old = false;
+  if (isset($_SESSION["prev_time"])) {
+    $age = $now - $_SESSION["prev_time"];
+    $is_old = $age > $max_age;
+    //debug_msg("$age > $max_age");
+    if ($is_old) debug_msg("response is potentially old: age is $age (more than $max_age)");
+  } else {
+    $_SESSION["prev_time"] = $now;
+  }
+  return $is_old;
+}
+
 $request_start_time = microtime(true);
+
+$haveTicket = isset($_GET["ticket"]); // must be done before initPhpCAS which removes it
+$noCache = isset($_GET["noCache"]);
+session_start();
+if ($noCache && !isset($_GET["auth_checked"])) {
+  // cleanup SESSION, esp. to force CAS authentification again
+  debug_msg("cleaning SESSION");
+  $_SESSION = array();
+}
 initPhpCAS($cas_host, '443', $cas_context, $CA_certificate_file);
-$uid = checkAuthentication() ? get_uid() : '';
+list ($isAuthenticated, $noCookies, $wasPreviouslyAuthenticated) = checkAuthentication($noCache, $haveTicket);
+
+
+if (!$isAuthenticated)
+  setcookie("PHPSESSID", "", 1, "/");
+
+
+$uid = $isAuthenticated ? get_uid() : '';
 $person = $uid ? getLdapInfo("uid=$uid") : array();
 
 $layout = computeLayout($person);
 $bandeauHeader = computeBandeauHeader($person);
 $exportApps = exportApps(!$person);
 
+$is_old = is_old();
+
+$js_conf = array('cas_login_url' => $cas_login_url,
+		 'bandeau_ENT_url' => $bandeau_ENT_url,
+		 'ent_logout_url' => $ent_base_url . '/Logout');
+
+$js_data = array('person' => $person,
+		 'bandeauHeader' => $bandeauHeader,
+		 'apps' => $exportApps,
+		 'layout' => $layout);
+$js_data["hash"] = md5(json_encode($js_data));
+$js_data["time"] = time();
+$js_data["wasPreviouslyAuthenticated"] = $wasPreviouslyAuthenticated;
+$js_data['is_old'] = $is_old;
 
 debug_msg("request time: " . formattedElapsedTime($request_start_time));
 
 header('Content-type: application/javascript; charset=utf8');
 echo "$debug_msgs\n";
 echo "(function () {\n\n";
-echo "var CAS_LOGIN_URL = " . json_encode($cas_login_url) . ";\n\n";
-echo "var BANDEAU_ENT_URL = " . json_encode($bandeau_ENT_url) . ";\n\n";
-echo "var ENT_LOGOUT_URL = " . json_encode($ent_base_url . '/Logout') . ";\n\n";
-echo "var PERSON = " . ($person ? json_encode($person) : "{}") . ";\n\n";
-echo "var BANDEAU_HEADER = " . json_encode($bandeauHeader) . ";\n\n";
-echo "var APPS = " . json_encode($exportApps) . ";\n\n";
-echo "var LAYOUT = " . json_encode($layout) . ";\n\n";
+echo "var CONF = " . json_encode($js_conf) . ";\n\n";
+echo "var DATA = " . json_encode($js_data) . ";\n\n";
+
 readfile('bandeau-ENT-static.js');
 echo "}())\n";
 

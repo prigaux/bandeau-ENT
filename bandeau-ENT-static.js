@@ -1,5 +1,8 @@
 /* static code below */
 
+var mylog = function() {};
+if (window['console'] !== undefined) { mylog = function(s) { console.log(s); }; } 
+
 function toggleClass(elt, classToToggle) {
     var regex = new RegExp(classToToggle, 'g');
        
@@ -71,12 +74,15 @@ function bandeau_ENT_toggleOpen() {
 }
 
 function via_CAS(url) {
-  return CAS_LOGIN_URL + "?service=" + encodeURIComponent(url);
+  return CONF.cas_login_url + "?service=" + encodeURIComponent(url);
 }
 
 function computeHeader() {
-    var logout_url = BANDEAU_ENT_URL + '/logout.php?service=' + encodeURIComponent(ENT_LOGOUT_URL);
-    return replaceAll(BANDEAU_HEADER, "<%logout_url%>", logout_url);
+    var app_logout_url = CONF.ent_logout_url;
+    if (window.bandeau_ENT.logout_a_id)
+	app_logout_url = document.getElementById(window.bandeau_ENT.logout_a_id).href;
+    var logout_url = CONF.bandeau_ENT_url + '/logout.php?service=' + encodeURIComponent(app_logout_url);
+    return replaceAll(DATA.bandeauHeader, "<%logout_url%>", logout_url);
 }
 
 function computeLink(app) {
@@ -85,9 +91,9 @@ function computeLink(app) {
 }
 
 function computeMenu(currentApp) {
-    var li_list = simpleMap(LAYOUT, function (tab) {
+    var li_list = simpleMap(DATA.layout, function (tab) {
 	var sub_li_list = simpleMap(tab.apps, function(appId) {
-	    return computeLink(APPS[appId]);
+	    return computeLink(DATA.apps[appId]);
 	});
     
 	var className = simpleContains(tab.apps, currentApp) ? "activeTab" : "inactiveTab";
@@ -97,7 +103,7 @@ function computeMenu(currentApp) {
 }
 
 function set_div_innerHTML(content) {
-    var div_id = window.bandeau_ENT.div_id || (window.bandeau_ENT.div_is_uid && PERSON.uid) || 'bandeau_ENT';
+    var div_id = window.bandeau_ENT.div_id || (window.bandeau_ENT.div_is_uid && DATA.person.uid) || 'bandeau_ENT';
     var elt = document.getElementById(div_id);
     if (!elt) {
 	elt = document.createElement("div");
@@ -115,6 +121,14 @@ function loadCSS (url) {
     document.getElementsByTagName("head")[0].appendChild(elt);
 };
 
+function loadScript (url) {
+    var elt = document.createElement("script");
+    elt.setAttribute("type", "text/javascript");
+    elt.setAttribute("src", url);
+    elt.setAttribute("async", "async");
+    document.getElementsByTagName("head")[0].appendChild(elt);
+}
+
 function specificCssHtml() {
     if (window['cssToLoadIfInsideIframe']) {
 	var v = window['cssToLoadIfInsideIframe'];
@@ -125,22 +139,45 @@ function specificCssHtml() {
 
 }
 
-
-
-var currentApp = window.bandeau_ENT.current;
-
-if (currentApp == "redirect-first" && LAYOUT && LAYOUT[0]) {
-    document.location.href = APPS[LAYOUT[0].apps[0]].url;
-} else {
-    bandeauCss = "<link rel='stylesheet' href='" + BANDEAU_ENT_URL + "/bandeau-ENT.css' type='text/css' > </link>";
-    specificCss = specificCssHtml();
-    header = computeHeader();
-    menu = computeMenu(currentApp);
-    clear = "<p style='clear: both;'></p>";
+function installBandeau() {
+    mylog("installBandeau (time=" + DATA.time + ", wasPreviouslyAuthenticated=" + DATA.wasPreviouslyAuthenticated + ")");
+    var bandeauCss = "<link rel='stylesheet' href='" + CONF.bandeau_ENT_url + "/bandeau-ENT.css' type='text/css' > </link>";
+    var specificCss = specificCssHtml();
+    var header = computeHeader();
+    var menu = computeMenu(currentApp);
+    var clear = "<p style='clear: both;'></p>";
     // NB: bandeauCss loaded AFTER the <div> for IE8
-    content = bandeauCss + specificCss + "\n\n<div class='bandeau_ENT_Inner focused'>" + header + menu + clear + "</div>" + "\n\n" + bandeauCss;
+    var content = bandeauCss + specificCss + "\n\n<div class='bandeau_ENT_Inner focused'>" + header + menu + clear + "</div>" + "\n\n" + bandeauCss;
     set_div_innerHTML(content);
 
-    document.getElementById('portalPageBarAccount').onclick = bandeau_ENT_toggleOpen;
+    var barAccount = document.getElementById('portalPageBarAccount');
+    if (barAccount) barAccount.onclick = bandeau_ENT_toggleOpen;
+}
 
+function mayInstallBandeau() {
+    if (window.bandeau_ENT.prevHash !== DATA.hash) {
+	window.bandeau_ENT.prevHash = DATA.hash;
+	installBandeau();
+    }
+}
+
+function update() {
+    mylog("updating bandeau");
+    loadScript(CONF.bandeau_ENT_url + "/bandeau-ENT-js.php?noCache=1");
+}
+
+function mayInstallAndMayUpdate() {
+    mayInstallBandeau();
+    if (DATA.is_old) update();
+}
+
+/*var loadTime = now();*/
+var currentApp = window.bandeau_ENT.current;
+
+if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
+    document.location.href = DATA.apps[DATA.layout[0].apps[0]].url;
+} else if (!DATA.person.uid) {
+    // disabled for now
+} else {
+    mayInstallAndMayUpdate();
 }
