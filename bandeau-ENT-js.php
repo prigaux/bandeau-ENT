@@ -45,7 +45,9 @@ function is_admin($uid) {
 
 function removeParameterFromUrl($parameterName, $url) {
    $parameterName = preg_quote($parameterName);
-   return preg_replace("/(&|\?)$parameterName(=[^&]*)?/", '', $url);
+   $url = preg_replace("/\?$parameterName(=[^&]*)?&/", '?', $url);
+   $url = preg_replace("/(&|\?)$parameterName(=[^&]*)?/", '', $url);
+   return $url;
 }
 
 function getAndUnset(&$a, $prop) {
