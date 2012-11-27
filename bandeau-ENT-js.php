@@ -294,7 +294,7 @@ function computeBandeauHeaderLinks($person) {
 	    </a>
 	  </li>
 	  <li class='portalPageBarAccountAnchor portalPageBarAccountLogout'>
-	    <a title='Se déconnecter et sortir du portail' href='<%%logout_url%%>'>
+	    <a title='Se déconnecter' href='<%%logout_url%%>'>
 	      <span>Déconnexion</span>
 	    </a>
 	  </li>
@@ -302,7 +302,7 @@ function computeBandeauHeaderLinks($person) {
       </div>
 
       <span class='portalPageBarLogout'>
-	<a title='Se déconnecter et sortir du portail' href='<%%logout_url%%>'>
+	<a title='Se déconnecter' href='<%%logout_url%%>'>
 	  <span>Déconnexion</span>
 	</a>
       </span>
