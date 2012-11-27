@@ -57,6 +57,22 @@ function replaceAll(s, target, replacement) {
     return s.split(target).join(replacement);
 }
 
+function onReady_rec(f) {
+    if (document.body)
+	f();
+    else
+	setTimeout(function () { onReady_rec(f) }, 9);
+}
+
+function onReady(f) {
+    if (document.body)
+	f();
+    else if (document.addEventListener)
+	document.addEventListener('DOMContentLoaded', f);
+    else 
+	onReady_rec(content);
+}
+
 function bandeau_ENT_toggleOpen() {
     toggleClass(document.getElementById('portalPageBarAccount'), 'open');
     toggleClass(document.getElementById('portalPageBarAccountInner'), 'open');
@@ -148,10 +164,12 @@ function installBandeau() {
     var menu = computeMenu(currentApp);
     var clear = "<p style='clear: both;'></p>";
     var content = "\n\n<div class='bandeau_ENT_Inner focused'>" + header + menu + clear + "</div>" + "\n\n";
-    set_div_innerHTML(content);
+    onReady(function() { 
+	set_div_innerHTML(content);
 
-    var barAccount = document.getElementById('portalPageBarAccount');
-    if (barAccount) barAccount.onclick = bandeau_ENT_toggleOpen;
+	var barAccount = document.getElementById('portalPageBarAccount');
+	if (barAccount) barAccount.onclick = bandeau_ENT_toggleOpen;
+    });
 }
 
 function mayInstallBandeau() {
