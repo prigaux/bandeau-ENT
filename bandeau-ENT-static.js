@@ -129,25 +129,25 @@ function loadScript (url) {
     document.getElementsByTagName("head")[0].appendChild(elt);
 }
 
-function specificCssHtml() {
+function loadSpecificCss() {
     if (window['cssToLoadIfInsideIframe']) {
 	var v = window['cssToLoadIfInsideIframe'];
 	if (typeof v === "string")
-	    return "<link rel='stylesheet' href='" + v + "' type='text/css' ></link>"
+	    loadCSS(v);
     }
-    return '';
 
 }
 
 function installBandeau() {
     mylog("installBandeau (time=" + DATA.time + ", wasPreviouslyAuthenticated=" + DATA.wasPreviouslyAuthenticated + ")");
-    var bandeauCss = "<link rel='stylesheet' href='" + CONF.bandeau_ENT_url + "/bandeau-ENT.css' type='text/css' > </link>";
-    var specificCss = specificCssHtml();
+
+    loadCSS(CONF.bandeau_ENT_url + "/bandeau-ENT.css");
+    loadSpecificCss();
+
     var header = computeHeader();
     var menu = computeMenu(currentApp);
     var clear = "<p style='clear: both;'></p>";
-    // NB: bandeauCss loaded AFTER the <div> for IE8
-    var content = bandeauCss + specificCss + "\n\n<div class='bandeau_ENT_Inner focused'>" + header + menu + clear + "</div>" + "\n\n" + bandeauCss;
+    var content = "\n\n<div class='bandeau_ENT_Inner focused'>" + header + menu + clear + "</div>" + "\n\n";
     set_div_innerHTML(content);
 
     var barAccount = document.getElementById('portalPageBarAccount');
