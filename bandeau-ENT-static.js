@@ -97,6 +97,8 @@ function computeHeader() {
     var app_logout_url = CONF.ent_logout_url;
     if (window.bandeau_ENT.logout_a_id)
 	app_logout_url = document.getElementById(window.bandeau_ENT.logout_a_id).href;
+    else if (window.bandeau_ENT.logout_url)
+	app_logout_url = window.bandeau_ENT.logout_url;
     var logout_url = CONF.bandeau_ENT_url + '/logout.php?service=' + encodeURIComponent(app_logout_url);
     return replaceAll(DATA.bandeauHeader, "<%logout_url%>", logout_url);
 }
