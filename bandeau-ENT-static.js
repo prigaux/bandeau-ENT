@@ -3,14 +3,18 @@
 var mylog = function() {};
 if (window['console'] !== undefined) { mylog = function(s) { console.log(s); }; } 
 
+/* return true if class has been added */
 function toggleClass(elt, classToToggle) {
     var regex = new RegExp(classToToggle, 'g');
        
     var without = elt.className.replace(regex , '');
-    if (elt.className === without)
+    if (elt.className === without) {
         elt.className += ' ' + classToToggle;
-    else
+	return true;
+    } else {
         elt.className = without;
+	return false;
+    }
 }
 
 function simpleContains(a, val) {
@@ -90,10 +94,21 @@ function bandeau_ENT_toggleOpen() {
 }
 
 function bandeau_ENT_Menu_toggleClosed() {
-    toggleClass(document.getElementById('bandeau_ENT_portalPageBarToggleMenu'), 'closed');
+    var b = toggleClass(document.getElementById('bandeau_ENT_portalPageBarToggleMenu'), 'closed');
     toggleClass(document.getElementById('bandeau_ENT_Menu'), 'closed');
 
+    if (localStorage) localStorage.setItem("menuClosed", b ? "true" : "");
+
     return false;
+}
+
+function installToggleMenu() {
+    var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
+    if (toggleMenu) {
+	toggleMenu.onclick = bandeau_ENT_Menu_toggleClosed;
+	if (localStorage && localStorage.getItem("menuClosed"))
+	    bandeau_ENT_Menu_toggleClosed();
+    }    
 }
 
 function via_CAS(url) {
@@ -182,8 +197,7 @@ function installBandeau() {
 	var barAccount = document.getElementById('portalPageBarAccount');
 	if (barAccount) barAccount.onclick = bandeau_ENT_toggleOpen;
 
-	var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
-	if (toggleMenu) toggleMenu.onclick = bandeau_ENT_Menu_toggleClosed;
+	installToggleMenu();
     });
 }
 
