@@ -150,12 +150,19 @@ function get_uid() {
 }
 
 function getLdapInfo($filter) {
-  global $ldap_server, $ou_people;
+  global $ldap_server, $ldap_bind_dn, $ldap_bind_password, $ou_people;
 
   $wanted_attributes = compute_wanted_attributes();
-  $ds=ldap_connect($ldap_server);
 
-  $all_entries = ldap_get_entries($ds, ldap_search($ds, $ou_people, $filter));
+  $ds=ldap_connect($ldap_server);
+  if (!$ds) exit("error: connection to $ldap_server failed");
+  if ($ldap_bind_dn) {
+    if (!ldap_bind($ds,$ldap_bind_dn,$ldap_bind_password)) exit("error: failed to bind using $ldap_bind_dn");
+  }
+
+  //$ds=ldap_connect($ldap_server);
+
+  $all_entries = ldap_get_entries($ds, ldap_search($ds, $ou_people, $filter, $wanted_attributes));
   $entries = $all_entries[0];
   $info = array();
   foreach ($wanted_attributes as $attr) {
