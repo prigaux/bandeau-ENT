@@ -43,7 +43,8 @@ function ent_url($fname, $isGuest = false) {
 }
 
 function is_admin($uid) {
-  return true;
+  global $admins;
+  return in_array($uid, $admins);
 }
 
 function removeParameterFromUrl($parameterName, $url) {
@@ -143,8 +144,7 @@ function get_uid() {
   debug_msg("uid is $uid");
   if (isset($_GET['uid'])) {
 	  if (is_admin($uid)) return $_GET['uid'];
-     set_div_innerHTML("$uid is not allowed to fake a user");
-     exit(1); 
+	  exit("$uid is not allowed to fake a user");
   }
   return $uid;
 }
