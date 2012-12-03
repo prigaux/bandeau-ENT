@@ -204,7 +204,7 @@ function computeGroups($person) {
 
 function get_url($app, $appId, $isGuest) {
   global $cas_login_url;
-  if (isset($app['url']))
+  if (isset($app['url']) && isset($app['url_bandeau_compatible']))
     return isset($app['force_CAS']) ? via_CAS($app['force_CAS'], $app['url']) : $app['url'];
   else
     return $isGuest ? ent_url($appId, true) : via_CAS($cas_login_url, ent_url($appId));
