@@ -309,6 +309,13 @@ function computeBandeauHeaderLinks($person) {
 	</ul>
       </div>
 
+
+      <span id='bandeau_ENT_portalPageBarToggleMenu'>
+        <a>
+          <span>Toggle menu</span>
+        </a>
+      </span> 
+
       <span class='portalPageBarLogout'>
 	<a title='Se déconnecter' href='<%%logout_url%%>'>
 	  <span>Déconnexion</span>

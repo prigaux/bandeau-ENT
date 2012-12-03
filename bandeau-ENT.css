@@ -166,6 +166,28 @@ li.portalPageBarAccountLogout {
     display: none;
 }
 
+#bandeau_ENT_portalPageBarToggleMenu {
+    height: 40px;
+    background: lightgray;
+    display: block;
+    float: right;
+}
+#bandeau_ENT_portalPageBarToggleMenu span {
+    display: none;
+}
+#bandeau_ENT_portalPageBarToggleMenu a {
+    background: url(chevron-close.png) no-repeat;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin-top: 7px;
+}
+#bandeau_ENT_portalPageBarToggleMenu.closed a {
+    background-image: url(chevron-open.png);
+}
+
+
 /*********************************************************************************/
 .portalLogo {
  padding: 0;
@@ -211,6 +233,16 @@ body {
  padding:0.3em 0.2em 0.9em 0.2em;
  color:#555;
  text-decoration:none;
+}
+
+#bandeau_ENT_Menu.closed {
+ display: none;
+}
+.toggleMenuSpacer {
+    float: right;
+    height: 19px;
+    padding: 5px 0px;
+    width: 24px;
 }
 
 .bandeau_ENT_Menu, .bandeau_ENT_Menu > li {

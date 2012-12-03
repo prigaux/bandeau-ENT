@@ -89,6 +89,13 @@ function bandeau_ENT_toggleOpen() {
     return false;
 }
 
+function bandeau_ENT_Menu_toggleClosed() {
+    toggleClass(document.getElementById('bandeau_ENT_portalPageBarToggleMenu'), 'closed');
+    toggleClass(document.getElementById('bandeau_ENT_Menu'), 'closed');
+
+    return false;
+}
+
 function via_CAS(url) {
   return CONF.cas_login_url + "?service=" + encodeURIComponent(url);
 }
@@ -117,7 +124,10 @@ function computeMenu(currentApp) {
 	var className = simpleContains(tab.apps, currentApp) ? "activeTab" : "inactiveTab";
 	return "<li class='" + className + "'><span>" + escapeQuotes(tab.title) + "</span><ul>" + sub_li_list.join("\n") + "</ul></li>";
     });
-    return "<ul class='bandeau_ENT_Menu'>\n" + li_list.join("\n") + "\n</ul>";
+
+    var toggleMenuSpacer = "<div class='toggleMenuSpacer'></div>\n";
+
+    return "<ul id='bandeau_ENT_Menu' class='bandeau_ENT_Menu'>\n" + toggleMenuSpacer + li_list.join("\n") + "\n</ul>";
 }
 
 function set_div_innerHTML(content) {
@@ -171,6 +181,9 @@ function installBandeau() {
 
 	var barAccount = document.getElementById('portalPageBarAccount');
 	if (barAccount) barAccount.onclick = bandeau_ENT_toggleOpen;
+
+	var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
+	if (toggleMenu) toggleMenu.onclick = bandeau_ENT_Menu_toggleClosed;
     });
 }
 
