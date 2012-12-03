@@ -93,9 +93,10 @@ function bandeau_ENT_toggleOpen() {
     return false;
 }
 
-function bandeau_ENT_Menu_toggleClosed() {
+function bandeau_ENT_Menu_toggle() {
     var b = toggleClass(document.getElementById('bandeau_ENT_portalPageBarToggleMenu'), 'closed');
-    toggleClass(document.getElementById('bandeau_ENT_Menu'), 'closed');
+    toggleClass(document.getElementById('bandeau_ENT_Menu_and_titlebar'), 'closed');
+    toggleClass(document.getElementById('bandeau_ENT_titlebar_in_header'), 'open');
 
     if (localStorage) localStorage.setItem("menuClosed", b ? "true" : "");
 
@@ -105,9 +106,9 @@ function bandeau_ENT_Menu_toggleClosed() {
 function installToggleMenu() {
     var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
     if (toggleMenu) {
-	toggleMenu.onclick = bandeau_ENT_Menu_toggleClosed;
+	toggleMenu.onclick = bandeau_ENT_Menu_toggle;
 	if (localStorage && localStorage.getItem("menuClosed"))
-	    bandeau_ENT_Menu_toggleClosed();
+	    bandeau_ENT_Menu_toggle();
     }    
 }
 
@@ -142,7 +143,15 @@ function computeMenu(currentApp) {
 
     var toggleMenuSpacer = "<div class='toggleMenuSpacer'></div>\n";
 
-    return "<ul id='bandeau_ENT_Menu' class='bandeau_ENT_Menu'>\n" + toggleMenuSpacer + li_list.join("\n") + "\n</ul>";
+    return "<ul class='bandeau_ENT_Menu'>\n" + toggleMenuSpacer + li_list.join("\n") + "\n</ul>";
+}
+
+function computeTitlebar(currentApp) {
+    var app = DATA.apps[currentApp];
+    if (app && app.title && !window.bandeau_ENT.no_titlebar)
+	return "<div class='bandeau_ENT_Titlebar'>" + escapeQuotes(app.title) + "</div>";
+    else
+	return '';
 }
 
 function set_div_innerHTML(content) {
@@ -189,8 +198,11 @@ function installBandeau() {
 
     var header = computeHeader();
     var menu = computeMenu(currentApp);
+    var titlebar = computeTitlebar(currentApp);
     var clear = "<p style='clear: both; height: 13px; margin: 0'></p>";
-    var content = "\n\n<div class='bandeau_ENT_Inner focused'>" + header + menu + clear + "</div>" + "\n\n";
+    var titlebar_in_header = "<div id='bandeau_ENT_titlebar_in_header'>" + titlebar + "</div>";
+    var menu_and_titlebar = "<div id='bandeau_ENT_Menu_and_titlebar'>" + menu + clear + titlebar + "</div>";
+    var content = "\n\n<div class='bandeau_ENT_Inner focused'>" + header + titlebar_in_header + menu_and_titlebar + "</div>" + "\n\n";
     onReady(function() { 
 	set_div_innerHTML(content);
 

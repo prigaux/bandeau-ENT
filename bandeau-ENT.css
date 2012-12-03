@@ -235,7 +235,7 @@ body {
  text-decoration:none;
 }
 
-#bandeau_ENT_Menu.closed {
+#bandeau_ENT_Menu_and_titlebar.closed {
  display: none;
 }
 .toggleMenuSpacer {
@@ -378,4 +378,27 @@ body {
     display: block;
     position: relative;
     float: left;
+}
+
+.bandeau_ENT_Titlebar {
+    color: #263F82;
+}
+#bandeau_ENT_Menu_and_titlebar .bandeau_ENT_Titlebar {
+    background: white;
+    padding: 13px 0 18px 13px;
+    font-size: 200%;
+}
+#bandeau_ENT_titlebar_in_header {
+    position: absolute;
+    left: 320px;
+    font-size: 24px;
+    top: 0;
+}
+#bandeau_ENT_titlebar_in_header {
+    display: none;
+}
+@media screen and (min-width: 450px) {
+  #bandeau_ENT_titlebar_in_header.open {
+    display: block;
+  }
 }

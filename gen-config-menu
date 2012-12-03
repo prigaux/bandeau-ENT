@@ -185,6 +185,7 @@ function uportalGetChannel($channelFile, $groupNameToPagsKeysAndUsers) {
 
   $channel = array();
   $channel["text"] = (string) $xml->name;
+  $channel["title"] = (string) $xml->title;
   $channel["description"] = (string) $xml->desc;
   $channel["users"] = array_merge($users, $subUsers);
   $channel["groups"] = $groups;

@@ -211,9 +211,11 @@ function get_url($app, $appId, $isGuest) {
 }
 
 function exportApp($app, $appId, $isGuest) {
-  return array("description" => $app['description'],
-	       "text" => $app['text'],
-	       "url" => get_url($app, $appId, $isGuest));
+  $r = array("description" => $app['description'],
+	     "text" => $app['text'],
+	     "url" => get_url($app, $appId, $isGuest));
+  if (isset($app['title'])) $r['title'] = $app['title'];
+  return $r;
 }
 
 function exportApps($isGuest) {
