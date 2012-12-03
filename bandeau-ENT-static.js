@@ -98,18 +98,20 @@ function bandeau_ENT_Menu_toggle() {
     toggleClass(document.getElementById('bandeau_ENT_Menu_and_titlebar'), 'closed');
     toggleClass(document.getElementById('bandeau_ENT_titlebar_in_header'), 'open');
 
-    if (localStorage) localStorage.setItem("menuClosed", b ? "true" : "");
+    if (window.localStorage) localStorage.setItem("bandeau_ENT_menuClosed", b ? "true" : "false");
 
     return false;
 }
 
 function installToggleMenu() {
+    var hideByDefault = window.bandeau_ENT.hide_menu;
     var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
     if (toggleMenu) {
 	toggleMenu.onclick = bandeau_ENT_Menu_toggle;
-	if (localStorage && localStorage.getItem("menuClosed"))
+	var savedState = window.localStorage && localStorage.getItem("bandeau_ENT_menuClosed");
+	if (savedState === "true" || savedState !== "false" && hideByDefault)
 	    bandeau_ENT_Menu_toggle();
-    }    
+    }
 }
 
 function via_CAS(url) {
