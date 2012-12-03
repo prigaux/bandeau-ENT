@@ -164,7 +164,7 @@ function installBandeau() {
 
     var header = computeHeader();
     var menu = computeMenu(currentApp);
-    var clear = "<p style='clear: both;'></p>";
+    var clear = "<p style='clear: both; height: 13px; margin: 0'></p>";
     var content = "\n\n<div class='bandeau_ENT_Inner focused'>" + header + menu + clear + "</div>" + "\n\n";
     onReady(function() { 
 	set_div_innerHTML(content);
