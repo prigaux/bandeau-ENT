@@ -22,7 +22,7 @@
 }
 
 /* Portal Page Bar */
-.portalPageBarLinks {position:absolute; right: 0; top: 0; z-index: 100004; background-color: #f7edd8; padding:0; }
+.portalPageBarLinks {position:absolute; right: 0; top: 0; z-index: 100004; padding:0;  }
 /* for IE7 IE8, force the width: force the width and make it auto for browsers handling :not selector (all browsers except IE lt 9) */ 
 .portalPageBarLinks { width: 15em; }
 .portalPageBarLinks:not([dummy]) { width: auto; }
@@ -167,21 +167,35 @@ li.portalPageBarAccountLogout {
 }
 
 #bandeau_ENT_portalPageBarToggleMenu {
-    height: 40px;
-    background: lightgray;
+    height: 45px;
+    background: #ccc;
+    border-left: 1px solid #a8a8a8;
     display: block;
     float: right;
+    position: relative;
 }
 #bandeau_ENT_portalPageBarToggleMenu span {
     display: none;
 }
 #bandeau_ENT_portalPageBarToggleMenu a {
-    background: url(chevron-close.png) no-repeat;
+    background: url(chevron-close.png) no-repeat center;
     display: inline-block;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 19px;
     padding: 0;
-    margin-top: 7px;
+    margin-top: -3px;
+    margin-left: 12px;
+}
+#bandeau_ENT_portalPageBarToggleMenu a:hover {
+    background-color: #f1f1f1;
+}
+
+#bandeau_ENT_portalPageBarToggleMenu.closed {
+    height: 40px;
+
+}
+#bandeau_ENT_portalPageBarToggleMenu.closed > div {
+    display: none;
 }
 #bandeau_ENT_portalPageBarToggleMenu.closed a {
     background-image: url(chevron-open.png);
@@ -189,31 +203,14 @@ li.portalPageBarAccountLogout {
 
 
 /*********************************************************************************/
-.portalLogo {
+#bandeau_ENT_portalLogo {
  padding: 0;
- height: 95px;
+ height: 40px;
  background-color: #F7EDD8;
 }
-.focused .portalLogo { 
- height: 40px;
+#bandeau_ENT_portalLogo.menuClosed { 
+ height: 30px;
 }
-
-.portalTitleUP1 {
-    display: block;
-    position: absolute;
-    left: 250px;
-    top: 0px;
-    width: 500px;
-    height: 90px;
-}
-
-.focused .portalTitleUP1 {
-    left: 96px;
-    top: 0px;
-    width: 100px;
-    height: 30px;
-}
-
 
 /*********************************************************************************/
 body {
@@ -240,7 +237,7 @@ body {
 }
 .toggleMenuSpacer {
     float: right;
-    height: 19px;
+    height: 23px;
     padding: 5px 0px;
     width: 24px;
 }
@@ -390,9 +387,9 @@ body {
 }
 #bandeau_ENT_titlebar_in_header {
     position: absolute;
-    left: 320px;
+    left: 120px;
     font-size: 24px;
-    top: 0;
+    top: 2px;
 }
 #bandeau_ENT_titlebar_in_header {
     display: none;

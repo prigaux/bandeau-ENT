@@ -320,6 +320,7 @@ function computeBandeauHeaderLinks($person) {
 
 
       <span id='bandeau_ENT_portalPageBarToggleMenu'>
+        <span style="display: block; font-size: 16px; color: #263F82; margin-right: 5px; margin-bottom: 0px; margin-left: 5px; margin-top: 5px; ">ENT</span>
         <a>
           <span>Toggle menu</span>
         </a>
@@ -360,15 +361,10 @@ function computeBandeauHeader($person) {
    </div>
   </div>
 
-  <div class='portalLogo'>
+  <div id='bandeau_ENT_portalLogo'>
     <a target='_blank' title='Universite Paris 1 Pantheon-Sorbonne: Accueil' href='http://www.univ-paris1.fr/'>
       <img src='%s' />
     </a>
-  </div>
-  <div class='portalTitleUP1'>
-      <a title='Aller à l&#39;accueil' href='%s'>
-	<img src='%s' />
-      </a>
   </div>
 EOD;
 
@@ -376,9 +372,8 @@ EOD;
   $portalPageBarLinks = $person ? computeBandeauHeaderLinks($person) : computeBandeauHeaderLinksAnonymous();
   $accueil_url = $ent_base_url . '/render.userLayoutRootNode.uP?uP_root=root&amp;uP_sparam=activeTab&amp;activeTab=1';
   $portal_logo = $ent_base_url . '/media/skins/universality/uportal3/images/portal_logo_slim.png';
-  $ent_logo = $ent_base_url . '/media/skins/universality/uportal3/images/background-bandeau-slim-ENT.png';
 
-  return sprintf($s, $portalPageBarLinks, $portal_logo, $accueil_url, $ent_logo);
+  return sprintf($s, $portalPageBarLinks, $portal_logo, $accueil_url);
 }
 
 function url2host($url) {

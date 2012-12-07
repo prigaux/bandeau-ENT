@@ -97,6 +97,7 @@ function bandeau_ENT_Menu_toggle() {
     var b = toggleClass(document.getElementById('bandeau_ENT_portalPageBarToggleMenu'), 'closed');
     toggleClass(document.getElementById('bandeau_ENT_Menu_and_titlebar'), 'closed');
     toggleClass(document.getElementById('bandeau_ENT_titlebar_in_header'), 'open');
+    toggleClass(document.getElementById('bandeau_ENT_portalLogo'), 'menuClosed');
 
     if (window.localStorage) localStorage.setItem("bandeau_ENT_menuClosed", b ? "true" : "false");
 
