@@ -436,6 +436,7 @@ $person = $uid ? getLdapInfo("uid=$uid") : array();
 $layout = computeLayout($person);
 $bandeauHeader = computeBandeauHeader($person);
 $exportApps = exportApps(!$person);
+$static_js = file_get_contents('bandeau-ENT-static.js');
 
 $is_old = is_old();
 
@@ -447,7 +448,7 @@ $js_data = array('person' => $person,
 		 'bandeauHeader' => $bandeauHeader,
 		 'apps' => $exportApps,
 		 'layout' => $layout);
-$js_data["hash"] = md5(json_encode($js_data));
+$js_data["hash"] = md5(json_encode(array($js_data, $static_js)));
 $js_data["time"] = time();
 $js_data["wasPreviouslyAuthenticated"] = $wasPreviouslyAuthenticated;
 $js_data['is_old'] = $is_old;
@@ -459,8 +460,7 @@ echo "$debug_msgs\n";
 echo "(function () {\n\n";
 echo "var CONF = " . json_encode($js_conf) . ";\n\n";
 echo "var DATA = " . json_encode($js_data) . ";\n\n";
-
-readfile('bandeau-ENT-static.js');
+echo $static_js;
 echo "}())\n";
 
 ?>
