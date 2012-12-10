@@ -320,7 +320,7 @@ function computeBandeauHeaderLinks($person) {
 
 
       <span id='bandeau_ENT_portalPageBarToggleMenu'>
-        <span style="display: block; font-size: 16px; color: #263F82; margin-right: 5px; margin-bottom: 0px; margin-left: 5px; margin-top: 5px; ">ENT</span>
+        <span>ENT</span>
         <a>
           <span>Toggle menu</span>
         </a>
@@ -361,7 +361,7 @@ function computeBandeauHeader($person) {
    </div>
   </div>
 
-  <div id='bandeau_ENT_portalLogo'>
+  <div class='bandeau_ENT_portalLogo'>
     <a target='_blank' title='Universite Paris 1 Pantheon-Sorbonne: Accueil' href='http://www.univ-paris1.fr/'>
       <img src='%s' />
     </a>
@@ -453,6 +453,9 @@ $js_data["time"] = time();
 $js_data["wasPreviouslyAuthenticated"] = $wasPreviouslyAuthenticated;
 $js_data['is_old'] = $is_old;
 
+$js_css = array('base' => file_get_contents('bandeau-ENT.css'),
+		'desktop' => file_get_contents('bandeau-ENT-desktop.css'));
+
 debug_msg("request time: " . formattedElapsedTime($request_start_time));
 
 header('Content-type: application/javascript; charset=utf8');
@@ -460,6 +463,7 @@ echo "$debug_msgs\n";
 echo "(function () {\n\n";
 echo "var CONF = " . json_encode($js_conf) . ";\n\n";
 echo "var DATA = " . json_encode($js_data) . ";\n\n";
+echo "var CSS = " . json_encode($js_css) . ";\n\n";
 echo $static_js;
 echo "}())\n";
 

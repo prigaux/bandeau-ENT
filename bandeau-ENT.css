@@ -1,11 +1,11 @@
 
-.bandeau_ENT_Inner {
+#bandeau_ENT_Inner {
   margin: 0;
   background-color: #F1F1F1;
   font:13px/1.231 Verdana, Arial, Helvetica, sans-serif;
 }  
 /* force sane values */
-.bandeau_ENT_Inner, .bandeau_ENT_Inner span {
+#bandeau_ENT_Inner, #bandeau_ENT_Inner span {
   text-align: left !important;
 
   font-size:13px/1.231 !important;
@@ -13,11 +13,11 @@
   font-weight: normal !important;
 }
 
-.bandeau_ENT_Inner a {
+#bandeau_ENT_Inner a {
   color: #263F82;
 }
 
-.bandeau_ENT_Inner img {
+#bandeau_ENT_Inner img {
   border: 0;
 }
 
@@ -31,7 +31,7 @@
 
 /*********************************************************************************/
 #portalPageBarAccount > a > span {
-    background: url("https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/arrow_down.png") no-repeat center right;
+    background: url(https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/arrow_down.png) no-repeat center right;
     padding-right: 1em;
 }
 
@@ -74,7 +74,7 @@
     position: absolute;
     background-color: #e7ddc8;
     top: 31px;
-    right: 33px;
+    right: 74px;
     border: 1px solid #d7cdb8;
     -moz-border-radius : 5px 0 5px 5px;
     border-radius : 5px 0 5px 5px;
@@ -135,7 +135,7 @@ li.portalPageBarAccountLogout {
     background: url(https://ticetest.univ-paris1.fr/bandeau-ENT/logout.png) no-repeat scroll 0 4px transparent;
 }
 
-/* replace "Deconnexion" with an icon */
+/* replace Deconnexion with an icon */
 .portalPageBarLogout a {
     display: inline-block;
     width: 20px;
@@ -155,48 +155,54 @@ li.portalPageBarAccountLogout {
 }
 
 #bandeau_ENT_portalPageBarToggleMenu {
-    height: 45px;
-    background: #ccc;
-    border-left: 1px solid #a8a8a8;
+    height: 40px;
     display: block;
     float: right;
     position: relative;
 }
-#bandeau_ENT_portalPageBarToggleMenu span {
+#bandeau_ENT_portalPageBarToggleMenu > span {
+  display: block; font-size: 16px; color: #263F82; padding: 5px;
+  background: #cccccc;
+  border-left: 1px solid #a8a8a8;
+  /*text-shadow: 0 0 1px;*/
+}
+#bandeau_ENT_portalPageBarToggleMenu:hover > span {
+    background: #dddddd;
+}
+#bandeau_ENT_portalPageBarToggleMenu:hover {
+    cursor: pointer;
+}
+
+.menuClosed #bandeau_ENT_portalPageBarToggleMenu > div {
     display: none;
 }
+
+#bandeau_ENT_portalPageBarToggleMenu a span {
+    display: none;
+}
+
 #bandeau_ENT_portalPageBarToggleMenu a {
-    background: url(chevron-close.png) no-repeat center;
+    background: url(https://ticetest.univ-paris1.fr/bandeau-ENT/chevron-close.png) no-repeat center;
     display: inline-block;
     width: 20px;
     height: 19px;
     padding: 0;
-    margin-top: -3px;
+    margin-top: -8px;
     margin-left: 12px;
 }
-#bandeau_ENT_portalPageBarToggleMenu a:hover {
-    background-color: #f1f1f1;
-}
 
-#bandeau_ENT_portalPageBarToggleMenu.closed {
-    height: 40px;
-
-}
-#bandeau_ENT_portalPageBarToggleMenu.closed > div {
-    display: none;
-}
-#bandeau_ENT_portalPageBarToggleMenu.closed a {
-    background-image: url(chevron-open.png);
+.menuClosed #bandeau_ENT_portalPageBarToggleMenu a {
+    background-image: url(https://ticetest.univ-paris1.fr/bandeau-ENT/chevron-open.png);
 }
 
 
 /*********************************************************************************/
-#bandeau_ENT_portalLogo {
+.bandeau_ENT_portalLogo {
  padding: 0;
- height: 40px;
+ height: 30px;
  background-color: #F7EDD8;
 }
-#bandeau_ENT_portalLogo.menuClosed { 
+.menuClosed .bandeau_ENT_portalLogo { 
  height: 30px;
 }
 
@@ -210,7 +216,6 @@ body {
 .bandeau_ENT_Menu {
  margin: 0;
  padding-left: 0;
- height: 28px;
  display: block;
 }
 
@@ -220,28 +225,20 @@ body {
  text-decoration:none;
 }
 
-#bandeau_ENT_Menu_and_titlebar.closed {
+.menuClosed .bandeau_ENT_Menu_and_titlebar > ul, .menuClosed .bandeau_ENT_Menu_and_titlebar > p {
  display: none;
-}
-.toggleMenuSpacer {
-    float: right;
-    height: 23px;
-    padding: 5px 0px;
-    width: 24px;
-}
-
-.bandeau_ENT_Menu, .bandeau_ENT_Menu > li {
-   background: url(https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/background_menu-h.png) repeat-x scroll right top #98B6C1; 
-   border-bottom: 1px solid #FFFFFF;
 }
 
 .bandeau_ENT_Menu > li {
  z-index: 100002;
- position:relative; 
- padding: 5px 11px 0px 11px;
- display: block;
  float: left;
- height: 23px;
+ padding: 5px 11px 0px 11px;
+}
+
+@media screen and (max-width: 450px) {
+  .bandeau_ENT_Menu > li {
+    float: none;
+  }
 }
 
 *:first-child+html .bandeau_ENT_Menu > li {
@@ -252,19 +249,6 @@ body {
 .bandeau_ENT_Menu > li:hover {
  background:#f1f1f1;
  color:#fff;
- margin-top: -10px;
- padding: 5px 10px;
- border-left: 1px solid #999999;
- border-right: 1px solid #999999;
- border-top: 1px solid #999999;
- border-bottom: 0px solid transparent!important;
- height: 28px;
- -moz-border-radius : 5px 5px 0 0;
- border-radius : 5px 5px 0 0;
- -webkit-border-bottom-left-radius : 0;
- -webkit-border-bottom-right-radius : 0;
- -webkit-border-top-left-radius: 5px;
- -webkit-border-top-right-radius : 5px;
 }
 .bandeau_ENT_Menu > li:hover span,
 .bandeau_ENT_Menu > li.activeTab span,
@@ -299,13 +283,9 @@ body {
 
 /* Flyout Navigation */
 .bandeau_ENT_Menu li ul {
-   width:200px; position:absolute; z-index:100004; display:none;
    padding:0;
    margin: 0; /* needed on IE8, no drawbacks on others */
    background:transparent; 
-   top: 37px; 
-   top: 20px\9; /* for IE8 */
-   left: -1px;
 }
 
 .bandeau_ENT_Menu li ul li {
@@ -321,32 +301,16 @@ body {
 .bandeau_ENT_Menu li ul {
   padding:2px;
   background-color:#f1f1f1;
-  border-bottom: 1px solid #999999;
-  border-left: 1px solid #999999;
-  border-right: 1px solid #999999;
-  border-top: 1px dotted #999999; 
-  -moz-border-radius : 0 5px 5px 5px;
-  border-radius : 0 5px 5px 5px;
-  -webkit-border-bottom-left-radius : 5px;
-  -webkit-border-bottom-right-radius : 5px;
-  -webkit-border-top-left-radius: 0;
-  -webkit-border-top-right-radius : 5px;
-}
-.bandeau_ENT_Menu li ul li {
-  border-top: 1px dotted #999999 !important;
+  border: 1px solid #999999;
 }
 .bandeau_ENT_Menu li ul li:first-child { 
   border-top: none !important; 
 }
 .bandeau_ENT_Menu li ul li a {
- padding:4px 4px 4px 25px; 
  color:#213885 !important; 
  font-weight:normal; 
  font-size:100%;
  background-color:#f1f1f1;
- background-position:5px 3px;
- background-repeat:no-repeat;
- background-image:url(https://esup.univ-paris1.fr/ResourceServingWebapp/rs/famfamfam/silk/1.3/application.png);
  text-decoration:none;
  text-align:left;
  display:block;
@@ -362,28 +326,33 @@ body {
 .bandeau_ENT_Menu > li {
     display: block;
     position: relative;
-    float: left;
 }
 
 .bandeau_ENT_Titlebar {
     color: #263F82;
 }
-#bandeau_ENT_Menu_and_titlebar .bandeau_ENT_Titlebar {
+.bandeau_ENT_Menu_and_titlebar .bandeau_ENT_Titlebar {
     background: white;
     padding: 13px 0 18px 13px;
     font-size: 200%;
 }
-#bandeau_ENT_titlebar_in_header {
+.bandeau_ENT_titlebar_in_header {
     position: absolute;
     left: 120px;
-    font-size: 24px;
-    top: 2px;
+    font-size: 16px;
+    top: 7px;
 }
-#bandeau_ENT_titlebar_in_header {
+.bandeau_ENT_titlebar_in_header {
+    display: none;
+}
+.bandeau_ENT_ent_title_in_header {
     display: none;
 }
 @media screen and (min-width: 450px) {
-  #bandeau_ENT_titlebar_in_header.open {
+  .menuClosed .bandeau_ENT_titlebar_in_header {
     display: block;
+  }
+  .menuClosed .bandeau_ENT_Menu_and_titlebar {
+   display: none;
   }
 }

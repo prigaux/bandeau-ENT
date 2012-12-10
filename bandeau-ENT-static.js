@@ -94,23 +94,20 @@ function bandeau_ENT_toggleOpen() {
 }
 
 function bandeau_ENT_Menu_toggle() {
-    var b = toggleClass(document.getElementById('bandeau_ENT_portalPageBarToggleMenu'), 'closed');
-    toggleClass(document.getElementById('bandeau_ENT_Menu_and_titlebar'), 'closed');
-    toggleClass(document.getElementById('bandeau_ENT_titlebar_in_header'), 'open');
-    toggleClass(document.getElementById('bandeau_ENT_portalLogo'), 'menuClosed');
+    var b = toggleClass(document.getElementById('bandeau_ENT_Inner'), 'menuClosed');
 
     if (window.localStorage) localStorage.setItem("bandeau_ENT_menuClosed", b ? "true" : "false");
 
     return false;
 }
 
-function installToggleMenu() {
+function installToggleMenu(hide) {
     var hideByDefault = window.bandeau_ENT.hide_menu;
     var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
     if (toggleMenu) {
 	toggleMenu.onclick = bandeau_ENT_Menu_toggle;
 	var savedState = window.localStorage && localStorage.getItem("bandeau_ENT_menuClosed");
-	if (savedState === "true" || savedState !== "false" && hideByDefault)
+	if (hide || savedState === "true" || savedState !== "false" && hideByDefault)
 	    bandeau_ENT_Menu_toggle();
     }
 }
@@ -156,9 +153,10 @@ function computeTitlebar(currentApp) {
     else
 	return '';
 }
-
-function set_div_innerHTML(content) {
-    var div_id = window.bandeau_ENT.div_id || (window.bandeau_ENT.div_is_uid && DATA.person.uid) || 'bandeau_ENT';
+function bandeau_div_id() {
+    window.bandeau_ENT.div_id || (window.bandeau_ENT.div_is_uid && DATA.person.uid) || 'bandeau_ENT';
+}
+function set_div_innerHTML(div_id, content) {
     var elt = document.getElementById(div_id);
     if (!elt) {
 	elt = document.createElement("div");
@@ -168,13 +166,24 @@ function set_div_innerHTML(content) {
     elt.innerHTML = content;
 }
 
-function loadCSS (url) {
+function loadCSS (url, media) {
     var elt = document.createElement("link");
     elt.setAttribute("rel", "stylesheet");
     elt.setAttribute("type", "text/css");
     elt.setAttribute("href", url);
+    if (media) elt.setAttribute("media", media);
     document.getElementsByTagName("head")[0].appendChild(elt);
 };
+
+function addCSS(css) {
+    var elt = document.createElement('style');
+    elt.setAttribute("type", 'text/css');
+    if (elt.styleSheet)
+	elt.styleSheet.cssText = css;
+    else
+	elt.appendChild(document.createTextNode(css));
+    document.getElementsByTagName("head")[0].appendChild(elt);
+}
 
 function loadScript (url) {
     var elt = document.createElement("script");
@@ -196,24 +205,54 @@ function loadSpecificCss() {
 function installBandeau() {
     mylog("installBandeau (time=" + DATA.time + ", wasPreviouslyAuthenticated=" + DATA.wasPreviouslyAuthenticated + ")");
 
-    loadCSS(CONF.bandeau_ENT_url + "/bandeau-ENT.css");
     loadSpecificCss();
+
+    if (typeof CSS != 'undefined') 
+	addCSS(CSS.base);
+    else
+	loadCSS(CONF.bandeau_ENT_url + "/bandeau-ENT.css");
+
+    var widthForNiceMenu = 800;
+    var conditionForNiceMenu = '(min-width: ' + widthForNiceMenu + 'px)';
+    var smallMenu = window.matchMedia ? !window.matchMedia(conditionForNiceMenu).matches : screen.width < widthForNiceMenu;
+    if (!smallMenu) {
+	// on IE7&IE8, we do want to include the desktop CSS
+	// but since media queries fail, we need to give them a simpler media
+	var handleMediaQuery = "getElementsByClassName" in document; // not having getElementsByClassName is a good sign of not having media queries... (IE7 and IE8)
+	var condition = handleMediaQuery ? conditionForNiceMenu : 'screen';
+
+	if (typeof CSS != 'undefined') 
+	    addCSS("@media " + condition + " { \n" + CSS.desktop + "}\n");
+	else
+	    loadCSS(CONF.bandeau_ENT_url + "/bandeau-ENT-desktop.css", condition);
+    }
 
     var header = computeHeader();
     var menu = computeMenu(currentApp);
     var titlebar = computeTitlebar(currentApp);
     var clear = "<p style='clear: both; height: 13px; margin: 0'></p>";
-    var titlebar_in_header = "<div id='bandeau_ENT_titlebar_in_header'>" + titlebar + "</div>";
-    var menu_and_titlebar = "<div id='bandeau_ENT_Menu_and_titlebar'>" + menu + clear + titlebar + "</div>";
-    var content = "\n\n<div class='bandeau_ENT_Inner focused'>" + header + titlebar_in_header + menu_and_titlebar + "</div>" + "\n\n";
-    onReady(function() { 
-	set_div_innerHTML(content);
+    var ent_title_in_header = "<div class='bandeau_ENT_ent_title_in_header'>Environnement numérique de travail</div>";
+    var titlebar_in_header = "<div class='bandeau_ENT_titlebar_in_header'>" + titlebar + "</div>";
+    var menu_and_titlebar = "<div class='bandeau_ENT_Menu_and_titlebar'>" + menu + clear + titlebar + "</div>";
+    var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='focused menuOpen'>" + header + ent_title_in_header + titlebar_in_header + menu_and_titlebar + "</div>" + "\n\n";
+    onReady(function () { 
+	set_div_innerHTML(bandeau_div_id(), bandeau_html);
 
 	var barAccount = document.getElementById('portalPageBarAccount');
 	if (barAccount) barAccount.onclick = bandeau_ENT_toggleOpen;
 
-	installToggleMenu();
+	installToggleMenu(smallMenu);
+
+	if (smallMenu && document.body.scrollTop === 0) {
+	    var bandeau = document.getElementById(bandeau_div_id());
+
+	    setTimeout(function() { 
+		mylog("scrolling to " + bandeau.clientHeight);
+		window.scrollTo(0, bandeau.clientHeight); 
+	    }, 0);
+	}
     });
+
 }
 
 function mayInstallBandeau() {
