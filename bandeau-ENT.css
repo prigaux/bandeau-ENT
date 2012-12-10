@@ -44,18 +44,6 @@
     height: 30px;
 }
 
-/*
-#portalPageBarAccount:after {
-    background: url("https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/logout.png") no-repeat -20px 0;
-    content: " ";
-    display: inline-block;
-    float: right;
-    height: 20px;
-    width: 1px;
-    margin-top: 5px;
-}
-*/
-
 #portalPageBarAccount > a {
     display: inline-block;
     padding: 0 6px;
@@ -144,11 +132,11 @@ li.portalPageBarAccountLogout {
 }
 .focused .portalPageBarLogout {
     height: 30px;
+    background: url(https://ticetest.univ-paris1.fr/bandeau-ENT/logout.png) no-repeat scroll 0 4px transparent;
 }
 
 /* replace "Deconnexion" with an icon */
 .portalPageBarLogout a {
-    background: url("https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/logout.png") no-repeat 0 0;
     display: inline-block;
     width: 20px;
     height: 20px;
@@ -156,7 +144,7 @@ li.portalPageBarAccountLogout {
     margin: 6px;
 }
 .focused .portalPageBarLogout a {
-    margin: 5px 6px;
+    margin: 5px 7px 5px 6px;
 }
 
 .portalPageBarLogout:hover {
