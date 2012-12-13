@@ -3,6 +3,10 @@
 var mylog = function() {};
 if (window['console'] !== undefined) { mylog = function(s) { console.log(s); }; } 
 
+function head() {
+    return document.getElementsByTagName("head")[0];
+}
+
 /* return true if class has been added */
 function toggleClass(elt, classToToggle) {
     var regex = new RegExp(classToToggle, 'g');
@@ -172,7 +176,7 @@ function loadCSS (url, media) {
     elt.setAttribute("type", "text/css");
     elt.setAttribute("href", url);
     if (media) elt.setAttribute("media", media);
-    document.getElementsByTagName("head")[0].appendChild(elt);
+    head().appendChild(elt);
 };
 
 function addCSS(css) {
@@ -182,7 +186,7 @@ function addCSS(css) {
 	elt.styleSheet.cssText = css;
     else
 	elt.appendChild(document.createTextNode(css));
-    document.getElementsByTagName("head")[0].appendChild(elt);
+    head().appendChild(elt);
 }
 
 function loadScript (url) {
@@ -190,7 +194,7 @@ function loadScript (url) {
     elt.setAttribute("type", "text/javascript");
     elt.setAttribute("src", url);
     elt.setAttribute("async", "async");
-    document.getElementsByTagName("head")[0].appendChild(elt);
+    head().appendChild(elt);
 }
 
 function loadSpecificCss() {
