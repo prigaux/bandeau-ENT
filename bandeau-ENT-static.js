@@ -321,7 +321,7 @@ var currentApp = window.bandeau_ENT.current;
 
 if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
     document.location.href = DATA.apps[DATA.layout[0].apps[0]].url;
-} else if (!DATA.person.uid) {
+} else if (!DATA.person.uid || window.bandeau_ENT.logout && !logout_DOM_elt()) {
     // disabled for now
 } else {
     mayInstallAndMayUpdate();
