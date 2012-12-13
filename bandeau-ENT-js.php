@@ -295,29 +295,12 @@ function computeLayout($person) {
 
 function computeBandeauHeaderLinks($person) {
   $s = <<<EOD
-
+    <div class='portalPageBarLinks'>
       <div id='portalPageBarAccount'>
 	<a href='#'>
           <span>%s</span>
         </a>
       </div>
-
-      <div id='portalPageBarAccountInner'>
-	<ul>
-	  <li class='portalPageBarAccountDescr'>%s (%s)</li>
-	  <li class='portalPageBarAccountAnchor'>
-	    <a title='Interface de gestion de compte de l&#39;université Paris 1 Panthéon-Sorbonne.' href='%s'>
-	      <span>Mon compte</span>
-	    </a>
-	  </li>
-	  <li class='portalPageBarAccountAnchor portalPageBarAccountLogout'>
-	    <a title='Se déconnecter' href='<%%logout_url%%>'>
-	      <span>Déconnexion</span>
-	    </a>
-	  </li>
-	</ul>
-      </div>
-
 
       <span id='bandeau_ENT_portalPageBarToggleMenu'>
         <span>ENT</span>
@@ -331,6 +314,24 @@ function computeBandeauHeaderLinks($person) {
 	  <span>Déconnexion</span>
 	</a>
       </span>
+    </div>
+
+    <div id='portalPageBarAccountInner'>
+	<ul>
+	  <li class='portalPageBarAccountDescr'>%s (%s)</li>
+	  <li class='portalPageBarAccountAnchor'>
+	    <a title='Interface de gestion de compte de l&#39;université Paris 1 Panthéon-Sorbonne.' href='%s'>
+	      <span>Mon compte</span>
+	    </a>
+	  </li>
+	  <li class='portalPageBarAccountAnchor portalPageBarAccountLogout'>
+	    <a title='Se déconnecter' href='<%%logout_url%%>'>
+	      <span>Déconnexion</span>
+	    </a>
+	  </li>
+	</ul>
+    </div>
+
 EOD;
 
   global $cas_login_url, $ent_base_url, $bandeau_ENT_url;
@@ -341,11 +342,13 @@ EOD;
  
 function computeBandeauHeaderLinksAnonymous() {
    $s = <<<EOD
+    <div class='portalPageBarLinks'>
       <span id="portalPageBarLogin">
         <a title="Connexion via le Service Central d'Authentification" href="%s" >
           <span>Connexion</span>
         </a>
       </span>
+    </div>
 EOD;
 
    global $cas_login_url;
@@ -356,9 +359,7 @@ EOD;
 function computeBandeauHeader($person) {
   $s = <<<EOD
   <div class='portalPageBar'>
-    <div class='portalPageBarLinks'>
 %s
-   </div>
   </div>
 
   <div class='bandeau_ENT_portalLogo'>
