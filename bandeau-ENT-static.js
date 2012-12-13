@@ -21,6 +21,25 @@ function toggleClass(elt, classToToggle) {
     }
 }
 
+function simpleQuerySelectorAll(selector) {
+    if (document.querySelectorAll) 
+        return document.querySelectorAll(selector);
+
+    // IE
+    window.__qsaels = [];
+    var style = addCSS(selector + "{x:expression(window.__qsaels.push(this))}");
+    window.scrollBy(0, 0); // force evaluation
+    head().removeChild(style);
+    return window.__qsaels;
+}
+
+function simpleQuerySelector(selector) {
+    if (document.querySelector) 
+        return document.querySelector(selector);
+    else
+	return simpleQuerySelectorAll(selector)[0];
+}
+
 function simpleContains(a, val) {
     var len = a.length;
     for(var i = 0; i < len; i++) {
@@ -122,10 +141,6 @@ function via_CAS(url) {
 
 function computeHeader() {
     var app_logout_url = CONF.ent_logout_url;
-    if (window.bandeau_ENT.logout_a_id)
-	app_logout_url = document.getElementById(window.bandeau_ENT.logout_a_id).href;
-    else if (window.bandeau_ENT.logout_url)
-	app_logout_url = window.bandeau_ENT.logout_url;
     var logout_url = CONF.bandeau_ENT_url + '/logout.php?service=' + encodeURIComponent(app_logout_url);
     return replaceAll(DATA.bandeauHeader, "<%logout_url%>", logout_url);
 }
@@ -187,6 +202,7 @@ function addCSS(css) {
     else
 	elt.appendChild(document.createTextNode(css));
     head().appendChild(elt);
+    return elt;
 }
 
 function loadScript (url) {
@@ -204,6 +220,29 @@ function loadSpecificCss() {
 	    loadCSS(v);
     }
 
+}
+
+function logout_DOM_elt() {
+    return window.bandeau_ENT.logout && simpleQuerySelector(window.bandeau_ENT.logout);
+}
+
+function asyncLogout() {
+    loadScript(CONF.bandeau_ENT_url + '/logout.php?callback=window.bandeau_ENT.onAsyncLogout');
+    return false;
+}
+window.bandeau_ENT.onAsyncLogout = function() {
+    var elt = logout_DOM_elt();
+    if (elt.href)
+	document.location = elt.href;
+    else if (elt.tagName === "FORM")
+	elt.submit();
+}
+function installLogout() {
+    var logout_buttons = "#bandeau_ENT_Inner .portalPageBarLogout, #bandeau_ENT_Inner .portalPageBarAccountLogout";
+    simpleEach(simpleQuerySelectorAll(logout_buttons),
+	       function (elt) { 
+		   elt.onclick = asyncLogout;
+	       });
 }
 
 function installBandeau() {
@@ -245,6 +284,7 @@ function installBandeau() {
 	var barAccount = document.getElementById('portalPageBarAccount');
 	if (barAccount) barAccount.onclick = bandeau_ENT_toggleOpen;
 
+	if (logout_DOM_elt()) installLogout();
 	installToggleMenu(smallMenu);
 
 	if (smallMenu && document.body.scrollTop === 0) {
