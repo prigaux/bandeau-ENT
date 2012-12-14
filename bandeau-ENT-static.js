@@ -117,8 +117,11 @@ function bandeau_ENT_toggleOpen() {
 }
 
 function bandeau_ENT_Menu_toggle() {
-    var b = toggleClass(document.getElementById('bandeau_ENT_Inner'), 'menuClosed');
+    return toggleClass(document.getElementById('bandeau_ENT_Inner'), 'menuClosed');
+}
 
+function bandeau_ENT_Menu_toggleAndStore() {
+    var b = bandeau_ENT_Menu_toggle();
     if (window.localStorage) localStorage.setItem("bandeau_ENT_menuClosed", b ? "true" : "false");
 
     return false;
@@ -128,7 +131,7 @@ function installToggleMenu(hide) {
     var hideByDefault = window.bandeau_ENT.hide_menu;
     var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
     if (toggleMenu) {
-	toggleMenu.onclick = bandeau_ENT_Menu_toggle;
+	toggleMenu.onclick = bandeau_ENT_Menu_toggleAndStore;
 	var savedState = window.localStorage && localStorage.getItem("bandeau_ENT_menuClosed");
 	if (hide || savedState === "true" || savedState !== "false" && hideByDefault)
 	    bandeau_ENT_Menu_toggle();
