@@ -298,8 +298,16 @@ function installBandeau() {
 		window.scrollTo(0, bandeau.clientHeight); 
 	    }, 0);
 	}
+	if (window.bandeau_ENT.quirks && simpleContains(window.bandeau_ENT.quirks, 'window-resize'))
+	     setTimeout(triggerWindowResize, 0);
     });
 
+}
+
+function triggerWindowResize() {
+    var evt = document.createEvent('UIEvents');
+    evt.initUIEvent('resize', true, false,window,0);
+    window.dispatchEvent(evt);
 }
 
 function mayInstallBandeau() {
