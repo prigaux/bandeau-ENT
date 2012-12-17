@@ -20,9 +20,6 @@
 #bandeau_ENT_portalPageBarToggleMenu > span {
     border-left: 0;
 }
-.menuClosed #bandeau_ENT_portalPageBarToggleMenu > span {
-    border-left: 1px solid #a8a8a8;
-}
 
 .bandeau_ENT_ent_title_in_header {
     display: block;

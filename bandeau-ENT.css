@@ -13,6 +13,10 @@
   font-weight: normal !important;
 }
 
+#bandeau_ENT_Inner.menuClosed {
+  border-bottom: 1px solid #d7cdb8;
+}
+
 #bandeau_ENT_Inner a {
   color: #263F82;
 }
@@ -169,7 +173,11 @@ li.portalPageBarAccountLogout {
   display: block; font-size: 16px; color: #263F82; padding: 5px;
   background: #cccccc;
   border-left: 1px solid #a8a8a8;
+  height: 20px;
   /*text-shadow: 0 0 1px;*/
+}
+.menuClosed #bandeau_ENT_portalPageBarToggleMenu > span {
+  border-left: 1px solid #c7bdb0;
 }
 #bandeau_ENT_portalPageBarToggleMenu:hover > span {
     background: #dddddd;
