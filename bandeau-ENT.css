@@ -300,7 +300,7 @@ body {
 
 .bandeau_ENT_Menu li ul {
   padding:2px;
-  background-color:#f1f1f1;
+  background-color: #fff;
   border: 1px solid #999999;
 }
 .bandeau_ENT_Menu li ul li:first-child { 
@@ -310,12 +310,12 @@ body {
  color:#213885 !important; 
  font-weight:normal; 
  font-size:100%;
- background-color:#f1f1f1;
  text-decoration:none;
  text-align:left;
  display:block;
  border: 0px solid #555 !important;
  text-shadow:none;
+ padding: 6px;
 }
 .bandeau_ENT_Menu li ul li a:hover {
  color:#000000 !important; 
