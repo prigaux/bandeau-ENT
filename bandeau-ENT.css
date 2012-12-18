@@ -24,9 +24,8 @@
 /* Portal Page Bar */
 .portalPageBarLinks {position:absolute; right: 0; top: 0; z-index: 100003; padding:0;  }
 /* for IE7 IE8, force the width: force the width and make it auto for browsers handling :not selector (all browsers except IE lt 9) */ 
-.portalPageBarLinks { width: 15em; }
+.portalPageBarLinks { width: 15em; padding-top: 0; }
 .portalPageBarLinks:not([dummy]) { width: auto; }
-.focused .portalPageBarLinks { padding-top: 0; }
 
 
 /*********************************************************************************/
@@ -38,9 +37,6 @@
 #portalPageBarAccount {
     display: block;
     float: left;
-    height: 32px;
-}
-.focused #portalPageBarAccount {
     height: 30px;
 }
 
@@ -133,9 +129,6 @@ li.portalPageBarAccountLogout {
 .portalPageBarLogout {
     display: block;
     float: right;
-    height: 32px;
-}
-.focused .portalPageBarLogout {
     height: 30px;
     background: url(https://ticetest.univ-paris1.fr/bandeau-ENT/logout.png) no-repeat scroll 0 4px transparent;
 }
@@ -148,7 +141,7 @@ li.portalPageBarAccountLogout {
     padding: 0;
     margin: 6px;
 }
-.focused .portalPageBarLogout a {
+.portalPageBarLogout a {
     margin: 5px 7px 5px 6px;
 }
 

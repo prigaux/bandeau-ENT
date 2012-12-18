@@ -280,7 +280,7 @@ function installBandeau() {
     var ent_title_in_header = "<div class='bandeau_ENT_ent_title_in_header'>Environnement num&eacute;rique de travail</div>";
     var titlebar_in_header = "<div class='bandeau_ENT_titlebar_in_header'>" + titlebar + "</div>";
     var menu_and_titlebar = "<div class='bandeau_ENT_Menu_and_titlebar'>" + menu + clear + titlebar + "</div>";
-    var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='focused menuOpen'>" + header + ent_title_in_header + titlebar_in_header + menu_and_titlebar + "</div>" + "\n\n";
+    var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + ent_title_in_header + titlebar_in_header + menu_and_titlebar + "</div>" + "\n\n";
     onReady(function () { 
 	set_div_innerHTML(bandeau_div_id(), bandeau_html);
 
