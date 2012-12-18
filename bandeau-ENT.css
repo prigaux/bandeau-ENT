@@ -13,10 +13,6 @@
   font-weight: normal !important;
 }
 
-#bandeau_ENT_Inner.menuClosed {
-  border-bottom: 1px solid #d7cdb8;
-}
-
 #bandeau_ENT_Inner a {
   color: #263F82;
 }
@@ -217,6 +213,7 @@ li.portalPageBarAccountLogout {
 }
 .menuClosed .bandeau_ENT_portalLogo { 
  height: 30px;
+ border-bottom: 1px solid #d7cdb8;
 }
 
 /*********************************************************************************/
