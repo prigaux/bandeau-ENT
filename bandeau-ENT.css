@@ -43,7 +43,7 @@
 #portalPageBarAccount > a {
     display: inline-block;
     padding: 1px 6px;
-    line-height: 28px;
+    line-height: 29px;
     font-size: 13px; /* enforce it */
 }
 
@@ -74,8 +74,8 @@
     position: absolute;
     background-color: #e7ddc8;
     z-index: 100006;
-    top: 31px;
-    right: 74px;
+    top: 30px;
+    right: 75px;
     border: 1px solid #d7cdb8;
     -moz-border-radius : 5px 0 5px 5px;
     border-radius : 5px 0 5px 5px;
@@ -87,9 +87,6 @@
 }
 #portalPageBarAccountInner.open {
     display: block;
-}
-.focused #portalPageBarAccountInner {
-    top: 29px;
 }
 
 #portalPageBarAccountInner a:hover {
@@ -357,5 +354,11 @@ body {
   }
   .menuClosed .bandeau_ENT_Menu_and_titlebar {
    display: none;
+  }
+}
+@media screen and (max-width: 450px) {
+  #portalPageBarAccountInner {
+      left: 0;
+    right: 0;
   }
 }
