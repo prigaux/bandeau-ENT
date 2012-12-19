@@ -122,7 +122,7 @@ function bandeau_ENT_Menu_toggle() {
 
 function bandeau_ENT_Menu_toggleAndStore() {
     var b = bandeau_ENT_Menu_toggle();
-    if (window.localStorage) localStorage.setItem("bandeau_ENT_menuClosed", b ? "true" : "false");
+    if (window.localStorage) localStorageSet("menuClosed", b ? "true" : "false");
 
     return false;
 }
@@ -132,7 +132,7 @@ function installToggleMenu(hide) {
     var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
     if (toggleMenu) {
 	toggleMenu.onclick = bandeau_ENT_Menu_toggleAndStore;
-	var savedState = window.localStorage && localStorage.getItem("bandeau_ENT_menuClosed");
+	var savedState = window.localStorage && localStorageGet("menuClosed");
 	if (hide || savedState === "true" || savedState !== "false" && hideByDefault)
 	    bandeau_ENT_Menu_toggle();
     }
@@ -315,6 +315,19 @@ function mayInstallBandeau() {
 	window.bandeau_ENT.prevHash = DATA.hash;
 	installBandeau();
     }
+}
+
+function localStorageGet(field) {
+    try {
+	return localStorage.getItem("bandeau_ENT_" + field);
+    } catch (err) {
+	return null;
+    }
+}
+function localStorageSet(field, value) {
+    try {
+	localStorage.setItem("bandeau_ENT_" + field, value);
+    } catch (err) {}
 }
 
 function update() {
