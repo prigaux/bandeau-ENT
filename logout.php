@@ -1,5 +1,6 @@
 <?
 
+session_destroy();
 // remove cookie to drop phpCAS cache
 setcookie("PHPSESSID", "", 1, "/");
 
