@@ -97,7 +97,7 @@ function onReady(f) {
     else if (document.addEventListener)
 	document.addEventListener('DOMContentLoaded', f);
     else 
-	onReady_rec(content);
+	onReady_rec(f);
 }
 
 function bandeau_ENT_toggleOpen() {
