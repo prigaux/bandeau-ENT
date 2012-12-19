@@ -338,18 +338,16 @@ function computeBandeauHeader($person) {
   </div>
 
   <div class='bandeau_ENT_portalLogo'>
-    <a target='_blank' title='Universite Paris 1 Pantheon-Sorbonne: Accueil' href='http://www.univ-paris1.fr/'>
-      <img src='%s' />
+    <a title='Universite Paris 1 Pantheon-Sorbonne: Accueil' href='http://www.univ-paris1.fr/'>
+
     </a>
   </div>
 EOD;
 
   global $ent_base_url;
   $portalPageBarLinks = $person ? computeBandeauHeaderLinks($person) : computeBandeauHeaderLinksAnonymous();
-  $accueil_url = $ent_base_url . '/render.userLayoutRootNode.uP?uP_root=root&amp;uP_sparam=activeTab&amp;activeTab=1';
-  $portal_logo = $ent_base_url . '/media/skins/universality/uportal3/images/portal_logo_slim.png';
 
-  return sprintf($s, $portalPageBarLinks, $portal_logo, $accueil_url);
+  return sprintf($s, $portalPageBarLinks);
 }
 
 function url2host($url) {
