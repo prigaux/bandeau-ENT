@@ -3,6 +3,7 @@
 include_once "config.inc.php";
 
 $cas_login_url = "https://$cas_host$cas_context/login";
+$cas_logout_url = "https://$cas_host$cas_context/logout";
 
 
 function debug_msg($msg) {
