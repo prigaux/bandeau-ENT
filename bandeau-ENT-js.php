@@ -350,6 +350,11 @@ EOD;
   return sprintf($s, $portalPageBarLinks);
 }
 
+function get_css_with_absolute_url($css_file) {
+  global $bandeau_ENT_url;
+  $s = file_get_contents($css_file);
+  return preg_replace("/(url\(['\" ]*)(?!['\" ])(?!https?:|\/)/", "$1$bandeau_ENT_url/", $s);
+}
 function url2host($url) {
   $p = parse_url($url);
   return $p ? $p["host"] : null;
@@ -428,8 +433,8 @@ $js_data["time"] = time();
 $js_data["wasPreviouslyAuthenticated"] = $wasPreviouslyAuthenticated;
 $js_data['is_old'] = $is_old;
 
-$js_css = array('base' => file_get_contents('bandeau-ENT.css'),
-		'desktop' => file_get_contents('bandeau-ENT-desktop.css'));
+$js_css = array('base' => get_css_with_absolute_url('bandeau-ENT.css'),
+		'desktop' => get_css_with_absolute_url('bandeau-ENT-desktop.css'));
 
 debug_msg("request time: " . formattedElapsedTime($request_start_time));
 

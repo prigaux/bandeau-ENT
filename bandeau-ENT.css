@@ -127,7 +127,7 @@ li.portalPageBarAccountLogout {
     display: block;
     float: right;
     height: 30px;
-    background: url(https://ticetest.univ-paris1.fr/bandeau-ENT/logout.png) no-repeat scroll 0 4px transparent;
+    background: url(logout.png) no-repeat scroll 0 4px transparent;
 }
 
 /* replace Deconnexion with an icon */
@@ -181,7 +181,7 @@ li.portalPageBarAccountLogout {
 }
 
 #bandeau_ENT_portalPageBarToggleMenu a {
-    background: url(https://ticetest.univ-paris1.fr/bandeau-ENT/chevron-close.png) no-repeat center;
+    background: url(chevron-close.png) no-repeat center;
     display: inline-block;
     width: 20px;
     height: 19px;
@@ -191,7 +191,7 @@ li.portalPageBarAccountLogout {
 }
 
 .menuClosed #bandeau_ENT_portalPageBarToggleMenu a {
-    background-image: url(https://ticetest.univ-paris1.fr/bandeau-ENT/chevron-open.png);
+    background-image: url(chevron-open.png);
 }
 
 
@@ -210,13 +210,13 @@ li.portalPageBarAccountLogout {
   display: block;
   width: 96px;
   height: 30px;
-  background-image: url(https://ticetest.univ-paris1.fr/bandeau-ENT/logo.png);
+  background-image: url(logo.png);
   background-size: cover;
 }
 
 @media screen and (-webkit-min-device-pixel-ratio: 1.1), screen and (min-resolution: 97dpi) {
   .bandeau_ENT_portalLogo a {
-    background-image: url(https://ticetest.univ-paris1.fr/bandeau-ENT/logo_2x.png);
+    background-image: url(logo_2x.png);
   }
 }
 
