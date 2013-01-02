@@ -389,6 +389,7 @@ $request_start_time = microtime(true);
 
 $haveTicket = isset($_GET["ticket"]); // must be done before initPhpCAS which removes it
 $noCache = isset($_GET["noCache"]);
+if (@$_GET["PHPSESSID"]) $_COOKIE["PHPSESSID"] = $_GET["PHPSESSID"];
 session_start();
 if ($noCache && !isset($_GET["auth_checked"])) {
   // cleanup SESSION, esp. to force CAS authentification again
@@ -425,6 +426,7 @@ $js_data = array('person' => $person,
 $js_data["hash"] = md5(json_encode(array($js_data, $static_js)));
 $js_data["time"] = time();
 $js_data["wasPreviouslyAuthenticated"] = $wasPreviouslyAuthenticated;
+if ($noCookies || @$_GET["PHPSESSID"] || 1) $js_data['PHPSESSID'] = session_id();
 $js_data['is_old'] = $is_old;
 
 $js_css = array('base' => get_css_with_absolute_url('bandeau-ENT.css'),

@@ -338,9 +338,15 @@ function localStorageSet(field, value) {
     } catch (err) {}
 }
 
+function loadBandeauJs(params) {
+    if (DATA.PHPSESSID && params == '')
+	params = "PHPSESSID=" + DATA.PHPSESSID;
+    loadScript(CONF.bandeau_ENT_url + "/bandeau-ENT-js.php" + (params ? "?" + params : ''));
+}
+
 function update() {
     mylog("updating bandeau");
-    loadScript(CONF.bandeau_ENT_url + "/bandeau-ENT-js.php?noCache=1");
+    loadBandeauJs('noCache=1');
 }
 
 function mayInstallAndMayUpdate() {
