@@ -92,20 +92,20 @@ function replaceAll(s, target, replacement) {
     return s.split(target).join(replacement);
 }
 
-function onReady_rec(f) {
-    if (document.body)
+function onReady_rec(id, f) {
+    if (id && document.getElementById(id) || document.body)
 	f();
     else
-	setTimeout(function () { onReady_rec(f) }, 9);
+	setTimeout(function () { onReady_rec(id, f) }, 9);
 }
 
-function onReady(f) {
-    if (document.body)
+function onReady(id, f) {
+    if (id && document.getElementById(id) || document.body)
 	f();
     else if (document.addEventListener)
 	document.addEventListener('DOMContentLoaded', f);
     else 
-	onReady_rec(f);
+	onReady_rec(id, f);
 }
 
 function bandeau_ENT_toggleOpen() {
@@ -289,7 +289,7 @@ function installBandeau() {
     var titlebar_in_header = "<div class='bandeau_ENT_titlebar_in_header'>" + titlebar + "</div>";
     var menu_and_titlebar = "<div class='bandeau_ENT_Menu_and_titlebar'>" + menu + clear + titlebar + "</div>";
     var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + ent_title_in_header + titlebar_in_header + menu_and_titlebar + "</div>" + "\n\n";
-    onReady(function () { 
+    onReady(bandeau_div_id(), function () { 
 	set_div_innerHTML(bandeau_div_id(), bandeau_html);
 
 	var barAccount = document.getElementById('portalPageBarAccount');
@@ -362,7 +362,7 @@ if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
 } else if (!DATA.person.uid) {
     // disabled for now
 } else if (window.bandeau_ENT.logout) {
-    onReady(function () {
+    onReady(null, function () {
 	    if (logout_DOM_elt()) mayInstallAndMayUpdate();
     });
 } else {
