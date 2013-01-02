@@ -184,7 +184,7 @@ function computeTitlebar(currentApp) {
 	return '';
 }
 function bandeau_div_id() {
-    window.bandeau_ENT.div_id || (window.bandeau_ENT.div_is_uid && DATA.person.uid) || 'bandeau_ENT';
+    return window.bandeau_ENT.div_id || (window.bandeau_ENT.div_is_uid && DATA.person.uid) || 'bandeau_ENT';
 }
 function set_div_innerHTML(div_id, content) {
     var elt = document.getElementById(div_id);
