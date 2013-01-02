@@ -9,12 +9,6 @@ function time_before_forcing_CAS_authentication_again($different_referrer) {
   return $different_referrer ? 10 : 120; // seconds
 }
 
-$APPS["redirect-first"] = 
-    array("text" => "",
-	  "description" => "",
-	  "users" => array(), "groups" => array(),
-	  "url" => "$bandeau_ENT_url/ent.html");
-
 
 function compute_wanted_attributes() {
   global $GROUPS, $minimal_attrs;
