@@ -23,7 +23,11 @@ function toggleClass(elt, classToToggle) {
 
 function simpleQuerySelectorAll(selector) {
     if (document.querySelectorAll) 
-        return document.querySelectorAll(selector);
+	try {
+            return document.querySelectorAll(selector);
+	} catch (err) {
+	    return [];
+	}
 
     // IE
     window.__qsaels = [];
@@ -35,7 +39,11 @@ function simpleQuerySelectorAll(selector) {
 
 function simpleQuerySelector(selector) {
     if (document.querySelector) 
-        return document.querySelector(selector);
+	try {
+            return document.querySelector(selector);
+	} catch (err) {
+	    return null;
+	}
     else
 	return simpleQuerySelectorAll(selector)[0];
 }
