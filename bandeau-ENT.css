@@ -127,19 +127,18 @@ li.portalPageBarAccountLogout {
     display: block;
     float: right;
     height: 30px;
-    background: url(logout.png) no-repeat scroll 0 4px transparent;
+    width: 33px;
 }
 
 /* replace Deconnexion with an icon */
 .portalPageBarLogout a {
+    background: url(logout.png) no-repeat scroll transparent;
+    background-size: cover;
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 27px;
+    height: 21px;
     padding: 0;
-    margin: 6px;
-}
-.portalPageBarLogout a {
-    margin: 5px 7px 5px 6px;
+    margin: 4px 6px 5px 0;
 }
 
 .portalPageBarLogout:hover {
@@ -216,6 +215,9 @@ li.portalPageBarAccountLogout {
 }
 
 @media screen and (-webkit-min-device-pixel-ratio: 1.1), screen and (min-resolution: 97dpi) {
+  .portalPageBarLogout a {
+    background-image: url(logout_2x.png);
+  }
   .bandeau_ENT_portalLogo a {
     background-image: url(logo_2x.png);
   }
