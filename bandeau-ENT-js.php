@@ -5,6 +5,8 @@ require_once 'CAS.php';
 include_once "config.inc.php";
 include_once "common.inc.php";
 
+$time_before_checking_browser_cache_is_up_to_date = 60; // seconds
+
 function time_before_forcing_CAS_authentication_again($different_referrer) {
   return $different_referrer ? 10 : 120; // seconds
 }
@@ -417,6 +419,7 @@ $is_old = is_old();
 $js_conf = array('cas_login_url' => $cas_login_url,
 		 'bandeau_ENT_url' => $bandeau_ENT_url,
 		 'ent_logout_url' => via_CAS($cas_logout_url, $ent_base_url . '/Logout'), // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
+		 'time_before_checking_browser_cache_is_up_to_date' => $time_before_checking_browser_cache_is_up_to_date,
 		 );
 
 $js_data = array('person' => $person,
@@ -432,15 +435,20 @@ $js_data['is_old'] = $is_old;
 $js_css = array('base' => get_css_with_absolute_url('bandeau-ENT.css'),
 		'desktop' => get_css_with_absolute_url('bandeau-ENT-desktop.css'));
 
+$js_text = 
+  "(function () {\n\n" .
+  "var CONF = " . json_encode($js_conf) . ";\n\n" .
+  "var DATA = " . json_encode($js_data) . ";\n\n" .
+  "var CSS = " . json_encode($js_css) . ";\n\n" .
+  $static_js .
+  "}())\n";
+
 debug_msg("request time: " . formattedElapsedTime($request_start_time));
 
 header('Content-type: application/javascript; charset=utf8');
 echo "$debug_msgs\n";
-echo "(function () {\n\n";
-echo "var CONF = " . json_encode($js_conf) . ";\n\n";
-echo "var DATA = " . json_encode($js_data) . ";\n\n";
-echo "var CSS = " . json_encode($js_css) . ";\n\n";
-echo $static_js;
-echo "}())\n";
+echo "window.bandeau_ENT.js_text = " . json_encode($js_text) . ";\n\n";
+echo "window.bandeau_ENT.notFromLocalStorage = true;\n";
+echo "eval(window.bandeau_ENT.js_text);\n";
 
 ?>

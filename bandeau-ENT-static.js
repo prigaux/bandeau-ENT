@@ -7,6 +7,10 @@ function head() {
     return document.getElementsByTagName("head")[0];
 }
 
+function now() {
+    return Math.round(new Date().getTime() / 1000);
+}
+
 /* return true if class has been added */
 function toggleClass(elt, classToToggle) {
     var regex = new RegExp(classToToggle, 'g');
@@ -337,6 +341,10 @@ function localStorageSet(field, value) {
 	localStorage.setItem("bandeau_ENT_" + field, value);
     } catch (err) {}
 }
+function setLocalStorageCache() {
+    localStorageSet("js_text", window.bandeau_ENT.js_text);
+    localStorageSet("time", now());
+}
 
 function loadBandeauJs(params) {
     if (DATA.PHPSESSID && params == '')
@@ -344,23 +352,61 @@ function loadBandeauJs(params) {
     loadScript(CONF.bandeau_ENT_url + "/bandeau-ENT-js.php" + (params ? "?" + params : ''));
 }
 
-function update() {
-    mylog("updating bandeau");
-    loadBandeauJs('noCache=1');
+function detectReload($time) {
+    var $prev = localStorageGet('detectReload');
+    if ($prev && $prev != $time) {
+	mylog("reload detected, updating bandeau softly");
+	loadBandeauJs('');
+    }
+    localStorageSet('detectReload', $time);
 }
 
 function mayInstallAndMayUpdate() {
     mayInstallBandeau();
-    if (DATA.is_old) update();
+    if (notFromLocalStorage) {
+	if (window.localStorage) {
+	    mylog("caching bandeau in localStorage");
+	    setLocalStorageCache();
+	}
+	if (DATA.is_old) {
+	    mylog("server said bandeau is old, forcing full bandeau update");
+	    loadBandeauJs('noCache=1');
+	}
+    } else {
+	var age = now() - localStorageGet("time");
+	if (age > CONF.time_before_checking_browser_cache_is_up_to_date) {
+	    mylog("cached bandeau is old (" + age + "s), updating it softly");
+	    loadBandeauJs('');
+	} else {
+	    // if user used "reload", the cached version of detectReload.php will change
+	    window.bandeau_ENT.detectReload = detectReload;
+	    loadScript(CONF.bandeau_ENT_url + "/detectReload.php");
+	}
+    }
 }
 
 /*var loadTime = now();*/
 var currentApp = window.bandeau_ENT.current;
+var notFromLocalStorage = window.bandeau_ENT.notFromLocalStorage;
+window.bandeau_ENT.notFromLocalStorage = false;
 
 if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
     document.location.href = DATA.apps[DATA.layout[0].apps[0]].url;
 } else if (!DATA.person.uid) {
     // disabled for now
+
+    if (notFromLocalStorage) {
+	onReady(bandeau_div_id(), function () { 
+	    set_div_innerHTML(bandeau_div_id(), '');
+	});
+	if (window.localStorage) {
+	    mylog("removing cached bandeau from localStorage");
+	    localStorageSet('js_text', '');
+	}
+    } else {
+	// checking wether we are logged in now
+	loadBandeauJs('');
+    }
 } else if (window.bandeau_ENT.logout) {
     onReady(null, function () {
 	    if (logout_DOM_elt()) mayInstallAndMayUpdate();
@@ -369,3 +415,5 @@ if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
     mayInstallAndMayUpdate();
 }
 
+// things seem ok, cached js_text can be kept
+return "OK";
