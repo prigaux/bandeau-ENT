@@ -24,10 +24,17 @@
 .bandeau_ENT_ent_title_in_header {
     display: block;
     position: absolute;
-    left: 120px;
     font-size: 16px;
-    top: 7px;
     color: #263F82;
+    /* left: 120px; top: 7px;*/
+
+    left: 96px; top: 0px;
+    width: 202px;
+    height: 30px;
+    background: url(https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/background-bandeau-slim-ENT.png);
+}
+.bandeau_ENT_ent_title_in_header span {
+    display: none;
 }
 .menuClosed .bandeau_ENT_ent_title_in_header {
     display: none;
