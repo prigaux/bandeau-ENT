@@ -7,7 +7,7 @@ if (isset($_GET["id"])) {
   $id = $_GET["id"];
   $app = $APPS[$id];
   if (!$app) $app = array(); // gasp, go on anyway...
-  $url = get_url($app, $id, isset($_GET["guest"]));
+  $url = get_url($app, $id, isset($_GET["guest"]), !isset($_GET["login"]));
   if ($url) 
     header("Location: $url");
   else
