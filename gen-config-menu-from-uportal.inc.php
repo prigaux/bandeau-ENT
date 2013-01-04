@@ -211,12 +211,8 @@ function uportalGetChannels($channelFiles, $groupNameToPagsKeysAndUsers) {
   return $r;
 }
 
-function uportalComputeGroupNameToKeysAndUsers($groupNameToKey, $groupNameToNamesAndUsers) {
-  $r = array();
-  foreach ($groupNameToKey as $name => $key)
-    $r[$name] = array("groups" => array($key), "users" => array());
 
-  $computeOneGroupNameToKeys = function ($groupName) use (& $r, $groupNameToNamesAndUsers, &$computeOneGroupNameToKeys) {
+function computeOneGroupNameToKeys($groupName, &$r, $groupNameToNamesAndUsers, &$computeOneGroupNameToKeys) {
     if (!isset($r[$groupName])) {
       $keys = array();
       $users = array();
@@ -226,7 +222,7 @@ function uportalComputeGroupNameToKeysAndUsers($groupNameToKey, $groupNameToName
 	$users = $groupNameToNamesAndUsers[$groupName]["users"];
 
 	foreach ($groupNameToNamesAndUsers[$groupName]["groups"] as $subName) {
-	  $sub = $computeOneGroupNameToKeys($subName);
+	  $sub = computeOneGroupNameToKeys($subName, $r, $groupNameToNamesAndUsers, $computeOneGroupNameToKeys);
 	  $keys = array_merge($keys, $sub["groups"]);
 	  $users = array_merge($users, $sub["users"]);
 	}
@@ -237,10 +233,15 @@ function uportalComputeGroupNameToKeysAndUsers($groupNameToKey, $groupNameToName
       $r[$groupName] = array("groups" => $keys, "users" => $users);
     }
     return $r[$groupName];
-  };
+}
+
+function uportalComputeGroupNameToKeysAndUsers($groupNameToKey, $groupNameToNamesAndUsers) {
+  $r = array();
+  foreach ($groupNameToKey as $name => $key)
+    $r[$name] = array("groups" => array($key), "users" => array());
 
   foreach (array_keys($groupNameToNamesAndUsers) as $name)
-    $computeOneGroupNameToKeys($name);
+    computeOneGroupNameToKeys($name, $r, $groupNameToNamesAndUsers, $computeOneGroupNameToKeys);
 
   return $r;
 }
