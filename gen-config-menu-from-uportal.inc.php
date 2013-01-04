@@ -139,6 +139,7 @@ function pagsGetGroups($PAGSGroupStoreConfig) {
 
 function uportalGetLayout($fragment_layout) {
   $xml = simplexml_load_file($fragment_layout);
+  if (!$xml) exit("invalid $fragment_layout");
 
   $layout = array();
   foreach ($xml->xpath("//folder[@type='regular']") as $folder) {
@@ -254,7 +255,7 @@ function keepOnlyUsedChannels($channels, $layout) {
 
   foreach (array_keys($channels) as $fname) {
     if (!isset($r[$fname]))
-      error_log("unused channel $fname");
+      ;// error_log("unused channel $fname");
   }
 
   return $r;
@@ -270,36 +271,38 @@ function keepOnlyUsedPagsGroups($groups, $channels) {
   return $r;
 }
 
-$groupNameToNamesAndUsers = uportalGetGroupsMembership(glob('git/db-export/group_membership/*.group_membership'));
-
-list($pagsGroups, $groupNameToPagsKey) = pagsGetGroups('PAGSGroupStoreConfig.xml');
-
-$groupNameToPagsKeysAndUsers = uportalComputeGroupNameToKeysAndUsers($groupNameToPagsKey, $groupNameToNamesAndUsers);
-
-//pagsGetGroupMembership(
-$channels = uportalGetChannels(glob('git/db-export/channel/*.channel'), $groupNameToPagsKeysAndUsers);
-
-$layout_all = uportalGetLayout('git/db-export/fragment-layout/all-lo.fragment-layout');
-$layout_guest = uportalGetLayout('git/db-export/fragment-layout/guest-lo.fragment-layout');
-unset($layout_guest["Hidden"]);
-$usedChannels = keepOnlyUsedChannels($channels, array_merge(array_values($layout_all), array_values($layout_guest)));
-$usedPagsGroups = keepOnlyUsedPagsGroups($pagsGroups, $channels);
-
-
-function gen($l) {
-  echo "<?php\n\n// Generated\n\n";
+function gen_raw($l) {
+  $r = '';
+  $r .= "<?php\n\n// Generated\n\n";
 
   foreach ($l as $name => $v) {
-    echo '$' . $name . ' = ';
-    var_export($v);
-    echo ";\n\n";
+    $r .= '$' . $name . ' = ';
+    $r .= var_export($v, true);
+    $r .= ";\n\n";
   }
-  echo "?>\n"; 
+  $r .= "?>\n"; 
+  return $r;
 }
 
-gen(array('LAYOUT_ALL' => $layout_all,
-	  'LAYOUT_GUEST' => $layout_guest,
-	  'APPS' => $usedChannels,
-	  'GROUPS' => $usedPagsGroups));
+function gen($PAGSGroupStoreConfig, $db_export_dir) {
+  $groupNameToNamesAndUsers = uportalGetGroupsMembership(glob("$db_export_dir/group_membership/*.group_membership"));
+
+  list($pagsGroups, $groupNameToPagsKey) = pagsGetGroups($PAGSGroupStoreConfig);
+
+  $groupNameToPagsKeysAndUsers = uportalComputeGroupNameToKeysAndUsers($groupNameToPagsKey, $groupNameToNamesAndUsers);
+
+  $channels = uportalGetChannels(glob("$db_export_dir/channel/*.channel"), $groupNameToPagsKeysAndUsers);
+
+  $layout_all = uportalGetLayout("$db_export_dir/fragment-layout/all-lo.fragment-layout");
+  $layout_guest = uportalGetLayout("$db_export_dir/fragment-layout/guest-lo.fragment-layout");
+  unset($layout_guest["Hidden"]);
+  $usedChannels = keepOnlyUsedChannels($channels, array_merge(array_values($layout_all), array_values($layout_guest)));
+  $usedPagsGroups = keepOnlyUsedPagsGroups($pagsGroups, $channels);
+
+  return gen_raw(array('LAYOUT_ALL' => $layout_all,
+		       'LAYOUT_GUEST' => $layout_guest,
+		       'APPS' => $usedChannels,
+		       'GROUPS' => $usedPagsGroups));
+}
 
 ?>
