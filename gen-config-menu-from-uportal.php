@@ -26,7 +26,10 @@ function wait_previous_call_terminate($tmp_dir) {
 
 $tmp_dir = sys_get_temp_dir() . "/tmp-uportal-conf";
 //echo "working in $tmp_dir\n";
-if (!wait_previous_call_terminate($tmp_dir)) exit("race detected, failing");
+if (!wait_previous_call_terminate($tmp_dir)) {
+  exit(ini_get('safe_mode') ? 'only way to make it work is to disable safe_mode!' :
+       (is_dir($tmp_dir) ? "race detected, failing" : "failed to create $tmp_dir"));
+}
 
 $tmp_tar_file = "$tmp_dir/t.tar";
 file_put_contents($tmp_tar_file, file_get_contents('php://input'));
