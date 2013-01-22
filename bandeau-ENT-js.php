@@ -437,6 +437,7 @@ $js_css = array('base' => get_css_with_absolute_url('bandeau-ENT.css'),
 
 $js_text = 
   "(function () {\n\n" .
+  "'use strict';\n\n" .
   "var CONF = " . json_encode($js_conf) . ";\n\n" .
   "var DATA = " . json_encode($js_data) . ";\n\n" .
   "var CSS = " . json_encode($js_css) . ";\n\n" .
