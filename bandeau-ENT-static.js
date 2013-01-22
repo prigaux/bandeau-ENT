@@ -287,7 +287,9 @@ function installBandeau() {
 	loadCSS(CONF.bandeau_ENT_url + "/bandeau-ENT.css");
 
     var widthForNiceMenu = 800;
-    var conditionForNiceMenu = '(min-width: ' + widthForNiceMenu + 'px)';
+    // testing min-width is not enough: in case of a non-mobile comptabile page, the width will be big.
+    // also testing min-device-width will help
+    var conditionForNiceMenu = '(min-width: ' + widthForNiceMenu + 'px) and (min-device-width: ' + widthForNiceMenu + 'px)';
     var smallMenu = window.matchMedia ? !window.matchMedia(conditionForNiceMenu).matches : screen.width < widthForNiceMenu;
     if (!smallMenu) {
 	// on IE7&IE8, we do want to include the desktop CSS
