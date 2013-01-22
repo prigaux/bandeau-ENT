@@ -432,18 +432,22 @@ $js_data = array('person' => $person,
 $js_css = array('base' => get_css_with_absolute_url('bandeau-ENT.css'),
 		'desktop' => get_css_with_absolute_url('bandeau-ENT-desktop.css'));
 
-$js_data["hash"] = md5(json_encode(array($js_data, $static_js, $js_css)));
+$js_text_middle = 
+  "var CONF = " . json_encode($js_conf) . ";\n\n" .
+  "var DATA = " . json_encode($js_data) . ";\n\n" .
+  "var CSS = " . json_encode($js_css) . ";\n\n" .
+  $static_js;
 
-if ($noCookies || @$_GET["PHPSESSID"]) $js_data['PHPSESSID'] = session_id();
-$js_data['is_old'] = $is_old;
+$js_params = array('is_old' => $is_old,
+		   'hash' => md5($js_text_middle),
+		   );
+if ($noCookies || @$_GET["PHPSESSID"]) $js_params['PHPSESSID'] = session_id();
 
 $js_text = 
   "(function () {\n\n" .
   "'use strict';\n\n" .
-  "var CONF = " . json_encode($js_conf) . ";\n\n" .
-  "var DATA = " . json_encode($js_data) . ";\n\n" .
-  "var CSS = " . json_encode($js_css) . ";\n\n" .
-  $static_js .
+  "var PARAMS = " . json_encode($js_params) . ";\n\n" .
+  $js_text_middle .
   "}())\n";
 
 debug_msg("request time: " . formattedElapsedTime($request_start_time));

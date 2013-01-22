@@ -356,8 +356,8 @@ function triggerWindowResize() {
 }
 
 function mayInstallBandeau() {
-    if (window.bandeau_ENT.prevHash !== DATA.hash) {
-	window.bandeau_ENT.prevHash = DATA.hash;
+    if (window.bandeau_ENT.prevHash !== PARAMS.hash) {
+	window.bandeau_ENT.prevHash = PARAMS.hash;
 	installBandeau();
     }
 }
@@ -380,8 +380,8 @@ function setLocalStorageCache() {
 }
 
 function loadBandeauJs(params) {
-    if (DATA.PHPSESSID && params == '')
-	params = "PHPSESSID=" + DATA.PHPSESSID;
+    if (PARAMS.PHPSESSID && params == '')
+	params = "PHPSESSID=" + PARAMS.PHPSESSID;
     loadScript(CONF.bandeau_ENT_url + "/bandeau-ENT-js.php" + (params ? "?" + params : ''));
 }
 
@@ -400,7 +400,7 @@ function mayUpdate() {
 	    mylog("caching bandeau in localStorage");
 	    setLocalStorageCache();
 	}
-	if (DATA.is_old) {
+	if (PARAMS.is_old) {
 	    mylog("server said bandeau is old, forcing full bandeau update");
 	    loadBandeauJs('noCache=1');
 	}
