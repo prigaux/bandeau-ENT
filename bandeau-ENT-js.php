@@ -426,14 +426,16 @@ $js_data = array('person' => $person,
 		 'bandeauHeader' => $bandeauHeader,
 		 'apps' => $exportApps,
 		 'layout' => $layout);
-$js_data["hash"] = md5(json_encode(array($js_data, $static_js)));
+
+$js_css = array('base' => get_css_with_absolute_url('bandeau-ENT.css'),
+		'desktop' => get_css_with_absolute_url('bandeau-ENT-desktop.css'));
+
+$js_data["hash"] = md5(json_encode(array($js_data, $static_js, $js_css)));
+
 $js_data["time"] = time();
 $js_data["wasPreviouslyAuthenticated"] = $wasPreviouslyAuthenticated;
 if ($noCookies || @$_GET["PHPSESSID"] || 1) $js_data['PHPSESSID'] = session_id();
 $js_data['is_old'] = $is_old;
-
-$js_css = array('base' => get_css_with_absolute_url('bandeau-ENT.css'),
-		'desktop' => get_css_with_absolute_url('bandeau-ENT-desktop.css'));
 
 $js_text = 
   "(function () {\n\n" .
