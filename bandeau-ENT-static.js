@@ -188,7 +188,7 @@ function computeMenu(currentApp) {
 	});
     
 	var className = simpleContains(tab.apps, currentApp) ? "activeTab" : "inactiveTab";
-	return "<li class='" + className + "'><span>" + escapeQuotes(tab.title) + "</span><ul>" + sub_li_list.join("\n") + "</ul></li>";
+	return "<li class='" + className + "' onclick=''><span>" + escapeQuotes(tab.title) + "</span><ul>" + sub_li_list.join("\n") + "</ul></li>";
     });
 
     var toggleMenuSpacer = "<div class='toggleMenuSpacer'></div>\n";
