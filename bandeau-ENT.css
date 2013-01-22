@@ -380,3 +380,7 @@ body {
     right: 0;
   }
 }
+
+@media print {
+  #bandeau_ENT_Inner { display: none; }
+}
