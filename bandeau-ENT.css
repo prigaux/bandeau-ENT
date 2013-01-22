@@ -13,6 +13,9 @@
   font-weight: normal !important;
 }
 
+.bandeau_ENT_Menu li {
+  margin: 0;
+}
 #bandeau_ENT_Inner a {
   color: #263F82;
 }
@@ -328,7 +331,7 @@ body {
  color:#213885 !important; 
  font-weight:normal; 
  font-size:100%;
- text-decoration:none;
+ text-decoration:none !important;
  text-align:left;
  display:block;
  border: 0px solid #555 !important;
