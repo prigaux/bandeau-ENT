@@ -434,7 +434,7 @@ $js_data["hash"] = md5(json_encode(array($js_data, $static_js, $js_css)));
 
 $js_data["time"] = time();
 $js_data["wasPreviouslyAuthenticated"] = $wasPreviouslyAuthenticated;
-if ($noCookies || @$_GET["PHPSESSID"] || 1) $js_data['PHPSESSID'] = session_id();
+if ($noCookies || @$_GET["PHPSESSID"]) $js_data['PHPSESSID'] = session_id();
 $js_data['is_old'] = $is_old;
 
 $js_text = 
