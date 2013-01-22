@@ -289,7 +289,7 @@ function installLogout() {
 }
 
 function installBandeau() {
-    mylog("installBandeau (time=" + DATA.time + ", wasPreviouslyAuthenticated=" + DATA.wasPreviouslyAuthenticated + ")");
+    mylog("installBandeau");
 
     loadSpecificCss();
 

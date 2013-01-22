@@ -434,10 +434,6 @@ $js_css = array('base' => get_css_with_absolute_url('bandeau-ENT.css'),
 
 $js_data["hash"] = md5(json_encode(array($js_data, $static_js, $js_css)));
 
-// for debug purpose:
-$js_data["time"] = time();
-$js_data["wasPreviouslyAuthenticated"] = $wasPreviouslyAuthenticated;
-
 if ($noCookies || @$_GET["PHPSESSID"]) $js_data['PHPSESSID'] = session_id();
 $js_data['is_old'] = $is_old;
 
