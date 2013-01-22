@@ -96,20 +96,36 @@ function replaceAll(s, target, replacement) {
     return s.split(target).join(replacement);
 }
 
-function onReady_rec(id, f) {
+function onIdOrBody_rec(id, f) {
     if (id && document.getElementById(id) || document.body)
 	f();
     else
-	setTimeout(function () { onReady_rec(id, f) }, 9);
+	setTimeout(function () { onIdOrBody_rec(id, f) }, 9);
 }
 
-function onReady(id, f) {
-    if (id && document.getElementById(id) || document.body)
+function onIdOrBody(id, f) {
+    if (id && document.getElementById(id) || document.body) {
 	f();
-    else if (document.addEventListener)
+    } else if (document.addEventListener) {
 	document.addEventListener('DOMContentLoaded', f);
-    else 
-	onReady_rec(id, f);
+    } else 
+	onIdOrBody_rec(id, f);
+}
+
+function onReady_rec(f) {
+    if (document.readyState === "interactive")
+	f();
+    else
+	setTimeout(function () { onReady_rec(f) }, 9);
+}
+
+function onReady(f) {
+    if (document.readyState === "interactive") {
+	f();
+    } else if (document.addEventListener) {
+	document.addEventListener('DOMContentLoaded', f);
+    } else 
+	onReady_rec(f);
 }
 
 function bandeau_ENT_toggleOpen() {
@@ -293,13 +309,15 @@ function installBandeau() {
     var titlebar_in_header = "<div class='bandeau_ENT_titlebar_in_header'>" + titlebar + "</div>";
     var menu_and_titlebar = "<div class='bandeau_ENT_Menu_and_titlebar'>" + menu + clear + titlebar + "</div>";
     var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + ent_title_in_header + titlebar_in_header + menu_and_titlebar + "</div>" + "\n\n";
-    onReady(bandeau_div_id(), function () { 
+    onIdOrBody(bandeau_div_id(), function () { 
 	set_div_innerHTML(bandeau_div_id(), bandeau_html);
 
 	var barAccount = document.getElementById('portalPageBarAccount');
 	if (barAccount) barAccount.onclick = bandeau_ENT_toggleOpen;
 
-	if (logout_DOM_elt()) installLogout();
+	onReady(function () {
+	    if (logout_DOM_elt()) installLogout();
+	});
 	installToggleMenu(smallMenu);
 
 	if (smallMenu && document.body.scrollTop === 0) {
@@ -361,8 +379,7 @@ function detectReload($time) {
     localStorageSet('detectReload', $time);
 }
 
-function mayInstallAndMayUpdate() {
-    mayInstallBandeau();
+function mayUpdate() {
     if (notFromLocalStorage) {
 	if (window.localStorage) {
 	    mylog("caching bandeau in localStorage");
@@ -396,7 +413,7 @@ if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
     // disabled for now
 
     if (notFromLocalStorage) {
-	onReady(bandeau_div_id(), function () { 
+	onIdOrBody(bandeau_div_id(), function () { 
 	    set_div_innerHTML(bandeau_div_id(), '');
 	});
 	if (window.localStorage) {
@@ -408,11 +425,13 @@ if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
 	loadBandeauJs('');
     }
 } else if (window.bandeau_ENT.logout) {
-    onReady(null, function () {
-	    if (logout_DOM_elt()) mayInstallAndMayUpdate();
+    onReady(function () {
+	    if (logout_DOM_elt()) mayInstallBandeau();
+	    mayUpdate();
     });
 } else {
-    mayInstallAndMayUpdate();
+    mayInstallBandeau();
+    mayUpdate();
 }
 
 // things seem ok, cached js_text can be kept
