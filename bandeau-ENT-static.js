@@ -196,6 +196,18 @@ function computeMenu(currentApp) {
     return "<ul class='bandeau_ENT_Menu'>\n" + toggleMenuSpacer + li_list.join("\n") + "\n</ul>";
 }
 
+function computeHelp(currentApp) {
+    var app = DATA.apps[currentApp];
+    if (app && app.hashelp) {
+	var href = "http://esup-data.univ-paris1.fr/esup/aide/canal/" + currentApp + ".html";
+	var onclick = "window.open('','form_help','toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,scrollbars=yes,copyhistory=no,alwaysRaised,width=600,height=400')";
+	var a = "<a href='"+  href + "' onclick=\"" + onclick + "\" target='form_help' title=\"Voir l'aide du canal\"><span>Aide</span></a>";
+	return "<div class='bandeau_ENT_Help'>" + a + "</div>";
+    } else {
+	return '';
+    }
+}
+
 function computeTitlebar(currentApp) {
     var app = DATA.apps[currentApp];
     if (app && app.title && !window.bandeau_ENT.no_titlebar)
@@ -305,12 +317,13 @@ function installBandeau() {
 
     var header = computeHeader();
     var menu = computeMenu(currentApp);
+    var help = computeHelp(currentApp);
     var titlebar = computeTitlebar(currentApp);
     var clear = "<p style='clear: both; height: 13px; margin: 0'></p>";
     var ent_title_in_header = "<div class='bandeau_ENT_ent_title_in_header'><span>Environnement num&eacute;rique de travail</span></div>";
     var titlebar_in_header = "<div class='bandeau_ENT_titlebar_in_header'>" + titlebar + "</div>";
     var menu_and_titlebar = "<div class='bandeau_ENT_Menu_and_titlebar'>" + menu + clear + titlebar + "</div>";
-    var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + ent_title_in_header + titlebar_in_header + menu_and_titlebar + "</div>" + "\n\n";
+    var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + ent_title_in_header + titlebar_in_header + menu_and_titlebar + help + "</div>" + "\n\n";
     onIdOrBody(bandeau_div_id(), function () { 
 	set_div_innerHTML(bandeau_div_id(), bandeau_html);
 

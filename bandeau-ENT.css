@@ -349,6 +349,30 @@ body {
     position: relative;
 }
 
+.bandeau_ENT_Help a {
+    position: relative;
+    float: right;
+    z-index: 100006;
+    margin-right: 1em;
+    margin-top: -4em;
+
+    text-decoration: none;
+    margin-left: 1.5em;
+    padding-left: 18px;
+    background: url(https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/portlet_icons_flat.png) no-repeat scroll 0 -48px transparent;
+}
+.bandeau_ENT_Help a:hover {
+    text-decoration: underline;
+    background-image: url(https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/portlet_icons_flat_hover.png);
+}
+.menuClosed .bandeau_ENT_Help {
+    height: 2.3em;
+    background-color: white;
+}
+.menuClosed .bandeau_ENT_Help a {
+    margin-top: 10px;
+}
+
 .bandeau_ENT_Titlebar {
     color: #263F82;
 }

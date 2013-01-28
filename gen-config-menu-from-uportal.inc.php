@@ -190,6 +190,7 @@ function uportalGetChannel($channelFile, $groupNameToPagsKeysAndUsers) {
   $channel["description"] = (string) $xml->desc;
   $channel["users"] = array_merge($users, $subUsers);
   $channel["groups"] = $groups;
+  if ($xml->hashelp == 'Y') $channel["hashelp"] = true;
   foreach ($xml->portletPreferences->portletPreference as $pref) {
     if ($pref->name == 'url')
       $channel["url"] = uportalAbsolutateUrl((string) $pref->values->value);

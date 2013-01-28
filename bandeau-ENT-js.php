@@ -196,7 +196,9 @@ function exportApp($app, $appId, $isGuest) {
   $r = array("description" => $app['description'],
 	     "text" => $app['text'],
 	     "url" => get_url($app, $appId, $isGuest, false));
-  if (isset($app['title'])) $r['title'] = $app['title'];
+  foreach (array('title', 'hashelp') as $key) {
+    if (isset($app[$key])) $r[$key] = $app[$key];
+  }
   return $r;
 }
 
