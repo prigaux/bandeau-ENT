@@ -307,7 +307,7 @@ function computeBandeauHeaderLinks($person) {
 
 EOD;
 
-  global $cas_login_url, $ent_base_url, $bandeau_ENT_url;
+  global $cas_login_url, $bandeau_ENT_url;
   $activation_url = via_CAS($cas_login_url, ent_url('CActivation'));
   return sprintf($s, $person["displayName"][0], $person["mail"][0], $person["uid"][0], 
 		 $activation_url);
@@ -342,7 +342,6 @@ function computeBandeauHeader($person) {
   </div>
 EOD;
 
-  global $ent_base_url;
   $portalPageBarLinks = $person ? computeBandeauHeaderLinks($person) : computeBandeauHeaderLinksAnonymous();
 
   return sprintf($s, $portalPageBarLinks);
