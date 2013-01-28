@@ -364,14 +364,14 @@ function mayInstallBandeau() {
 
 function localStorageGet(field) {
     try {
-	return localStorage.getItem("bandeau_ENT_" + field);
+	return localStorage.getItem(window.bandeau_ENT.localStorage_prefix + field);
     } catch (err) {
 	return null;
     }
 }
 function localStorageSet(field, value) {
     try {
-	localStorage.setItem("bandeau_ENT_" + field, value);
+	localStorage.setItem(window.bandeau_ENT.localStorage_prefix + field, value);
     } catch (err) {}
 }
 function setLocalStorageCache() {
@@ -397,7 +397,7 @@ function detectReload($time) {
 function mayUpdate() {
     if (notFromLocalStorage) {
 	if (window.localStorage) {
-	    mylog("caching bandeau in localStorage");
+	    mylog("caching bandeau in localStorage (prefix " + window.bandeau_ENT.localStorage_prefix + ")");
 	    setLocalStorageCache();
 	}
 	if (PARAMS.is_old) {
@@ -422,7 +422,10 @@ var currentApp = window.bandeau_ENT.current;
 var notFromLocalStorage = window.bandeau_ENT.notFromLocalStorage;
 window.bandeau_ENT.notFromLocalStorage = false;
 
-if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
+if (!notFromLocalStorage && window.bandeau_ENT.url !== CONF.bandeau_ENT_url) {
+    mylog("not using bandeau from localStorage which was computed for " + CONF.bandeau_ENT_url + " whereas " + window.bandeau_ENT.url + " is wanted");
+    return "invalid";
+} else if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
     document.location.href = DATA.apps[DATA.layout[0].apps[0]].url;
 } else if (!DATA.person.uid) {
     // disabled for now
