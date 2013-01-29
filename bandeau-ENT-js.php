@@ -312,22 +312,6 @@ EOD;
   return sprintf($s, $person["displayName"][0], $person["mail"][0], $person["uid"][0], 
 		 $activation_url);
 }
- 
-function computeBandeauHeaderLinksAnonymous() {
-   $s = <<<EOD
-    <div class='portalPageBarLinks'>
-      <span id="portalPageBarLogin">
-        <a title="Connexion via le Service Central d'Authentification" href="%s" >
-          <span>Connexion</span>
-        </a>
-      </span>
-    </div>
-EOD;
-
-   global $cas_login_url;
-   $login_url = via_CAS($cas_login_url, ent_url(''));
-   return sprintf($s, $login_url);
-}
 
 function computeBandeauHeader($person) {
   $s = <<<EOD
@@ -342,7 +326,7 @@ function computeBandeauHeader($person) {
   </div>
 EOD;
 
-  $portalPageBarLinks = $person ? computeBandeauHeaderLinks($person) : computeBandeauHeaderLinksAnonymous();
+  $portalPageBarLinks = $person ? computeBandeauHeaderLinks($person) : '';
 
   return sprintf($s, $portalPageBarLinks);
 }
