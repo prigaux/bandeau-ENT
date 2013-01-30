@@ -376,13 +376,14 @@ function localStorageSet(field, value) {
 }
 function setLocalStorageCache() {
     localStorageSet("js_text", window.bandeau_ENT.js_text);
+    localStorageSet("url", window.bandeau_ENT.url);
     localStorageSet("time", now());
 }
 
 function loadBandeauJs(params) {
     if (PARAMS.PHPSESSID && params == '')
 	params = "PHPSESSID=" + PARAMS.PHPSESSID;
-    loadScript(CONF.bandeau_ENT_url + "/bandeau-ENT-js.php" + (params ? "?" + params : ''));
+    loadScript(window.bandeau_ENT.url + "/bandeau-ENT-js.php" + (params ? "?" + params : ''));
 }
 
 function detectReload($time) {
@@ -422,8 +423,8 @@ var currentApp = window.bandeau_ENT.current;
 var notFromLocalStorage = window.bandeau_ENT.notFromLocalStorage;
 window.bandeau_ENT.notFromLocalStorage = false;
 
-if (!notFromLocalStorage && window.bandeau_ENT.url !== CONF.bandeau_ENT_url) {
-    mylog("not using bandeau from localStorage which was computed for " + CONF.bandeau_ENT_url + " whereas " + window.bandeau_ENT.url + " is wanted");
+if (!notFromLocalStorage && window.bandeau_ENT.url !== localStorageGet('url')) {
+    mylog("not using bandeau from localStorage which was computed for " + localStorageGet('url') + " whereas " + window.bandeau_ENT.url + " is wanted");
     return "invalid";
 } else if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
     document.location.href = DATA.apps[DATA.layout[0].apps[0]].url;
