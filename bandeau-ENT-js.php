@@ -291,7 +291,7 @@ function computeBandeauHeaderLinks($person) {
 
     <div id='portalPageBarAccountInner'>
 	<ul>
-	  <li class='portalPageBarAccountDescr'>%s (%s)</li>
+	  <li class='portalPageBarAccountDescr'>%s</li>
 	  <li class='portalPageBarAccountAnchor'>
 	    <a title='Interface de gestion de compte de l&#39;université Paris 1 Panthéon-Sorbonne.' href='%s'>
 	      <span>Mon compte</span>
@@ -309,7 +309,8 @@ EOD;
 
   global $cas_login_url, $bandeau_ENT_url;
   $activation_url = via_CAS($cas_login_url, ent_url('CActivation'));
-  return sprintf($s, $person["displayName"][0], $person["mail"][0], $person["uid"][0], 
+  return sprintf($s, (@$person["displayname"] ? $person["displayname"][0] : $person["mail"][0]), 
+		 (@$person["displayname"] ? $person["mail"][0] . " (" . $person["uid"][0] . ")" : $person["uid"][0]), 
 		 $activation_url);
 }
 
