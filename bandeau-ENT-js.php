@@ -440,10 +440,11 @@ $layout = computeLayout($person);
 $bandeauHeader = computeBandeauHeader($person);
 $exportApps = exportApps(!$person);
 $static_js = file_get_contents('bandeau-ENT-static.js');
+$default_logout_url = @$ent_base_url ? $ent_base_url . '/Logout' : (@$layout[0] ? via_CAS($cas_login_url, $APPS[$layout[0]["apps"][0]]["url"]) : '');
 
 $js_conf = array('cas_login_url' => $cas_login_url,
 		 'bandeau_ENT_url' => $bandeau_ENT_url,
-		 'ent_logout_url' => via_CAS($cas_logout_url, $ent_base_url . '/Logout'), // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
+		 'ent_logout_url' => via_CAS($cas_logout_url, $default_logout_url), // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
 		 'time_before_checking_browser_cache_is_up_to_date' => $time_before_checking_browser_cache_is_up_to_date,
 		 );
 
