@@ -393,7 +393,7 @@ if (!$isAuthenticated)
 
 
 $uid = $isAuthenticated ? get_uid() : '';
-$person = $uid ? getLdapInfo("uid=$uid") : array();
+$person = $uid ? ($ldap_server ? getLdapInfo("uid=$uid") : array("uid" => array($uid))) : array();
 
 $layout = computeLayout($person);
 $bandeauHeader = computeBandeauHeader($person);
