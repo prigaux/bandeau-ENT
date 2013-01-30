@@ -48,6 +48,16 @@ function getAndUnset(&$a, $prop) {
   }
 }
 
+function startsWith($hay, $needle) {
+  return substr($hay, 0, strlen($needle)) === $needle;
+}
+function removePrefix($s, $prefix) {
+    return startsWith($s, $prefix) ? substr($s, strlen($prefix)) : $s;
+}
+function removePrefixOrNULL($s, $prefix) {
+    return startsWith($s, $prefix) ? substr($s, strlen($prefix)) : NULL;
+}
+
 function formattedElapsedTime($prev) {
   $now = microtime(true);
   return sprintf("%dms", ($now - $prev) * 1000);
@@ -160,6 +170,32 @@ function getLdapInfo($filter) {
     $info[$attrL] = $value;
   }
   return $info;
+}
+
+function eppn2uid($eppn) {
+  global $eppnDomainRegexForUid;
+  if ($eppnDomainRegexForUid)
+	return preg_replace("/$eppnDomainRegexForUid/", "", $eppn);
+  else
+	return $eppn;
+}
+
+function getShibPersonFromHeaders() {
+  $person = array();
+  foreach ($_SERVER as $k => $v) {
+    $k = removePrefixOrNULL($k, "HTTP_");
+
+    if ($k === "UNSCOPED_AFFILIATION") $k = "eduPersonAffiliation";
+    if ($k === "PRIMARY_AFFILIATION") $k = "eduPersonPrimaryAffiliation";
+
+    if ($k && !preg_match("/^(Accept|Accept_Charset|Accept_Encoding|Accept_Language|Accept_Datetime|Authorization|Cache_Control|Connection|Cookie|Content_Length|Content_MD5|Content_Type|Date|Expect|From|Host|If_Match|If_Modified_Since|If_None_Match|If_Range|If_Unmodified_Since|Max_Forwards|Pragma|Proxy_Authorization|Range|Referer|TE|Upgrade|User_Agent|Via|Warning)$/i", $k)
+	&& !preg_match("/^(X_.*|Shib_Application_ID|Shib_Authentication_Instant|Shib_AuthnContext_Decl|Shib_Session_ID|Shib_Assertion_Count|Shib_Authentication_Method|Shib_AuthnContext_Class)$/i", $k)
+	&& $k !== "PREFERREDLANGUAGE" && $v) {
+      $person[strtolower($k)] = explode(";", $v);
+    }
+  }
+  $person['uid'] = eppn2uid($person['eppn']);
+  return $person;
 }
 
 function computeGroups($person) {
@@ -375,32 +411,35 @@ function is_old() {
 
 $request_start_time = microtime(true);
 
-$haveTicket = isset($_GET["ticket"]); // must be done before initPhpCAS which removes it
-$noCache = isset($_GET["noCache"]);
-if (@$_GET["PHPSESSID"]) $_COOKIE["PHPSESSID"] = $_GET["PHPSESSID"];
-session_start();
-if ($noCache && !isset($_GET["auth_checked"])) {
-  // cleanup SESSION, esp. to force CAS authentification again
-  debug_msg("cleaning SESSION");
-  $_SESSION = array();
+if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER']) {
+  list ($isAuthenticated, $noCookies, $wasPreviouslyAuthenticated) = array(true, false, false);
+  $person = getShibPersonFromHeaders();
+  $is_old = false;
+} else {
+  $haveTicket = isset($_GET["ticket"]); // must be done before initPhpCAS which removes it
+  $noCache = isset($_GET["noCache"]);
+  if (@$_GET["PHPSESSID"]) $_COOKIE["PHPSESSID"] = $_GET["PHPSESSID"];
+  session_start();
+  if ($noCache && !isset($_GET["auth_checked"])) {
+    // cleanup SESSION, esp. to force CAS authentification again
+    debug_msg("cleaning SESSION");
+    $_SESSION = array();
+  }
+  initPhpCAS($cas_host, '443', $cas_context, $CA_certificate_file);
+  list ($isAuthenticated, $noCookies, $wasPreviouslyAuthenticated) = checkAuthentication($noCache, $haveTicket);
+
+  if (!$isAuthenticated)
+    setcookie("PHPSESSID", "", 1, "/");
+
+  $uid = $isAuthenticated ? get_uid() : '';
+  $person = $uid ? ($ldap_server ? getLdapInfo("uid=$uid") : array("uid" => array($uid))) : array();
+  $is_old = is_old();
 }
-initPhpCAS($cas_host, '443', $cas_context, $CA_certificate_file);
-list ($isAuthenticated, $noCookies, $wasPreviouslyAuthenticated) = checkAuthentication($noCache, $haveTicket);
-
-
-if (!$isAuthenticated)
-  setcookie("PHPSESSID", "", 1, "/");
-
-
-$uid = $isAuthenticated ? get_uid() : '';
-$person = $uid ? ($ldap_server ? getLdapInfo("uid=$uid") : array("uid" => array($uid))) : array();
 
 $layout = computeLayout($person);
 $bandeauHeader = computeBandeauHeader($person);
 $exportApps = exportApps(!$person);
 $static_js = file_get_contents('bandeau-ENT-static.js');
-
-$is_old = is_old();
 
 $js_conf = array('cas_login_url' => $cas_login_url,
 		 'bandeau_ENT_url' => $bandeau_ENT_url,
