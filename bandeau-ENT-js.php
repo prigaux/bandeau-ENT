@@ -157,7 +157,7 @@ function getLdapInfo($filter) {
     }
     $value = $entries[$attrL];
     unset($value["count"]);
-    $info[$attr] = $value;
+    $info[$attrL] = $value;
   }
   return $info;
 }
@@ -169,12 +169,12 @@ function computeGroups($person) {
   foreach ($GROUPS as $name => $attr2regexes) {
     $ok = true;
     foreach ($attr2regexes as $attr => $regexes) {
-      if (!isset($person[$attr])) {
+      $value = @$person[strtolower($attr)];
+      if (!$value) {
 	debug_msg("missing attribute $attr");
 	$ok = false;
 	break;
       }
-      $value = $person[$attr];
       $regexes = is_array($regexes) ? $regexes : array($regexes);
       $okAttr = true;
       foreach ($regexes as $regex) {
