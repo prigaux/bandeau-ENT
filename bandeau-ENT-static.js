@@ -113,14 +113,15 @@ function onIdOrBody(id, f) {
 }
 
 function onReady_rec(f) {
-    if (document.readyState === "interactive")
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading")
 	f();
     else
 	setTimeout(function () { onReady_rec(f) }, 9);
 }
 
 function onReady(f) {
-    if (document.readyState === "interactive") {
+    // IE10 and lower don't handle "interactive" properly
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
 	f();
     } else if (document.addEventListener) {
 	document.addEventListener('DOMContentLoaded', f);
