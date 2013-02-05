@@ -410,6 +410,8 @@ function is_old() {
 }
 
 $request_start_time = microtime(true);
+session_cache_limiter('private');
+session_cache_expire(0);
 
 if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER']) {
   list ($isAuthenticated, $noCookies, $wasPreviouslyAuthenticated) = array(true, false, false);
@@ -473,6 +475,15 @@ $js_text =
   "var PARAMS = " . json_encode($js_params) . ";\n\n" .
   $js_text_middle .
   "}())\n";
+
+$full_hash = md5($js_text);
+
+if (@$_SERVER['HTTP_IF_NONE_MATCH'] === $full_hash) {
+  header('HTTP/1.1 304 Not Modified');
+  exit;
+} else {
+  header('ETag: ' . $full_hash);
+}
 
 debug_msg("request time: " . formattedElapsedTime($request_start_time));
 
