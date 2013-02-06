@@ -30,7 +30,7 @@ function get_url($app, $appId, $isGuest, $noLogin) {
   if (isset($app['url']) && isset($app['url_bandeau_compatible']))
     return isset($app['force_CAS']) ? via_CAS($app['force_CAS'], $app['url']) : $app['url'];
   else {
-    $url = ent_url($appId, $isGuest, $noLogin, @$app['uportalActiveTab']);
+    $url = ent_url($appId, $isGuest, $noLogin, @$app[$isGuest ? 'uportalActiveTabGuest': 'uportalActiveTab']);
     return $isGuest || $noLogin ? $url : via_CAS($cas_login_url, $url);
   }
 }
