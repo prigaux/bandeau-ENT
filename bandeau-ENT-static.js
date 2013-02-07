@@ -424,6 +424,15 @@ var currentApp = window.bandeau_ENT.current;
 var notFromLocalStorage = window.bandeau_ENT.notFromLocalStorage;
 window.bandeau_ENT.notFromLocalStorage = false;
 
+if (!window.bandeau_ENT.localStorage_prefix)
+    window.bandeau_ENT.localStorage_prefix = 'bandeau_ENT_';
+// for old bandeau-ENT-loader.js which did not set localStorage_js_text_field:
+if (!window.bandeau_ENT.localStorage_js_text_field)
+    window.bandeau_ENT.localStorage_js_text_field = 'js_text';
+// for old bandeau-ENT-loader.js which did not set window.bandeau_ENT.url:
+if (!window.bandeau_ENT.url)
+    window.bandeau_ENT.url = CONF.bandeau_ENT_url;
+
 if (!notFromLocalStorage && window.bandeau_ENT.url !== localStorageGet('url')) {
     mylog("not using bandeau from localStorage which was computed for " + localStorageGet('url') + " whereas " + window.bandeau_ENT.url + " is wanted");
     return "invalid";
