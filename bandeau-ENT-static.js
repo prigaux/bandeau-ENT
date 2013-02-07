@@ -444,7 +444,7 @@ if (!notFromLocalStorage && window.bandeau_ENT.url !== localStorageGet('url')) {
 	// checking wether we are logged in now
 	loadBandeauJs('');
     }
-} else if (window.bandeau_ENT.logout) {
+} else if (window.bandeau_ENT.logout && !logout_DOM_elt()) {
     onReady(function () {
 	    if (logout_DOM_elt()) mayInstallBandeau();
 	    mayUpdate();
