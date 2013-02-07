@@ -478,7 +478,7 @@ $js_text =
 
 $full_hash = md5($js_text);
 
-if (@$_SERVER['HTTP_IF_NONE_MATCH'] === $full_hash) {
+if (@$_SERVER['HTTP_IF_NONE_MATCH'] === $full_hash && !@$disableLocalStorage) {
   header('HTTP/1.1 304 Not Modified');
   exit;
 } else {
@@ -489,8 +489,13 @@ debug_msg("request time: " . formattedElapsedTime($request_start_time));
 
 header('Content-type: application/javascript; charset=utf8');
 echo "$debug_msgs\n";
-echo "window.bandeau_ENT.js_text = " . json_encode($js_text) . ";\n\n";
 echo "window.bandeau_ENT.notFromLocalStorage = true;\n";
+if (@$disableLocalStorage) {
+  // for debug purpose: debugging eval'ed javascript code is tough...
+  echo $js_text;
+  $js_text = '';
+}
+echo "window.bandeau_ENT.js_text = " . json_encode($js_text) . ";\n\n";
 echo "eval(window.bandeau_ENT.js_text);\n";
 
 ?>
