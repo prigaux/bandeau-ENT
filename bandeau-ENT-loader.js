@@ -16,9 +16,10 @@
     function load_bandeau_ENT() {
 	var b_E = window.bandeau_ENT;
 	if (!b_E.url) b_E.url = "https://front-test.univ-paris1.fr/bandeau-ENT";
-	if (!b_E.localStorage_prefix) b_E.localStorage_prefix = "bandeau_ENT:v3:";
+	if (!b_E.localStorage_prefix) b_E.localStorage_prefix = "bandeau_ENT:";
+	if (!b_E.localStorage_js_text_field) b_E.localStorage_js_text_field = "v4:js_text";
 	var url = b_E.url + "/bandeau-ENT-js.php";
-	var localStorageName = b_E.localStorage_prefix + "js_text";
+	var localStorageName = b_E.localStorage_prefix + b_E.localStorage_js_text_field;
 	try {
 	    if (window.localStorage && localStorage.getItem(localStorageName)) {
 		mylog("loading bandeau from localStorage (" + localStorageName + ")");

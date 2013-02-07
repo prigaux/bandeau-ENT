@@ -376,7 +376,7 @@ function localStorageSet(field, value) {
     } catch (err) {}
 }
 function setLocalStorageCache() {
-    localStorageSet("js_text", window.bandeau_ENT.js_text);
+    localStorageSet(window.bandeau_ENT.localStorage_js_text_field, window.bandeau_ENT.js_text);
     localStorageSet("url", window.bandeau_ENT.url);
     localStorageSet("time", now());
 }
@@ -399,7 +399,7 @@ function detectReload($time) {
 function mayUpdate() {
     if (notFromLocalStorage) {
 	if (window.localStorage) {
-	    mylog("caching bandeau in localStorage (prefix " + window.bandeau_ENT.localStorage_prefix + ")");
+	    mylog("caching bandeau in localStorage (" + window.bandeau_ENT.localStorage_prefix + " " + window.bandeau_ENT.localStorage_js_text_field + ")");
 	    setLocalStorageCache();
 	}
 	if (PARAMS.is_old) {
@@ -438,7 +438,7 @@ if (!notFromLocalStorage && window.bandeau_ENT.url !== localStorageGet('url')) {
 	});
 	if (window.localStorage) {
 	    mylog("removing cached bandeau from localStorage");
-	    localStorageSet('js_text', '');
+	    localStorageSet(window.bandeau_ENT.localStorage_js_text_field, '');
 	}
     } else {
 	// checking wether we are logged in now
