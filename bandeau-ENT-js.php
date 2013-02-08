@@ -299,10 +299,28 @@ function computeLayout($person) {
   debug_msg((isset($person["uid"]) ? $person["uid"][0] : "anonymous") . " is member of groups: " . implode(" ", $groups));
   $validApps = computeValidAppsRaw($person, $groups);
   debug_msg("valid apps: " . implode(" ", $validApps));
-  return computeLayoutRaw($validApps, $person);
+  return array($validApps, computeLayoutRaw($validApps, $person));
 }
 
-function computeBandeauHeaderLinks($person) {
+function computeBandeauHeaderLinkMyAccount($validApps) {
+  if (!in_array('CActivation', $validApps))
+    return '';
+  
+  $s = <<<EOD
+	  <li class='portalPageBarAccountAnchor'>
+	    <a title='Interface de gestion de compte de l&#39;université Paris 1 Panthéon-Sorbonne.' href='%s'>
+	      <span>Mon compte</span>
+	    </a>
+	  </li>
+EOD;
+
+  global $cas_login_url, $bandeau_ENT_url;
+  $activation_url = via_CAS($cas_login_url, ent_url('CActivation'));
+
+  return sprintf($s, $activation_url);
+}
+
+function computeBandeauHeaderLinks($person, $validApps) {
   $s = <<<EOD
     <div class='portalPageBarLinks'>
       <div id='portalPageBarAccount'>
@@ -328,11 +346,7 @@ function computeBandeauHeaderLinks($person) {
     <div id='portalPageBarAccountInner'>
 	<ul>
 	  <li class='portalPageBarAccountDescr'>%s</li>
-	  <li class='portalPageBarAccountAnchor'>
-	    <a title='Interface de gestion de compte de l&#39;université Paris 1 Panthéon-Sorbonne.' href='%s'>
-	      <span>Mon compte</span>
-	    </a>
-	  </li>
+%s        
 	  <li class='portalPageBarAccountAnchor portalPageBarAccountLogout'>
 	    <a title='Se déconnecter' href='<%%logout_url%%>'>
 	      <span>Déconnexion</span>
@@ -343,14 +357,14 @@ function computeBandeauHeaderLinks($person) {
 
 EOD;
 
-  global $cas_login_url, $bandeau_ENT_url;
-  $activation_url = via_CAS($cas_login_url, ent_url('CActivation'));
+  $myAccount = computeBandeauHeaderLinkMyAccount($validApps);
+
   return sprintf($s, (@$person["displayname"] ? $person["displayname"][0] : $person["mail"][0]), 
 		 (@$person["displayname"] ? $person["mail"][0] . " (" . $person["uid"][0] . ")" : $person["uid"][0]), 
-		 $activation_url);
+		 $myAccount);
 }
 
-function computeBandeauHeader($person) {
+function computeBandeauHeader($person, $validApps) {
   $s = <<<EOD
   <div class='portalPageBar'>
 %s
@@ -363,7 +377,7 @@ function computeBandeauHeader($person) {
   </div>
 EOD;
 
-  $portalPageBarLinks = $person ? computeBandeauHeaderLinks($person) : '';
+  $portalPageBarLinks = $person ? computeBandeauHeaderLinks($person, $validApps) : '';
 
   return sprintf($s, $portalPageBarLinks);
 }
@@ -438,8 +452,8 @@ if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER']) {
   $is_old = is_old();
 }
 
-$layout = computeLayout($person);
-$bandeauHeader = computeBandeauHeader($person);
+list ($validApps, $layout) = computeLayout($person);
+$bandeauHeader = computeBandeauHeader($person, $validApps);
 $exportApps = exportApps(!$person);
 $static_js = file_get_contents('bandeau-ENT-static.js');
 $default_logout_url = @$ent_base_url ? $ent_base_url . '/Logout' : (@$layout[0] ? via_CAS($cas_login_url, $APPS[$layout[0]["apps"][0]]["url"]) : '');
