@@ -119,7 +119,15 @@ function pagsGetGroupTests($g, $groupKey) {
 
   $attr2regexes = pagsPrepareAndTests($andTests, $groupKey, $lax);
 
-  return pagsOrMergeAndTests($attr2regexes, $groupKey, $lax);
+  $tests = pagsOrMergeAndTests($attr2regexes, $groupKey, $lax);
+
+  // here we know the tests is not empty
+  // may restrict to users having $eduPersonOrgDNForGroups
+  global $eduPersonOrgDNForGroups;
+  if (@$eduPersonOrgDNForGroups)
+    $tests["eduPersonOrgDN"] = $eduPersonOrgDNForGroups;
+
+  return $tests;
 }
 
 function pagsGetGroups($PAGSGroupStoreConfig) {
