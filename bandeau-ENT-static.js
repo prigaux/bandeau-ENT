@@ -270,6 +270,12 @@ function logout_DOM_elt() {
     return window.bandeau_ENT.logout && simpleQuerySelector(window.bandeau_ENT.logout);
 }
 
+function isLogged() {
+    if (window.bandeau_ENT.login)
+	return !simpleQuerySelector(window.bandeau_ENT.login);
+    return window.bandeau_ENT.is_logged_selector && simpleQuerySelector(window.bandeau_ENT.is_logged_selector);
+}
+
 function asyncLogout() {
     loadScript(CONF.bandeau_ENT_url + '/logout.php?callback=window.bandeau_ENT.onAsyncLogout');
     return false;
@@ -424,6 +430,9 @@ var currentApp = window.bandeau_ENT.current;
 var notFromLocalStorage = window.bandeau_ENT.notFromLocalStorage;
 window.bandeau_ENT.notFromLocalStorage = false;
 
+if (!window.bandeau_ENT.is_logged_selector)
+    window.bandeau_ENT.is_logged_selector = window.bandeau_ENT.logout;
+
 if (!window.bandeau_ENT.localStorage_prefix)
     window.bandeau_ENT.localStorage_prefix = 'bandeau_ENT_';
 // for old bandeau-ENT-loader.js which did not set localStorage_js_text_field:
@@ -453,9 +462,9 @@ if (!notFromLocalStorage && window.bandeau_ENT.url !== localStorageGet('url')) {
 	// checking wether we are logged in now
 	loadBandeauJs('');
     }
-} else if (window.bandeau_ENT.logout && !logout_DOM_elt()) {
+} else if (window.bandeau_ENT.is_logged_selector && !isLogged()) {
     onReady(function () {
-	    if (logout_DOM_elt()) mayInstallBandeau();
+	    if (isLogged()) mayInstallBandeau();
 	    mayUpdate();
     });
 } else {
