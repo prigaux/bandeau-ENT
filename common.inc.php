@@ -12,9 +12,10 @@ function debug_msg($msg) {
   $debug_msgs .= "// $msg\n";
 }
 
-function ent_url($fname, $isGuest = false, $noLogin = false, $uportalActiveTab = '') {
+function ent_url($app, $fname, $isGuest, $noLogin) {
   global $ent_base_url, $ent_base_url_guest, $cas_login_url;
   $url = $isGuest ? "$ent_base_url_guest/Guest" : $ent_base_url . ($noLogin ? '/render.userLayoutRootNode.uP' : '/Login');
+  $uportalActiveTab = @$app[$isGuest ? 'uportalActiveTabGuest': 'uportalActiveTab'];
   $params = 
       "?uP_fname=$fname"
     . ($uportalActiveTab ? "&uP_sparam=activeTab&activeTab=$uportalActiveTab" : '');
@@ -41,7 +42,7 @@ function get_url($app, $appId, $isGuest, $noLogin) {
   if (isset($app['url']) && isset($app['url_bandeau_compatible'])) {
     return enhance_url($app['url'], $appId, $app);
   } else {
-    return ent_url($appId, $isGuest, $noLogin, @$app[$isGuest ? 'uportalActiveTabGuest': 'uportalActiveTab']);
+    return ent_url($app, $appId, $isGuest, $noLogin);
   }
 }
 
