@@ -25,13 +25,21 @@ function via_CAS($cas_login_url, $href) {
   return sprintf("%s?service=%s", $cas_login_url, urlencode($href));
 }
 
-function get_url($app, $appId, $isGuest, $noLogin) {
-  global $ent_base_url, $cas_login_url;
-  if (isset($app['url']) && isset($app['url_bandeau_compatible'])) {
-    $url = $app['url'];
+function enhance_url($url, $appId, $options) {
+    global $ent_base_url;
     if (@$app['useExternalURLStats'])
-	$url = "$ent_base_url/ExternalURLStats?fname=$appId&service=" . urlencode($url);
-    return isset($app['force_CAS']) ? via_CAS($app['force_CAS'], $url) : $url;
+        $url = "$ent_base_url/ExternalURLStats?fname=$appId&service=" . urlencode($url);
+
+    if (@$options['force_CAS'])
+	$url = via_CAS($options['force_CAS'], $url);
+
+    return $url;
+}
+
+function get_url($app, $appId, $isGuest, $noLogin) {
+  global $cas_login_url;
+  if (isset($app['url']) && isset($app['url_bandeau_compatible'])) {
+    return enhance_url($app['url'], $appId, $app);
   } else {
     $url = ent_url($appId, $isGuest, $noLogin, @$app[$isGuest ? 'uportalActiveTabGuest': 'uportalActiveTab']);
     return $isGuest || $noLogin ? $url : via_CAS($cas_login_url, $url);
