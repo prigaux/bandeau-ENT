@@ -12,6 +12,14 @@ function debug_msg($msg) {
   $debug_msgs .= "// $msg\n";
 }
 
+function atomic_file_put_contents($file, $content) {
+  $tmp_file = $file . ".tmp";
+  if (!file_put_contents($tmp_file, $content))
+    exit("failed to write $tmp_file");
+  if (!rename($tmp_file, $file))
+    exit("failed to rename $tmp_file into $file");
+}
+
 function ent_url($app, $fname, $isGuest, $noLogin) {
   global $ent_base_url, $ent_base_url_guest, $cas_login_url;
   $url = $isGuest ? "$ent_base_url_guest/Guest" : $ent_base_url . ($noLogin ? '/render.userLayoutRootNode.uP' : '/Login');

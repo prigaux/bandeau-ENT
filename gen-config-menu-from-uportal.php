@@ -2,6 +2,7 @@
 
 include_once "config.inc.php";
 include_once "gen-config-menu-from-uportal.inc.php";
+require_once "common.inc.php";
 
 if ($_SERVER['REMOTE_ADDR'] !== $ip_allowed_to_run_gen_config_menu_from_uportal)
   exit("your IP (" . $_SERVER['REMOTE_ADDR'] . ") is not allowed");
@@ -48,11 +49,7 @@ rm_rf($tmp_dir);
 if (@$err) exit($err);
 
 $config_menu_file = dirname(__FILE__) . '/config-menu-from-uportal/config-menu.inc.php';
-$tmp_conf = $config_menu_file . ".tmp";
-if (!file_put_contents($tmp_conf, $config_menu_content))
-  exit("failed to write $tmp_conf");
-if (!rename($tmp_conf, $config_menu_file)) 
-  exit("failed to rename $tmp_conf into $config_menu_file");
+atomic_file_put_contents($config_menu_file, $config_menu_content);
 
 echo "success\n";
 
