@@ -45,7 +45,7 @@ if (!is_file($PAGSGroupStoreConfig)) {
   $config_menu_content = gen($PAGSGroupStoreConfig, $db_export_dir);
 }
 rm_rf($tmp_dir);
-if ($err) exit($err);
+if (@$err) exit($err);
 
 $config_menu_file = dirname(__FILE__) . '/config-menu-from-uportal/config-menu.inc.php';
 $tmp_conf = $config_menu_file . ".tmp";
