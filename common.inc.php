@@ -26,12 +26,12 @@ function via_CAS($cas_login_url, $href) {
 }
 
 function enhance_url($url, $appId, $options) {
-    global $ent_base_url;
+    global $ent_base_url, $cas_login_url;
     if (@$app['useExternalURLStats'])
         $url = "$ent_base_url/ExternalURLStats?fname=$appId&service=" . urlencode($url);
 
     if (@$options['force_CAS'])
-	$url = via_CAS($options['force_CAS'], $url);
+	$url = via_CAS($cas_login_url, $url);
 
     return $url;
 }
