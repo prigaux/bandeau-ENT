@@ -229,6 +229,12 @@ function computeGroups($person) {
   return $r;
 }
 
+function get_appId_url($appId) {
+  global $APPS;
+  $app = $APPS[$id];
+  return get_url($app, $appId, false, false);
+}
+
 function exportApp($app, $appId) {
   $r = array("description" => $app['description'],
 	     "text" => $app['text'],
@@ -317,7 +323,7 @@ function computeBandeauHeaderLinkMyAccount($validApps) {
 	  </li>
 EOD;
 
-  $activation_url = ent_url('CActivation');
+  $activation_url = get_appId_url('CActivation');
 
   return sprintf($s, $activation_url);
 }
