@@ -235,22 +235,49 @@ function get_appId_url($appId) {
   return get_url($app, $appId, false, false);
 }
 
-function exportApp($app, $appId) {
+function person_url($url, $person) {
+  $idpIds = @$person['shib_identity_provider'];
+  if (!$idpIds) return $url;
+  $idpId = $idpIds[0];
+  global $currentIdpId;
+  if ($idpId !== $currentIdpId) {
+     global $entityID_to_AuthnRequest_url;
+     require_once 'federation-renater/entityID_to_AuthnRequest_url.inc.php';
+     $currentAuthnRequest = $entityID_to_AuthnRequest_url[$currentIdpId];
+     $url_ = removePrefixOrNULL($url, $currentAuthnRequest);
+     if ($url_) {
+	$url = $entityID_to_AuthnRequest_url[$idpId] . $url_;
+	debug_msg("personalized shib url is now $url");
+     }
+  }
+  return $url;
+}
+
+function get_person_url($app, $appId, $person) {
+  if (isset($app['url']) && isset($app['url_bandeau_compatible'])) {
+    $url = person_url($app['url'], $person);
+    return enhance_url($url, $appId, $app);
+  } else {
+    return ent_url($app, $appId, false, false);
+  }
+}
+
+function exportApp($app, $appId, $person) {
   $r = array("description" => $app['description'],
 	     "text" => $app['text'],
-	     "url" => get_url($app, $appId, false, false));
+	     "url" => get_person_url($app, $appId, $person));
   foreach (array('title', 'hashelp') as $key) {
     if (isset($app[$key])) $r[$key] = $app[$key];
   }
   return $r;
 }
 
-function exportApps() {
+function exportApps($person) {
   global $APPS;
 
   $r = array();
   foreach ($APPS as $appId => $app) {
-    $r[$appId] = exportApp($app, $appId);
+    $r[$appId] = exportApp($app, $appId, $person);
   }
   return $r;
 }
@@ -462,7 +489,7 @@ if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER']) {
 
 list ($validApps, $layout) = computeLayout($person);
 $bandeauHeader = computeBandeauHeader($person, $validApps);
-$exportApps = exportApps();
+$exportApps = exportApps($person);
 $static_js = file_get_contents('bandeau-ENT-static.js');
 $default_logout_url = @$ent_base_url ? $ent_base_url . '/Logout' : (@$layout[0] ? via_CAS($cas_login_url, $APPS[$layout[0]["apps"][0]]["url"]) : '');
 
