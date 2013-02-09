@@ -181,6 +181,12 @@ function uportalGetPagsKeysAndUsers($groupNames, $groupNameToPagsKeysAndUsers) {
 function startsWith($hay, $needle) {
   return substr($hay, 0, strlen($needle)) === $needle;
 }
+function removePrefix($s, $prefix) {
+    return startsWith($s, $prefix) ? substr($s, strlen($prefix)) : $s;
+}
+function removePrefixOrNULL($s, $prefix) {
+    return startsWith($s, $prefix) ? substr($s, strlen($prefix)) : NULL;
+}
 
 function uportalAbsolutateUrl($url) {
   return startsWith($url, "/") ? "https://esup.univ-paris1.fr" . $url : $url;
@@ -192,6 +198,7 @@ function uportalGetChannel($channelFile, $groupNameToPagsKeysAndUsers) {
   $groupNames = simplexml_get_string_array($xml->groups->group);
   list ($subUsers, $groups) = uportalGetPagsKeysAndUsers($groupNames, $groupNameToPagsKeysAndUsers);
 
+  $fname = (string) $xml->fname;
   $channel = array();
   $channel["text"] = (string) $xml->name;
   $channel["title"] = (string) $xml->title;
@@ -200,14 +207,22 @@ function uportalGetChannel($channelFile, $groupNameToPagsKeysAndUsers) {
   $channel["groups"] = $groups;
   if ($xml->hashelp == 'Y') $channel["hashelp"] = true;
   foreach ($xml->portletPreferences->portletPreference as $pref) {
-    if ($pref->name == 'url')
-      $channel["url"] = uportalAbsolutateUrl((string) $pref->values->value);
+    if ($pref->name == 'url') {
+      $url = (string) $pref->values->value;
+      $service = removePrefixOrNULL($url, "/ExternalURLStats?fname=$fname&service=");
+      if ($service) {
+	$url = urldecode($service);
+	$channel["useExternalURLStats"] = true;
+      } else {
+	error_log( "$fname: no ExternalURLStats in $url" );
+      }
+      $channel["url"] = uportalAbsolutateUrl($url);
+    }
   }
   foreach ($xml->parameters->parameter as $param) {
     if ($param->name == 'hideFromMobile')
       $channel['hideFromMobile'] = $param->value == 'true';
   }
-  $fname = (string) $xml->fname;
   return array($fname, $channel);
 }
 

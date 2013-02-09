@@ -26,10 +26,13 @@ function via_CAS($cas_login_url, $href) {
 }
 
 function get_url($app, $appId, $isGuest, $noLogin) {
-  global $cas_login_url;
-  if (isset($app['url']) && isset($app['url_bandeau_compatible']))
-    return isset($app['force_CAS']) ? via_CAS($app['force_CAS'], $app['url']) : $app['url'];
-  else {
+  global $ent_base_url, $cas_login_url;
+  if (isset($app['url']) && isset($app['url_bandeau_compatible'])) {
+    $url = $app['url'];
+    if (@$app['useExternalURLStats'])
+	$url = "$ent_base_url/ExternalURLStats?fname=$appId&service=" . urlencode($url);
+    return isset($app['force_CAS']) ? via_CAS($app['force_CAS'], $url) : $url;
+  } else {
     $url = ent_url($appId, $isGuest, $noLogin, @$app[$isGuest ? 'uportalActiveTabGuest': 'uportalActiveTab']);
     return $isGuest || $noLogin ? $url : via_CAS($cas_login_url, $url);
   }
