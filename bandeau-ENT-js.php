@@ -317,8 +317,7 @@ function computeBandeauHeaderLinkMyAccount($validApps) {
 	  </li>
 EOD;
 
-  global $cas_login_url, $bandeau_ENT_url;
-  $activation_url = via_CAS($cas_login_url, ent_url('CActivation'));
+  $activation_url = ent_url('CActivation');
 
   return sprintf($s, $activation_url);
 }
