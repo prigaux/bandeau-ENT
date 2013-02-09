@@ -229,22 +229,22 @@ function computeGroups($person) {
   return $r;
 }
 
-function exportApp($app, $appId, $isGuest) {
+function exportApp($app, $appId) {
   $r = array("description" => $app['description'],
 	     "text" => $app['text'],
-	     "url" => get_url($app, $appId, $isGuest, false));
+	     "url" => get_url($app, $appId, false, false));
   foreach (array('title', 'hashelp') as $key) {
     if (isset($app[$key])) $r[$key] = $app[$key];
   }
   return $r;
 }
 
-function exportApps($isGuest) {
+function exportApps() {
   global $APPS;
 
   $r = array();
   foreach ($APPS as $appId => $app) {
-    $r[$appId] = exportApp($app, $appId, $isGuest);
+    $r[$appId] = exportApp($app, $appId);
   }
   return $r;
 }
@@ -252,7 +252,7 @@ function exportApps($isGuest) {
 function computeValidAppsRaw($person, $groups) {
   global $APPS;
 
-  $user = isset($person["uid"]) ? $person["uid"][0] : 'guest-lo'; // uportal specific
+  $user = $person["uid"][0];
 
   $r = array();
   foreach ($APPS as $appId => $app) {
@@ -291,13 +291,15 @@ function computeOneLayoutRaw($validApps, $layout) {
 }
 
 function computeLayoutRaw($validApps, $person) {
-  global $LAYOUT_ALL, $LAYOUT_GUEST;
-  return computeOneLayoutRaw($validApps, isset($person["uid"]) ? $LAYOUT_ALL : $LAYOUT_GUEST);
+  global $LAYOUT_ALL;
+  return computeOneLayoutRaw($validApps, $LAYOUT_ALL);
 }
 
 function computeLayout($person) {
+  if (!@$person["uid"]) return array(array(), array());
+
   $groups = computeGroups($person);
-  debug_msg((isset($person["uid"]) ? $person["uid"][0] : "anonymous") . " is member of groups: " . implode(" ", $groups));
+  debug_msg($person["uid"][0] . " is member of groups: " . implode(" ", $groups));
   $validApps = computeValidAppsRaw($person, $groups);
   debug_msg("valid apps: " . implode(" ", $validApps));
   return array($validApps, computeLayoutRaw($validApps, $person));
@@ -455,7 +457,7 @@ if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER']) {
 
 list ($validApps, $layout) = computeLayout($person);
 $bandeauHeader = computeBandeauHeader($person, $validApps);
-$exportApps = exportApps(!$person);
+$exportApps = exportApps();
 $static_js = file_get_contents('bandeau-ENT-static.js');
 $default_logout_url = @$ent_base_url ? $ent_base_url . '/Logout' : (@$layout[0] ? via_CAS($cas_login_url, $APPS[$layout[0]["apps"][0]]["url"]) : '');
 
