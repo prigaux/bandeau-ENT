@@ -345,7 +345,7 @@ function computeBandeauHeaderLinkMyAccount($validApps) {
   $s = <<<EOD
 	  <li class='portalPageBarAccountAnchor'>
 	    <a title='Interface de gestion de compte de l&#39;université Paris 1 Panthéon-Sorbonne.' href='%s'>
-	      <span>Mon compte</span>
+	      <span>Mon compte Paris1</span>
 	    </a>
 	  </li>
 EOD;
@@ -382,7 +382,8 @@ function computeBandeauHeaderLinks($person, $validApps) {
 	<ul>
 	  <li class='portalPageBarAccountDescr'>%s</li>
 %s        
-	  <li class='portalPageBarAccountAnchor portalPageBarAccountLogout'>
+	  <li class='portalPageBarAccountAppLinks'></li>
+	  <li class='portalPageBarAccountSeparator portalPageBarAccountLogout'>
 	    <a title='Se déconnecter' href='<%%logout_url%%>'>
 	      <span>Déconnexion</span>
 	    </a>

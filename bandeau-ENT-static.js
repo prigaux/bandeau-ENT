@@ -25,6 +25,10 @@ function toggleClass(elt, classToToggle) {
     }
 }
 
+function insertAfter(e, newNode) {
+    e.parentNode.insertBefore(newNode, e.nextSibling);
+}
+
 function simpleQuerySelectorAll(selector) {
     if (document.querySelectorAll) 
 	try {
@@ -64,6 +68,12 @@ function simpleEach(a, fn) {
     var len = a.length;
     for(var i = 0; i < len; i++) {
 	fn(a[i], i, a);
+    }
+}
+
+function simpleEachObject(o, fn) {
+    for(var k in o) {
+	fn(k, o[k], o);
     }
 }
 
@@ -276,16 +286,22 @@ function isLogged() {
     return window.bandeau_ENT.is_logged_selector && simpleQuerySelector(window.bandeau_ENT.is_logged_selector);
 }
 
+function simulateClickElt(elt) {
+    if (elt.href)
+	document.location = elt.href;
+    else if (elt.tagName === "FORM")
+	elt.submit();
+}
+function simulateClick(selector) {
+    simulateClickElt(simpleQuerySelector(selector));
+}
+
 function asyncLogout() {
     loadScript(CONF.bandeau_ENT_url + '/logout.php?callback=window.bandeau_ENT.onAsyncLogout');
     return false;
 }
 window.bandeau_ENT.onAsyncLogout = function() {
-    var elt = logout_DOM_elt();
-    if (elt.href)
-	document.location = elt.href;
-    else if (elt.tagName === "FORM")
-	elt.submit();
+    simulateClickElt(logout_DOM_elt());
 }
 function installLogout() {
     var logout_buttons = "#bandeau_ENT_Inner .portalPageBarLogout, #bandeau_ENT_Inner .portalPageBarAccountLogout";
@@ -293,6 +309,36 @@ function installLogout() {
 	       function (elt) { 
 		   elt.onclick = asyncLogout;
 	       });
+}
+
+function _accountLink(text, link_spec) {
+    var a = document.createElement("a");
+    a.innerHTML = escapeQuotes(text);
+    if (link_spec.href) {
+	a.setAttribute('href', link_spec.href);
+    } else if (link_spec.selector) {
+	a.setAttribute('href', '#');
+	a.onclick = function () { simulateClick(link_spec.selector); };
+    } else if (link_spec.fn) {
+	a.setAttribute('href', '#');
+	a.onclick = function () { simulateClickElt(link_spec.fn(simpleQuerySelector)); };
+    } else {
+	mylog("skipping invalid account_links spec for link '" + text + "'");
+    }
+    return a;
+}
+
+function installAccountLinks() {
+    var app = DATA.apps[currentApp];
+    var appLinks_li = simpleQuerySelector('.portalPageBarAccountAppLinks');
+    appLinks_li.innerHTML = escapeQuotes(app.title);
+    toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
+
+    simpleEachObject(window.bandeau_ENT.account_links, function (text, link_spec) {
+	var sub_li = document.createElement("li");
+	sub_li.appendChild(_accountLink(text, link_spec));
+	insertAfter(appLinks_li, sub_li);
+    });
 }
 
 function installBandeau() {
@@ -337,7 +383,9 @@ function installBandeau() {
 	var barAccount = document.getElementById('portalPageBarAccount');
 	if (barAccount) barAccount.onclick = bandeau_ENT_toggleOpen;
 
+
 	onReady(function () {
+	    if (window.bandeau_ENT.account_links) installAccountLinks(currentApp);
 	    if (logout_DOM_elt()) installLogout();
 	});
 	installToggleMenu(smallMenu);

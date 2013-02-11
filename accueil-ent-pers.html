@@ -13,7 +13,7 @@
 <meta name="author" content="Université Paris 1 Panthéon-Sorbonne - Marc-Olivier Lagadic" />
 
 <script type="text/javascript"> 
-window.bandeau_ENT = { current: "caccueil-pers" }
+window.bandeau_ENT = { current: "caccueil-pers", account_links: { "Mon profil": { href: '/cours/user/profile.php' }, "Courrier": { fn: function(find) { return find('#foo').parentNode } } } }
 </script>
 <script src="https://area51.univ-paris1.fr/prigaux/debug/postMessage-resize-iframe-in-parent.js" type="text/javascript"></script>
 <!-- <script type="text/javascript" src="https://esup-data.univ-paris1.fr/esup/outils/postMessage-resize-iframe-in-parent.js"></script> -->
@@ -42,7 +42,7 @@ window.bandeau_ENT = { current: "caccueil-pers" }
 		<a id="c540445"></a>
 		<!--  Raw HTML content: [begin] -->
 			<a href="https://cas.univ-paris1.fr/cas/login?service=https://epi.univ-paris1.fr/servlet/com.jsbsoft.jtf.core.SG?PROC=IDENTIFICATION_FRONT" target="_blank"><img src="https://www.univ-paris1.fr/fileadmin/templates/v1/images/accueil-ent/epi-pers.png" border="0" alt="EPI - Espace P&eacute;dagogique Interactif" title="EPI - Espace P&eacute;dagogique Interactif" /></a>
-<a href="https://courrier.univ-paris1.fr/" target="_blank"><img src="https://www.univ-paris1.fr/fileadmin/templates/v1/images/accueil-ent/webmail.png" border="0" alt="Webmail" title="Webmail de Paris 1" /></a>
+<a href="https://courrier.univ-paris1.fr/" target="_blank"><img id="foo" src="https://www.univ-paris1.fr/fileadmin/templates/v1/images/accueil-ent/webmail.png" border="0" alt="Webmail" title="Webmail de Paris 1" /></a>
 <br />
 <a href="https://e-cours.univ-paris1.fr/" target="_blank"><img src="https://www.univ-paris1.fr/fileadmin/templates/v1/images/accueil-ent/e-cours.png" border="0" alt="E-cours - les cours de C2i en ligne" title="E-cours" /></a>
 <a href="https://cas.univ-paris1.fr/cas/login?service=http://reseaupro.univ-paris1.fr" target="_blank"><img src="https://www.univ-paris1.fr/fileadmin/templates/v1/images/accueil-ent/reseaupro-pers.png" border="0" alt="Reseaupro - offres de stages et d'emploi" title="Reseaupro - offres de stages et d'emploi" /></a>
