@@ -3,6 +3,7 @@
   margin: 0;
   background-color: #F1F1F1;
   font:13px/1.231 Verdana, Arial, Helvetica, sans-serif;
+  color: #000;
 }  
 /* force sane values */
 #bandeau_ENT_Inner, #bandeau_ENT_Inner span {
