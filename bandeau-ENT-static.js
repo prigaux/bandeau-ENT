@@ -276,14 +276,28 @@ function loadSpecificCss() {
 
 }
 
+function find_DOM_elt(elt_spec) {
+    if (typeof elt_spec === "string") {
+	return simpleQuerySelector(elt_spec);
+    } else if (elt_spec.selector) {
+	return simpleQuerySelector(elt_spec.selector);
+    } else if (elt_spec.fn) {
+	return elt_spec.fn(simpleQuerySelector);
+    } else {
+	mylog("ignoring invalid DOM elt spec " + elt_spec);
+	return undefined;
+    }
+}
+
 function logout_DOM_elt() {
-    return window.bandeau_ENT.logout && simpleQuerySelector(window.bandeau_ENT.logout);
+    if (window.bandeau_ENT.logout)
+	return find_DOM_elt(window.bandeau_ENT.logout);
 }
 
 function isLogged() {
     if (window.bandeau_ENT.login)
-	return !simpleQuerySelector(window.bandeau_ENT.login);
-    return window.bandeau_ENT.is_logged_selector && simpleQuerySelector(window.bandeau_ENT.is_logged_selector);
+	return !find_DOM_elt(window.bandeau_ENT.login);
+    return window.bandeau_ENT.is_logged && find_DOM_elt(window.bandeau_ENT.is_logged);
 }
 
 function simulateClickElt(elt) {
@@ -291,9 +305,6 @@ function simulateClickElt(elt) {
 	document.location = elt.href;
     else if (elt.tagName === "FORM")
 	elt.submit();
-}
-function simulateClick(selector) {
-    simulateClickElt(simpleQuerySelector(selector));
 }
 
 function asyncLogout() {
@@ -316,14 +327,9 @@ function _accountLink(text, link_spec) {
     a.innerHTML = escapeQuotes(text);
     if (link_spec.href) {
 	a.setAttribute('href', link_spec.href);
-    } else if (link_spec.selector) {
-	a.setAttribute('href', '#');
-	a.onclick = function () { simulateClick(link_spec.selector); };
-    } else if (link_spec.fn) {
-	a.setAttribute('href', '#');
-	a.onclick = function () { simulateClickElt(link_spec.fn(simpleQuerySelector)); };
     } else {
-	mylog("skipping invalid account_links spec for link '" + text + "'");
+	a.setAttribute('href', '#');
+	a.onclick = function () { simulateClickElt(find_DOM_elt(link_spec)); };
     }
     return a;
 }
@@ -478,8 +484,8 @@ var currentApp = window.bandeau_ENT.current;
 var notFromLocalStorage = window.bandeau_ENT.notFromLocalStorage;
 window.bandeau_ENT.notFromLocalStorage = false;
 
-if (!window.bandeau_ENT.is_logged_selector)
-    window.bandeau_ENT.is_logged_selector = window.bandeau_ENT.logout;
+if (!window.bandeau_ENT.is_logged)
+    window.bandeau_ENT.is_logged = window.bandeau_ENT.logout;
 
 if (!window.bandeau_ENT.localStorage_prefix)
     window.bandeau_ENT.localStorage_prefix = 'bandeau_ENT_';
@@ -510,7 +516,7 @@ if (!notFromLocalStorage && window.bandeau_ENT.url !== localStorageGet('url')) {
 	// checking wether we are logged in now
 	loadBandeauJs('');
     }
-} else if (window.bandeau_ENT.is_logged_selector && !isLogged()) {
+} else if ((window.bandeau_ENT.is_logged || window.bandeau_ENT.login) && !isLogged()) {
     onReady(function () {
 	    if (isLogged()) mayInstallBandeau();
 	    mayUpdate();
