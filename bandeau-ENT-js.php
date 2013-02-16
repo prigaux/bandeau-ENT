@@ -255,7 +255,7 @@ function get_person_url($app, $appId, $idpAuthnRequest_url) {
     $url = person_url($app['url'], $idpAuthnRequest_url);
     return enhance_url($url, $appId, $app);
   } else {
-    return ent_url($app, $appId, false, false);
+    return ent_url($app, $appId, false, false, $idpAuthnRequest_url);
   }
 }
 
