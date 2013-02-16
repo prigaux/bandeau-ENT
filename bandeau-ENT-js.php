@@ -224,37 +224,45 @@ function get_appId_url($appId) {
   return get_person_url($APPS[$id], $appId, null);
 }
 
-function person_url($url, $person) {
+function idpAuthnRequest_url($person) {
   $idpIds = @$person['shib_identity_provider'];
-  if (!$idpIds) return $url;
+  if (!$idpIds) return;
   $idpId = $idpIds[0];
   global $currentIdpId;
   if ($idpId !== $currentIdpId) {
      global $entityID_to_AuthnRequest_url;
      require_once 'federation-renater/entityID_to_AuthnRequest_url.inc.php';
-     $currentAuthnRequest = $entityID_to_AuthnRequest_url[$currentIdpId];
-     $url_ = removePrefixOrNULL($url, $currentAuthnRequest);
-     if ($url_) {
-	$url = $entityID_to_AuthnRequest_url[$idpId] . $url_;
+     return $entityID_to_AuthnRequest_url[$idpId];
+  }
+  return;
+}
+
+function person_url($url, $idpAuthnRequest_url) {
+  if (!$idpAuthnRequest_url) return $url;
+  global $currentIdpId;
+  global $entityID_to_AuthnRequest_url;
+  $currentAuthnRequest = $entityID_to_AuthnRequest_url[$currentIdpId];
+  $url_ = removePrefixOrNULL($url, $currentAuthnRequest);
+  if ($url_) {
+	$url = $idpAuthnRequest_url . $url_;
 	debug_msg("personalized shib url is now $url");
-     }
   }
   return $url;
 }
 
-function get_person_url($app, $appId, $person) {
+function get_person_url($app, $appId, $idpAuthnRequest_url) {
   if (isset($app['url']) && isset($app['url_bandeau_compatible'])) {
-    $url = person_url($app['url'], $person);
+    $url = person_url($app['url'], $idpAuthnRequest_url);
     return enhance_url($url, $appId, $app);
   } else {
     return ent_url($app, $appId, false, false);
   }
 }
 
-function exportApp($app, $appId, $person) {
+function exportApp($app, $appId, $idpAuthnRequest_url) {
   $r = array("description" => $app['description'],
 	     "text" => $app['text'],
-	     "url" => get_person_url($app, $appId, $person));
+	     "url" => get_person_url($app, $appId, $idpAuthnRequest_url));
   foreach (array('title', 'hashelp') as $key) {
     if (isset($app[$key])) $r[$key] = $app[$key];
   }
@@ -264,9 +272,10 @@ function exportApp($app, $appId, $person) {
 function exportApps($person) {
   global $APPS;
 
+  $idpAuthnRequest_url = idpAuthnRequest_url($person);
   $r = array();
   foreach ($APPS as $appId => $app) {
-    $r[$appId] = exportApp($app, $appId, $person);
+    $r[$appId] = exportApp($app, $appId, $idpAuthnRequest_url);
   }
   return $r;
 }
