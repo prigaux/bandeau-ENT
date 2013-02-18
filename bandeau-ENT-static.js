@@ -150,17 +150,16 @@ function onReady(f) {
 
 function bandeau_ENT_Account_toggleOpen() {
     toggleClass(document.getElementById('portalPageBarAccount'), 'open');
-    toggleClass(document.getElementById('portalPageBarAccountInner'), 'open');
+    var isOpen = toggleClass(document.getElementById('portalPageBarAccountInner'), 'open');
 
-  /* TODO
-    if ($('#portalPageBarAccount').hasClass('open')) {
-  $(document).one('click', function () {
-    $('#portalPageBarAccount').removeClass('open');
-    $('#portalPageBarAccountInner').removeClass('open');
-    return true;
-  });
-  } */
-
+    if (isOpen) {
+	var close = function() {
+	    removeClass(document.getElementById('portalPageBarAccount'), 'open');
+	    removeClass(document.getElementById('portalPageBarAccountInner'), 'open');
+	    document.removeEventListener("click", close, false);
+	};
+	setTimeout(function () { document.addEventListener("click", close, false); }, 0);
+    }
     return false;
 }
 
