@@ -11,17 +11,26 @@ function now() {
     return Math.round(new Date().getTime() / 1000);
 }
 
-/* return true if class has been added */
-function toggleClass(elt, classToToggle) {
+/* return true if class has been removed */
+function removeClass(elt, classToToggle) {
     var regex = new RegExp(classToToggle, 'g');
        
     var without = elt.className.replace(regex , '');
     if (elt.className === without) {
-        elt.className += ' ' + classToToggle;
-	return true;
+	return false;
     } else {
         elt.className = without;
+	return true;
+    }
+}
+
+/* return true if class has been added */
+function toggleClass(elt, classToToggle) {
+    if (removeClass(elt, classToToggle)) {
 	return false;
+    } else {
+        elt.className += ' ' + classToToggle;
+	return true;
     }
 }
 
