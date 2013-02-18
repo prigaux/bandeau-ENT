@@ -148,7 +148,7 @@ function onReady(f) {
 	onReady_rec(f);
 }
 
-function bandeau_ENT_toggleOpen() {
+function bandeau_ENT_Account_toggleOpen() {
     toggleClass(document.getElementById('portalPageBarAccount'), 'open');
     toggleClass(document.getElementById('portalPageBarAccountInner'), 'open');
 
@@ -396,7 +396,7 @@ function installBandeau() {
 	set_div_innerHTML(bandeau_div_id(), bandeau_html);
 
 	var barAccount = document.getElementById('portalPageBarAccount');
-	if (barAccount) barAccount.onclick = bandeau_ENT_toggleOpen;
+	if (barAccount) barAccount.onclick = bandeau_ENT_Account_toggleOpen;
 
 
 	onReady(function () {
