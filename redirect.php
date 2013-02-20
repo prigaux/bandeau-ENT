@@ -23,7 +23,8 @@ function get_app_url($id) {
   global $APPS;
   $app = $APPS[$id];
   if (!$app) $app = array(); // gasp, go on anyway...
-  $url = get_url($app, $id, isset($_GET["guest"]), !isset($_GET["login"]));
+  $idpAuthnRequest_url = isset($_GET["idpId"]) ? idpAuthnRequest_url($_GET["idpId"]) : null;
+  $url = get_url($app, $id, isset($_GET["guest"]), !isset($_GET["login"]), $idpAuthnRequest_url);
   if ($url) 
     return $url;
   else

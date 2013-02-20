@@ -53,6 +53,29 @@ function via_idpAuthnRequest_url($idpAuthnRequest_url, $url) {
   return sprintf("%s?shire=%s&target=%s&providerId=%s", $idpAuthnRequest_url, urlencode($shire), urlencode($url), urlencode($spId));
 }
 
+function idpAuthnRequest_url($idpId) {
+  global $currentIdpId;
+  if ($idpId !== $currentIdpId) {
+     global $entityID_to_AuthnRequest_url;
+     require_once 'federation-renater/entityID_to_AuthnRequest_url.inc.php';
+     return $entityID_to_AuthnRequest_url[$idpId];
+  }
+  return;
+}
+
+function url_maybe_adapt_idp($url, $idpAuthnRequest_url) {
+  if (!$idpAuthnRequest_url) return $url;
+  global $currentIdpId;
+  global $entityID_to_AuthnRequest_url;
+  $currentAuthnRequest = $entityID_to_AuthnRequest_url[$currentIdpId];
+  $url_ = removePrefixOrNULL($url, $currentAuthnRequest);
+  if ($url_) {
+        $url = $idpAuthnRequest_url . $url_;
+        debug_msg("personalized shib url is now $url");
+  }
+  return $url;
+}
+
 function enhance_url($url, $appId, $options) {
     global $ent_base_url, $cas_login_url;
     if (@$app['useExternalURLStats'])
@@ -64,11 +87,12 @@ function enhance_url($url, $appId, $options) {
     return $url;
 }
 
-function get_url($app, $appId, $isGuest, $noLogin) {
+function get_url($app, $appId, $isGuest, $noLogin, $idpAuthnRequest_url) {
   if (isset($app['url']) && isset($app['url_bandeau_compatible'])) {
-    return enhance_url($app['url'], $appId, $app);
+    $url = url_maybe_adapt_idp($app['url'], $idpAuthnRequest_url);
+    return enhance_url($url, $appId, $app);
   } else {
-    return ent_url($app, $appId, $isGuest, $noLogin, null);
+    return ent_url($app, $appId, $isGuest, $noLogin, $idpAuthnRequest_url);
   }
 }
 

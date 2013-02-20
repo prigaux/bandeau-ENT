@@ -219,44 +219,19 @@ function computeGroups($person) {
   return $r;
 }
 
+function person_to_idpAuthnRequest_url($person) {
+  $idpIds = @$person['shib_identity_provider'];
+  if (!$idpIds) return;
+  return idpAuthnRequest_url($idpIds[0]);
+}
+
 function get_appId_url($appId) {
   global $APPS;
   return get_person_url($APPS[$id], $appId, null);
 }
 
-function idpAuthnRequest_url($person) {
-  $idpIds = @$person['shib_identity_provider'];
-  if (!$idpIds) return;
-  $idpId = $idpIds[0];
-  global $currentIdpId;
-  if ($idpId !== $currentIdpId) {
-     global $entityID_to_AuthnRequest_url;
-     require_once 'federation-renater/entityID_to_AuthnRequest_url.inc.php';
-     return $entityID_to_AuthnRequest_url[$idpId];
-  }
-  return;
-}
-
-function person_url($url, $idpAuthnRequest_url) {
-  if (!$idpAuthnRequest_url) return $url;
-  global $currentIdpId;
-  global $entityID_to_AuthnRequest_url;
-  $currentAuthnRequest = $entityID_to_AuthnRequest_url[$currentIdpId];
-  $url_ = removePrefixOrNULL($url, $currentAuthnRequest);
-  if ($url_) {
-	$url = $idpAuthnRequest_url . $url_;
-	debug_msg("personalized shib url is now $url");
-  }
-  return $url;
-}
-
 function get_person_url($app, $appId, $idpAuthnRequest_url) {
-  if (isset($app['url']) && isset($app['url_bandeau_compatible'])) {
-    $url = person_url($app['url'], $idpAuthnRequest_url);
-    return enhance_url($url, $appId, $app);
-  } else {
-    return ent_url($app, $appId, false, false, $idpAuthnRequest_url);
-  }
+  return get_url($app, $appId, false, false, $idpAuthnRequest_url);
 }
 
 function exportApp($app, $appId, $idpAuthnRequest_url) {
@@ -272,7 +247,7 @@ function exportApp($app, $appId, $idpAuthnRequest_url) {
 function exportApps($person) {
   global $APPS;
 
-  $idpAuthnRequest_url = idpAuthnRequest_url($person);
+  $idpAuthnRequest_url = person_to_idpAuthnRequest_url($person);
   $r = array();
   foreach ($APPS as $appId => $app) {
     $r[$appId] = exportApp($app, $appId, $idpAuthnRequest_url);
