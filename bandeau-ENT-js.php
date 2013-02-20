@@ -48,16 +48,6 @@ function getAndUnset(&$a, $prop) {
   }
 }
 
-function startsWith($hay, $needle) {
-  return substr($hay, 0, strlen($needle)) === $needle;
-}
-function removePrefix($s, $prefix) {
-    return startsWith($s, $prefix) ? substr($s, strlen($prefix)) : $s;
-}
-function removePrefixOrNULL($s, $prefix) {
-    return startsWith($s, $prefix) ? substr($s, strlen($prefix)) : NULL;
-}
-
 function formattedElapsedTime($prev) {
   $now = microtime(true);
   return sprintf("%dms", ($now - $prev) * 1000);

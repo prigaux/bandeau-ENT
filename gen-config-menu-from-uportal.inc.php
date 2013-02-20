@@ -178,16 +178,6 @@ function uportalGetPagsKeysAndUsers($groupNames, $groupNameToPagsKeysAndUsers) {
   return array($users, $groups);
 }
 
-function startsWith($hay, $needle) {
-  return substr($hay, 0, strlen($needle)) === $needle;
-}
-function removePrefix($s, $prefix) {
-    return startsWith($s, $prefix) ? substr($s, strlen($prefix)) : $s;
-}
-function removePrefixOrNULL($s, $prefix) {
-    return startsWith($s, $prefix) ? substr($s, strlen($prefix)) : NULL;
-}
-
 function uportalAbsolutateUrl($url) {
   return startsWith($url, "/") ? "https://esup.univ-paris1.fr" . $url : $url;
 }

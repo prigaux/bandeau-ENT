@@ -12,6 +12,16 @@ function debug_msg($msg) {
   $debug_msgs .= "// $msg\n";
 }
 
+function startsWith($hay, $needle) {
+  return substr($hay, 0, strlen($needle)) === $needle;
+}
+function removePrefix($s, $prefix) {
+    return startsWith($s, $prefix) ? substr($s, strlen($prefix)) : $s;
+}
+function removePrefixOrNULL($s, $prefix) {
+    return startsWith($s, $prefix) ? substr($s, strlen($prefix)) : NULL;
+}
+
 function atomic_file_put_contents($file, $content) {
   $tmp_file = $file . ".tmp";
   if (!file_put_contents($tmp_file, $content))
