@@ -221,8 +221,7 @@ function computeGroups($person) {
 
 function get_appId_url($appId) {
   global $APPS;
-  $app = $APPS[$id];
-  return get_url($app, $appId, false, false);
+  return get_person_url($APPS[$id], $appId, null);
 }
 
 function person_url($url, $person) {
