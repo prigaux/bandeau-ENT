@@ -368,8 +368,9 @@ EOD;
 
   $myAccount = computeBandeauHeaderLinkMyAccount($validApps);
 
+  $login = @$person["supannaliaslogin"] ? $person["supannaliaslogin"][0] : $person["uid"][0];
   return sprintf($s, (@$person["displayname"] ? $person["displayname"][0] : $person["mail"][0]), 
-		 (@$person["displayname"] ? $person["mail"][0] . " (" . $person["uid"][0] . ")" : $person["uid"][0]), 
+		 (@$person["displayname"] ? $person["mail"][0] . " ($login)" : $login), 
 		 $myAccount);
 }
 
