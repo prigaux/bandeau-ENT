@@ -269,7 +269,7 @@ function computeValidAppsRaw($person, $groups) {
 	$found = true;
     }
 
-    if (!$found) {
+    if (!$found && @$app["groups"]) {
       foreach ($app["groups"] as $group) {
 	if (in_array($group, $groups))
 	  $found = true;
