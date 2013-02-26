@@ -88,7 +88,7 @@ function enhance_url($url, $appId, $options) {
 }
 
 function get_url($app, $appId, $isGuest, $noLogin, $idpAuthnRequest_url) {
-  if (isset($app['url']) && isset($app['url_bandeau_compatible'])) {
+  if (isset($app['url']) && isset($app[$idpAuthnRequest_url ? 'url_bandeau_compatible' : 'url_bandeau_direct'])) {
     $url = url_maybe_adapt_idp($app['url'], $idpAuthnRequest_url);
     return enhance_url($url, $appId, $app);
   } else {
