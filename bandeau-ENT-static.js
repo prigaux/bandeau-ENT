@@ -215,6 +215,29 @@ function computeMenu(currentAppId) {
     return "<ul class='bandeau_ENT_Menu'>\n" + toggleMenuSpacer + li_list.join("\n") + "\n</ul>";
 }
 
+function computeBestCurrentAppId() {
+    if (b_E.current) {
+	// easy case
+	return b_E.current;
+    } else if (b_E.currentAppIds) {
+	// multi ids for this app, hopefully only one id is allowed for this user...
+	// this is useful for apps appearing with different titles based on user affiliation
+	var validApps = [];
+	simpleEach(DATA.layout, function (tab) {
+	    validApps.push.apply(validApps, tab.apps);
+	});
+	var currentAppIds = simpleFilter(b_E.currentAppIds, function (appId) {
+	    return simpleContains(validApps, appId);
+	});
+	if (currentAppIds.length > 1) {
+	    mylog("multiple appIds (" + currentAppIds + ") for this user, choosing first");
+	}
+	return currentAppIds[0];
+    } else {
+	return undefined;
+    }
+}
+
 function computeHelp(currentAppId) {
     var app = DATA.apps[currentAppId];
     if (app && app.hashelp) {
@@ -489,7 +512,7 @@ function mayUpdate() {
 
 /*var loadTime = now();*/
 var b_E = window.bandeau_ENT;
-var currentAppId = b_E.current;
+var currentAppId = computeBestCurrentAppId();
 var notFromLocalStorage = b_E.notFromLocalStorage;
 b_E.notFromLocalStorage = false;
 
