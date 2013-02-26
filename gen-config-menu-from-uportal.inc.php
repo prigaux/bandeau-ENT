@@ -122,10 +122,10 @@ function pagsGetGroupTests($g, $groupKey) {
   $tests = pagsOrMergeAndTests($attr2regexes, $groupKey, $lax);
 
   // here we know the tests is not empty
-  // may restrict to users having $eduPersonOrgDNForGroups
-  global $eduPersonOrgDNForGroups;
-  if (@$eduPersonOrgDNForGroups)
-    $tests["eduPersonOrgDN"] = $eduPersonOrgDNForGroups;
+  // may restrict to users having $supannEtablissementForGroups
+  global $supannEtablissementForGroups;
+  if (@$supannEtablissementForGroups)
+    $tests["supannEtablissement"] = $supannEtablissementForGroups;
 
   return $tests;
 }
