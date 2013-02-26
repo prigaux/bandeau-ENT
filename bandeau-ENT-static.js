@@ -258,7 +258,7 @@ function computeTitlebar(currentAppId) {
 	return '';
 }
 function bandeau_div_id() {
-    return b_E.div_id || (b_E.div_is_uid && DATA.person.uid) || 'bandeau_ENT';
+    return b_E.div_id || (b_E.div_is_uid && DATA.person.id) || 'bandeau_ENT';
 }
 function set_div_innerHTML(div_id, content) {
     var elt = document.getElementById(div_id);
@@ -533,7 +533,7 @@ if (!notFromLocalStorage && b_E.url !== localStorageGet('url')) {
     return "invalid";
 } else if (currentAppId == "redirect-first" && DATA.layout && DATA.layout[0]) {
     document.location.href = DATA.apps[DATA.layout[0].apps[0]].url;
-} else if (!DATA.person.uid) {
+} else if (!DATA.person.id) {
     // disabled for now
 
     if (notFromLocalStorage) {

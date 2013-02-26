@@ -164,10 +164,9 @@ function getLdapInfo($filter) {
 
 function eppn2uid($eppn) {
   global $eppnDomainRegexForUid;
-  if ($eppnDomainRegexForUid)
-	return preg_replace("/$eppnDomainRegexForUid/", "", $eppn);
-  else
-	return $eppn;
+  if (!@$eppnDomainRegexForUid) return null;
+  $uid = preg_replace("/$eppnDomainRegexForUid/", "", $eppn);
+  return $uid !== $eppn ? $uid : null;
 }
 
 function getShibPersonFromHeaders() {
@@ -185,7 +184,13 @@ function getShibPersonFromHeaders() {
       $person[strtolower($k)] = explode(";", $v);
     }
   }
-  $person['uid'] = eppn2uid($person['eppn']);
+  $uid = eppn2uid($person['eppn']);
+  if ($uid) {
+    $person['uid'] = $uid;
+    $person['id'] = $uid;
+  } else {
+    $person['id'] = $person['eppn'];
+  }
   return $person;
 }
 
@@ -258,7 +263,7 @@ function exportApps($person) {
 function computeValidAppsRaw($person, $groups) {
   global $APPS;
 
-  $user = $person["uid"][0];
+  $user = $person["id"][0];
 
   $r = array();
   foreach ($APPS as $appId => $app) {
@@ -302,10 +307,10 @@ function computeLayoutRaw($validApps, $person) {
 }
 
 function computeLayout($person) {
-  if (!@$person["uid"]) return array(array(), array());
+  if (!@$person["id"]) return array(array(), array());
 
   $groups = computeGroups($person);
-  debug_msg($person["uid"][0] . " is member of groups: " . implode(" ", $groups));
+  debug_msg($person["id"][0] . " is member of groups: " . implode(" ", $groups));
   $validApps = computeValidAppsRaw($person, $groups);
   debug_msg("valid apps: " . implode(" ", $validApps));
   return array($validApps, computeLayoutRaw($validApps, $person));
@@ -368,7 +373,7 @@ EOD;
 
   $myAccount = computeBandeauHeaderLinkMyAccount($validApps);
 
-  $login = @$person["supannaliaslogin"] ? $person["supannaliaslogin"][0] : $person["uid"][0];
+  $login = @$person["supannaliaslogin"] ? $person["supannaliaslogin"][0] : $person["id"][0];
   return sprintf($s, (@$person["displayname"] ? $person["displayname"][0] : $person["mail"][0]), 
 		 (@$person["displayname"] ? $person["mail"][0] . " ($login)" : $login), 
 		 $myAccount);
@@ -459,6 +464,7 @@ if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER']) {
 
   $uid = $isAuthenticated ? get_uid() : '';
   $person = $uid ? ($ldap_server ? getLdapInfo("uid=$uid") : array("uid" => array($uid))) : array();
+  $person['id'] = $person['uid'];
   $is_old = is_old();
 }
 
