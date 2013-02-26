@@ -200,13 +200,13 @@ function computeLink(app) {
     return "<li>" + a + "</li>";
 }
 
-function computeMenu(currentApp) {
+function computeMenu(currentAppId) {
     var li_list = simpleMap(DATA.layout, function (tab) {
 	var sub_li_list = simpleMap(tab.apps, function(appId) {
 	    return computeLink(DATA.apps[appId]);
 	});
     
-	var className = simpleContains(tab.apps, currentApp) ? "activeTab" : "inactiveTab";
+	var className = simpleContains(tab.apps, currentAppId) ? "activeTab" : "inactiveTab";
 	return "<li class='" + className + "' onclick=''><span>" + escapeQuotes(tab.title) + "</span><ul>" + sub_li_list.join("\n") + "</ul></li>";
     });
 
@@ -215,10 +215,10 @@ function computeMenu(currentApp) {
     return "<ul class='bandeau_ENT_Menu'>\n" + toggleMenuSpacer + li_list.join("\n") + "\n</ul>";
 }
 
-function computeHelp(currentApp) {
-    var app = DATA.apps[currentApp];
+function computeHelp(currentAppId) {
+    var app = DATA.apps[currentAppId];
     if (app && app.hashelp) {
-	var href = "http://esup-data.univ-paris1.fr/esup/aide/canal/" + currentApp + ".html";
+	var href = "http://esup-data.univ-paris1.fr/esup/aide/canal/" + currentAppId + ".html";
 	var onclick = "window.open('','form_help','toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,scrollbars=yes,copyhistory=no,alwaysRaised,width=600,height=400')";
 	var a = "<a href='"+  href + "' onclick=\"" + onclick + "\" target='form_help' title=\"Voir l'aide du canal\"><span>Aide</span></a>";
 	return "<div class='bandeau_ENT_Help'>" + a + "</div>";
@@ -227,8 +227,8 @@ function computeHelp(currentApp) {
     }
 }
 
-function computeTitlebar(currentApp) {
-    var app = DATA.apps[currentApp];
+function computeTitlebar(currentAppId) {
+    var app = DATA.apps[currentAppId];
     if (app && app.title && !window.bandeau_ENT.no_titlebar)
 	return "<div class='bandeau_ENT_Titlebar'>" + escapeQuotes(app.title) + "</div>";
     else
@@ -343,7 +343,7 @@ function _accountLink(text, link_spec) {
 }
 
 function installAccountLinks() {
-    var app = DATA.apps[currentApp];
+    var app = DATA.apps[currentAppId];
     var appLinks_li = simpleQuerySelector('.portalPageBarAccountAppLinks');
     appLinks_li.innerHTML = escapeQuotes(app.title);
     toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
@@ -383,9 +383,9 @@ function installBandeau() {
     }
 
     var header = computeHeader();
-    var menu = computeMenu(currentApp);
-    var help = computeHelp(currentApp);
-    var titlebar = computeTitlebar(currentApp);
+    var menu = computeMenu(currentAppId);
+    var help = computeHelp(currentAppId);
+    var titlebar = computeTitlebar(currentAppId);
     var clear = "<p style='clear: both; height: 13px; margin: 0'></p>";
     var ent_title_in_header = "<div class='bandeau_ENT_ent_title_in_header'><span>Environnement num&eacute;rique de travail</span></div>";
     var titlebar_in_header = "<div class='bandeau_ENT_titlebar_in_header'>" + titlebar + "</div>";
@@ -399,7 +399,7 @@ function installBandeau() {
 
 
 	onReady(function () {
-	    if (window.bandeau_ENT.account_links) installAccountLinks(currentApp);
+	    if (window.bandeau_ENT.account_links) installAccountLinks(currentAppId);
 	    if (logout_DOM_elt()) installLogout();
 	});
 	installToggleMenu(smallMenu);
@@ -488,7 +488,7 @@ function mayUpdate() {
 }
 
 /*var loadTime = now();*/
-var currentApp = window.bandeau_ENT.current;
+var currentAppId = window.bandeau_ENT.current;
 var notFromLocalStorage = window.bandeau_ENT.notFromLocalStorage;
 window.bandeau_ENT.notFromLocalStorage = false;
 
@@ -507,7 +507,7 @@ if (!window.bandeau_ENT.url)
 if (!notFromLocalStorage && window.bandeau_ENT.url !== localStorageGet('url')) {
     mylog("not using bandeau from localStorage which was computed for " + localStorageGet('url') + " whereas " + window.bandeau_ENT.url + " is wanted");
     return "invalid";
-} else if (currentApp == "redirect-first" && DATA.layout && DATA.layout[0]) {
+} else if (currentAppId == "redirect-first" && DATA.layout && DATA.layout[0]) {
     document.location.href = DATA.apps[DATA.layout[0].apps[0]].url;
 } else if (!DATA.person.uid) {
     // disabled for now
