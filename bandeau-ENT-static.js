@@ -175,7 +175,7 @@ function bandeau_ENT_Menu_toggleAndStore() {
 }
 
 function installToggleMenu(hide) {
-    var hideByDefault = window.bandeau_ENT.hide_menu;
+    var hideByDefault = b_E.hide_menu;
     var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
     if (toggleMenu) {
 	toggleMenu.onclick = bandeau_ENT_Menu_toggleAndStore;
@@ -229,13 +229,13 @@ function computeHelp(currentAppId) {
 
 function computeTitlebar(currentAppId) {
     var app = DATA.apps[currentAppId];
-    if (app && app.title && !window.bandeau_ENT.no_titlebar)
+    if (app && app.title && !b_E.no_titlebar)
 	return "<div class='bandeau_ENT_Titlebar'>" + escapeQuotes(app.title) + "</div>";
     else
 	return '';
 }
 function bandeau_div_id() {
-    return window.bandeau_ENT.div_id || (window.bandeau_ENT.div_is_uid && DATA.person.uid) || 'bandeau_ENT';
+    return b_E.div_id || (b_E.div_is_uid && DATA.person.uid) || 'bandeau_ENT';
 }
 function set_div_innerHTML(div_id, content) {
     var elt = document.getElementById(div_id);
@@ -298,14 +298,14 @@ function find_DOM_elt(elt_spec) {
 }
 
 function logout_DOM_elt() {
-    if (window.bandeau_ENT.logout)
-	return find_DOM_elt(window.bandeau_ENT.logout);
+    if (b_E.logout)
+	return find_DOM_elt(b_E.logout);
 }
 
 function isLogged() {
-    if (window.bandeau_ENT.login)
-	return !find_DOM_elt(window.bandeau_ENT.login);
-    return window.bandeau_ENT.is_logged && find_DOM_elt(window.bandeau_ENT.is_logged);
+    if (b_E.login)
+	return !find_DOM_elt(b_E.login);
+    return b_E.is_logged && find_DOM_elt(b_E.is_logged);
 }
 
 function simulateClickElt(elt) {
@@ -348,7 +348,7 @@ function installAccountLinks() {
     appLinks_li.innerHTML = escapeQuotes(app.title);
     toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
 
-    simpleEachObject(window.bandeau_ENT.account_links, function (text, link_spec) {
+    simpleEachObject(b_E.account_links, function (text, link_spec) {
 	var sub_li = document.createElement("li");
 	sub_li.appendChild(_accountLink(text, link_spec));
 	insertAfter(appLinks_li, sub_li);
@@ -399,7 +399,7 @@ function installBandeau() {
 
 
 	onReady(function () {
-	    if (window.bandeau_ENT.account_links) installAccountLinks(currentAppId);
+	    if (b_E.account_links) installAccountLinks(currentAppId);
 	    if (logout_DOM_elt()) installLogout();
 	});
 	installToggleMenu(smallMenu);
@@ -412,7 +412,7 @@ function installBandeau() {
 		window.scrollTo(0, bandeau.clientHeight); 
 	    }, 0);
 	}
-	if (window.bandeau_ENT.quirks && simpleContains(window.bandeau_ENT.quirks, 'window-resize'))
+	if (b_E.quirks && simpleContains(b_E.quirks, 'window-resize'))
 	     setTimeout(triggerWindowResize, 0);
     });
 
@@ -425,34 +425,34 @@ function triggerWindowResize() {
 }
 
 function mayInstallBandeau() {
-    if (window.bandeau_ENT.prevHash !== PARAMS.hash) {
-	window.bandeau_ENT.prevHash = PARAMS.hash;
+    if (b_E.prevHash !== PARAMS.hash) {
+	b_E.prevHash = PARAMS.hash;
 	installBandeau();
     }
 }
 
 function localStorageGet(field) {
     try {
-	return localStorage.getItem(window.bandeau_ENT.localStorage_prefix + field);
+	return localStorage.getItem(b_E.localStorage_prefix + field);
     } catch (err) {
 	return null;
     }
 }
 function localStorageSet(field, value) {
     try {
-	localStorage.setItem(window.bandeau_ENT.localStorage_prefix + field, value);
+	localStorage.setItem(b_E.localStorage_prefix + field, value);
     } catch (err) {}
 }
 function setLocalStorageCache() {
-    localStorageSet(window.bandeau_ENT.localStorage_js_text_field, window.bandeau_ENT.js_text);
-    localStorageSet("url", window.bandeau_ENT.url);
+    localStorageSet(b_E.localStorage_js_text_field, b_E.js_text);
+    localStorageSet("url", b_E.url);
     localStorageSet("time", now());
 }
 
 function loadBandeauJs(params) {
     if (PARAMS.PHPSESSID && params == '')
 	params = "PHPSESSID=" + PARAMS.PHPSESSID;
-    loadScript(window.bandeau_ENT.url + "/bandeau-ENT-js.php" + (params ? "?" + params : ''));
+    loadScript(b_E.url + "/bandeau-ENT-js.php" + (params ? "?" + params : ''));
 }
 
 function detectReload($time) {
@@ -467,7 +467,7 @@ function detectReload($time) {
 function mayUpdate() {
     if (notFromLocalStorage) {
 	if (window.localStorage) {
-	    mylog("caching bandeau in localStorage (" + window.bandeau_ENT.localStorage_prefix + " " + window.bandeau_ENT.localStorage_js_text_field + ")");
+	    mylog("caching bandeau in localStorage (" + b_E.localStorage_prefix + " " + b_E.localStorage_js_text_field + ")");
 	    setLocalStorageCache();
 	}
 	if (PARAMS.is_old) {
@@ -481,31 +481,32 @@ function mayUpdate() {
 	    loadBandeauJs('');
 	} else {
 	    // if user used "reload", the cached version of detectReload.php will change
-	    window.bandeau_ENT.detectReload = detectReload;
+	    b_E.detectReload = detectReload;
 	    loadScript(CONF.bandeau_ENT_url + "/detectReload.php");
 	}
     }
 }
 
 /*var loadTime = now();*/
-var currentAppId = window.bandeau_ENT.current;
-var notFromLocalStorage = window.bandeau_ENT.notFromLocalStorage;
-window.bandeau_ENT.notFromLocalStorage = false;
+var b_E = window.bandeau_ENT;
+var currentAppId = b_E.current;
+var notFromLocalStorage = b_E.notFromLocalStorage;
+b_E.notFromLocalStorage = false;
 
-if (!window.bandeau_ENT.is_logged)
-    window.bandeau_ENT.is_logged = window.bandeau_ENT.logout;
+if (!b_E.is_logged)
+    b_E.is_logged = b_E.logout;
 
-if (!window.bandeau_ENT.localStorage_prefix)
-    window.bandeau_ENT.localStorage_prefix = 'bandeau_ENT_';
+if (!b_E.localStorage_prefix)
+    b_E.localStorage_prefix = 'bandeau_ENT_';
 // for old bandeau-ENT-loader.js which did not set localStorage_js_text_field:
-if (!window.bandeau_ENT.localStorage_js_text_field)
-    window.bandeau_ENT.localStorage_js_text_field = 'js_text';
-// for old bandeau-ENT-loader.js which did not set window.bandeau_ENT.url:
-if (!window.bandeau_ENT.url)
-    window.bandeau_ENT.url = CONF.bandeau_ENT_url;
+if (!b_E.localStorage_js_text_field)
+    b_E.localStorage_js_text_field = 'js_text';
+// for old bandeau-ENT-loader.js which did not set b_E.url:
+if (!b_E.url)
+    b_E.url = CONF.bandeau_ENT_url;
 
-if (!notFromLocalStorage && window.bandeau_ENT.url !== localStorageGet('url')) {
-    mylog("not using bandeau from localStorage which was computed for " + localStorageGet('url') + " whereas " + window.bandeau_ENT.url + " is wanted");
+if (!notFromLocalStorage && b_E.url !== localStorageGet('url')) {
+    mylog("not using bandeau from localStorage which was computed for " + localStorageGet('url') + " whereas " + b_E.url + " is wanted");
     return "invalid";
 } else if (currentAppId == "redirect-first" && DATA.layout && DATA.layout[0]) {
     document.location.href = DATA.apps[DATA.layout[0].apps[0]].url;
@@ -518,13 +519,13 @@ if (!notFromLocalStorage && window.bandeau_ENT.url !== localStorageGet('url')) {
 	});
 	if (window.localStorage) {
 	    mylog("removing cached bandeau from localStorage");
-	    localStorageSet(window.bandeau_ENT.localStorage_js_text_field, '');
+	    localStorageSet(b_E.localStorage_js_text_field, '');
 	}
     } else {
 	// checking wether we are logged in now
 	loadBandeauJs('');
     }
-} else if ((window.bandeau_ENT.is_logged || window.bandeau_ENT.login) && !isLogged()) {
+} else if ((b_E.is_logged || b_E.login) && !isLogged()) {
     onReady(function () {
 	    if (isLogged()) mayInstallBandeau();
 	    mayUpdate();
