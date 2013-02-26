@@ -342,7 +342,7 @@ function _accountLink(text, link_spec) {
     return a;
 }
 
-function installAccountLinks() {
+function installAccountLinks(currentAppId) {
     var app = DATA.apps[currentAppId];
     var appLinks_li = simpleQuerySelector('.portalPageBarAccountAppLinks');
     appLinks_li.innerHTML = escapeQuotes(app.title);
