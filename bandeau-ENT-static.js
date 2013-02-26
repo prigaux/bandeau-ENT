@@ -339,10 +339,10 @@ function simulateClickElt(elt) {
 }
 
 function asyncLogout() {
-    loadScript(CONF.bandeau_ENT_url + '/logout.php?callback=window.bandeau_ENT.onAsyncLogout');
+    loadScript(CONF.bandeau_ENT_url + '/logout.php?callback=window.bandeau_ENT_onAsyncLogout');
     return false;
 }
-window.bandeau_ENT.onAsyncLogout = function() {
+window.bandeau_ENT_onAsyncLogout = function() {
     simulateClickElt(logout_DOM_elt());
 }
 function installLogout() {
@@ -504,7 +504,7 @@ function mayUpdate() {
 	    loadBandeauJs('');
 	} else {
 	    // if user used "reload", the cached version of detectReload.php will change
-	    b_E.detectReload = detectReload;
+	    window.bandeau_ENT_detectReload = detectReload;
 	    loadScript(CONF.bandeau_ENT_url + "/detectReload.php");
 	}
     }

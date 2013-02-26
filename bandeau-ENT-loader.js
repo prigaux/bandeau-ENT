@@ -1,4 +1,6 @@
-(function () {
+if (!window.bandeau_ENT_maybe_loaded) 
+  (function () {
+    window.bandeau_ENT_maybe_loaded = true;
     var mylog = function() {};
     if (window['console'] !== undefined) { mylog = function(s) { console.log(s); }; } 
     //else { mylog = function(s) { alert(s); }; }
