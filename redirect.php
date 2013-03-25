@@ -5,7 +5,7 @@ include_once "common.inc.php";
 
 if (isset($_GET["uportalActiveTab"])) {
   $activeTab = $_GET["uportalActiveTab"];
-  if (!tab_has_non_https_url($activeTab, isset($_GET["guest"]))) {
+  if (!tab_has_non_https_url($activeTab, isset($_GET["guest"])) && !isset($_GET["idpId"])) {
     // ok: let uportal display all channels
     $location = ent_tab_url($activeTab);
   } else {
