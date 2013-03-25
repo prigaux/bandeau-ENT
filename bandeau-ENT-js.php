@@ -176,6 +176,7 @@ function getShibPersonFromHeaders() {
 
     if ($k === "UNSCOPED_AFFILIATION") $k = "eduPersonAffiliation";
     if ($k === "PRIMARY_AFFILIATION") $k = "eduPersonPrimaryAffiliation";
+    if ($k === "SHIB_IDENTITY_PROVIDER") $k = "Shib-Identity-Provider";
     if ($k === "ORG_DN") $k = "eduPersonOrgDN";
 
     if ($k && !preg_match("/^(Accept|Accept_Charset|Accept_Encoding|Accept_Language|Accept_Datetime|Authorization|Cache_Control|Connection|Cookie|Content_Length|Content_MD5|Content_Type|Date|Expect|From|Host|If_Match|If_Modified_Since|If_None_Match|If_Range|If_Unmodified_Since|Max_Forwards|Pragma|Proxy_Authorization|Range|Referer|TE|Upgrade|User_Agent|Via|Warning)$/i", $k)
@@ -225,7 +226,7 @@ function computeGroups($person) {
 }
 
 function person_to_idpAuthnRequest_url($person) {
-  $idpIds = @$person['shib_identity_provider'];
+  $idpIds = @$person['shib-identity-provider'];
   if (!$idpIds) return;
   return idpAuthnRequest_url($idpIds[0]);
 }

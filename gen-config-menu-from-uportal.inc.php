@@ -123,7 +123,7 @@ function pagsGetGroupTests($g, $groupKey) {
 
   // here we know the tests is not empty
   // restrict to users having an uid
-  if (!@$tests["uid"])
+  if (!@$tests["uid"] && !@$tests['Shib-Identity-Provider'])
     $tests["uid"] = '.+';
 
   return $tests;
