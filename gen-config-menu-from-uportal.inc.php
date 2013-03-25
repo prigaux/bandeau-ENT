@@ -308,6 +308,11 @@ function gen($PAGSGroupStoreConfig, $db_export_dir) {
   $channels = uportalGetChannels(glob("$db_export_dir/channel/*.channel"), $groupNameToPagsKeysAndUsers);
 
   $layout_all = uportalGetLayout("$db_export_dir/fragment-layout/all-lo.fragment-layout");
+
+  $channels['caccueil-default']['users'] = array();
+  $channels['caccueil-default']['groups'] = array('not_paris1');
+  $layout_all['Accueil'][] = 'caccueil-default';
+
   $layout_guest = uportalGetLayout("$db_export_dir/fragment-layout/guest-lo.fragment-layout");
   unset($layout_guest["Hidden"]);
   $usedChannels = keepOnlyUsedChannels($channels, array_merge(array_values($layout_all), array_values($layout_guest)));
