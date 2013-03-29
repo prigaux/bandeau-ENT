@@ -169,7 +169,17 @@ function eppn2uid($eppn) {
   return $uid !== $eppn ? $uid : null;
 }
 
+function checkShibProxyKey() {
+  global $shib_proxy_keys;
+  if (@$shib_proxy_keys) {
+    $proxy_key = @$_SERVER['HTTP_X_BANDEAU_ENT_PROXY_KEY'];
+    if (!$proxy_key) exit("missing X-Bandeau-ENT-Proxy-Key");
+    if (!in_array($proxy_key, $shib_proxy_keys)) exit("invalid X-Bandeau-ENT-Proxy-Key");
+  }
+}
+
 function getShibPersonFromHeaders() {
+  checkShibProxyKey();
   $person = array();
   foreach ($_SERVER as $k => $v) {
     $k = removePrefixOrNULL($k, "HTTP_");
