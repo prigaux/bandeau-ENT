@@ -114,6 +114,7 @@ function pagsGetGroupTests($g, $groupKey) {
   foreach ($g->{'selection-test'}->{'test-group'} as $andTest) {
     $andTests[] = pagsGetAndTest($andTest, $groupKey);
   }
+  if (!$andTests) return $tests;
 
   $lax = in_array($groupKey, array('services'));
 
@@ -138,7 +139,9 @@ function pagsGetGroups($PAGSGroupStoreConfig) {
     $groupKey = (string) $g->{'group-key'};
     $groupName = (string) $g->{'group-name'};
 
-    $groups[$groupKey] = pagsGetGroupTests($g, $groupKey);
+    $tests = pagsGetGroupTests($g, $groupKey);
+    if (!$tests) continue; // ignore group always false (empty <selection-test> is false, whereas empty test is true in bandeau-ENT)
+    $groups[$groupKey] = $tests;
     $groupNameToKey[$groupName] = $groupKey;
   }
   return array($groups, $groupNameToKey);
