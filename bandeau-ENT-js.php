@@ -164,6 +164,16 @@ function getLdapPeopleInfo($uid) {
   return getLdapInfo("uid=$uid", $ou_people, $wanted_attributes);
 }
 
+function getLdapExternalPeopleInfo($person) {
+  global $ou_externalPeople;
+  if (@$ou_externalPeople) {
+    $filter = 'eduPersonPrincipalName=' . $person['eppn'][0];
+    $info = getLdapInfo($filter, $ou_externalPeople, array('memberOf'));
+    $person = array_merge($person, $info);
+  }
+  return $person;
+}
+
 function eppn2uid($eppn) {
   global $eppnDomainRegexForUid;
   if (!@$eppnDomainRegexForUid) return null;
@@ -458,6 +468,7 @@ session_cache_expire(0);
 if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER']) {
   list ($isAuthenticated, $noCookies, $wasPreviouslyAuthenticated) = array(true, false, false);
   $person = getShibPersonFromHeaders();
+  $person = getLdapExternalPeopleInfo($person);
   $is_old = false;
 } else {
   $haveTicket = isset($_GET["ticket"]); // must be done before initPhpCAS which removes it
