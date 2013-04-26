@@ -133,10 +133,8 @@ function get_uid() {
   return $uid;
 }
 
-function getLdapInfo($filter) {
-  global $ldap_server, $ldap_bind_dn, $ldap_bind_password, $ou_people;
-
-  $wanted_attributes = compute_wanted_attributes();
+function getLdapInfo($filter, $branch, $wanted_attributes) {
+  global $ldap_server, $ldap_bind_dn, $ldap_bind_password;
 
   $ds=ldap_connect($ldap_server);
   if (!$ds) exit("error: connection to $ldap_server failed");
@@ -144,9 +142,7 @@ function getLdapInfo($filter) {
     if (!ldap_bind($ds,$ldap_bind_dn,$ldap_bind_password)) exit("error: failed to bind using $ldap_bind_dn");
   }
 
-  //$ds=ldap_connect($ldap_server);
-
-  $all_entries = ldap_get_entries($ds, ldap_search($ds, $ou_people, $filter, $wanted_attributes));
+  $all_entries = ldap_get_entries($ds, ldap_search($ds, $branch, $filter, $wanted_attributes));
   $entries = $all_entries[0];
   $info = array();
   foreach ($wanted_attributes as $attr) {
@@ -160,6 +156,12 @@ function getLdapInfo($filter) {
     $info[$attrL] = $value;
   }
   return $info;
+}
+
+function getLdapPeopleInfo($uid) {
+  global $ou_people;
+  $wanted_attributes = compute_wanted_attributes();
+  return getLdapInfo("uid=$uid", $ou_people, $wanted_attributes);
 }
 
 function eppn2uid($eppn) {
@@ -474,7 +476,7 @@ if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER']) {
     setcookie("PHPSESSID", "", 1, "/");
 
   $uid = $isAuthenticated ? get_uid() : '';
-  $person = $uid ? ($ldap_server ? getLdapInfo("uid=$uid") : array("uid" => array($uid))) : array();
+  $person = $uid ? ($ldap_server ? getLdapPeopleInfo($uid) : array("uid" => array($uid))) : array();
   $person['id'] = $person['uid'];
   $is_old = is_old();
 }
