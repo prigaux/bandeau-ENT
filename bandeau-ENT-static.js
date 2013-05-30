@@ -106,8 +106,10 @@ function simpleMap(a, fn) {
 
 function escapeQuotes(s) {
     var str = s;
-    str=str.replace(/\'/g,'&#39;');
-    str=str.replace(/\"/g,'&quot;');
+    if (str) {
+	str=str.replace(/\'/g,'&#39;');
+	str=str.replace(/\"/g,'&quot;');
+    }
     return str;
 }
 
