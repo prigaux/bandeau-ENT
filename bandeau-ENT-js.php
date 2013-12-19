@@ -193,8 +193,10 @@ function checkShibProxyKey() {
 function getShibPersonFromHeaders() {
   checkShibProxyKey();
   $person = array();
-  foreach ($_SERVER as $k => $v) {
-    $k = removePrefixOrNULL($k, "HTTP_");
+
+  foreach ($_SERVER as $rawKey => $v) {
+    $k = removePrefixOrNULL($rawKey, "HTTP_AJP_");
+    if (is_null($k)) $k = removePrefixOrNULL($rawKey, "HTTP_");
 
     if ($k === "UNSCOPED_AFFILIATION") $k = "eduPersonAffiliation";
     if ($k === "PRIMARY_AFFILIATION") $k = "eduPersonPrimaryAffiliation";
@@ -465,7 +467,7 @@ $request_start_time = microtime(true);
 session_cache_limiter('private');
 session_cache_expire(0);
 
-if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER']) {
+if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER'] || @$_SERVER['HTTP_AJP_SHIB_IDENTITY_PROVIDER']) {
   list ($isAuthenticated, $noCookies, $wasPreviouslyAuthenticated) = array(true, false, false);
   $person = getShibPersonFromHeaders();
   $person = getLdapExternalPeopleInfo($person);
