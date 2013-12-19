@@ -265,8 +265,8 @@ function get_person_url($app, $appId, $idpAuthnRequest_url) {
 }
 
 function exportApp($app, $appId, $idpAuthnRequest_url) {
-  $r = array("description" => $app['description'],
-	     "text" => $app['text'],
+  $r = array("description" => @$app['description'],
+	     "text" => @$app['text'],
 	     "url" => get_person_url($app, $appId, $idpAuthnRequest_url));
   foreach (array('title', 'hashelp') as $key) {
     if (isset($app[$key])) $r[$key] = $app[$key];

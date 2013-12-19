@@ -370,9 +370,10 @@ function _accountLink(text, link_spec) {
 function installAccountLinks(currentAppId) {
     var app = DATA.apps[currentAppId];
     var appLinks_li = simpleQuerySelector('.portalPageBarAccountAppLinks');
-    appLinks_li.innerHTML = escapeQuotes(app.title);
-    toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
-
+    if (app && app.title) {
+	appLinks_li.innerHTML = escapeQuotes(app.title);
+	toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
+    }
     simpleEachObject(b_E.account_links, function (text, link_spec) {
 	var sub_li = document.createElement("li");
 	sub_li.appendChild(_accountLink(text, link_spec));
