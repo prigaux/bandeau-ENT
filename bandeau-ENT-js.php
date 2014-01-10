@@ -495,7 +495,7 @@ if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER'] || @$_SERVER['HTTP_AJP_SHIB_IDENTIT
   $uid = $isAuthenticated ? get_uid() : '';
   $person = $uid ? ($ldap_server ? getLdapPeopleInfo($uid) : array("uid" => array($uid))) : array();
   $person['id'] = $person['uid'];
-  $is_old = is_old();
+  $is_old = is_old() && !$noCache;
 }
 
 list ($validApps, $layout) = computeLayout($person);
