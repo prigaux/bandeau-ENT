@@ -116,7 +116,10 @@ function pagsGetGroupTests($g, $groupKey) {
   }
   if (!$andTests) return $tests;
 
+  $ignore = in_array($groupKey, array('autres_matieres'));
   $lax = in_array($groupKey, array('services'));
+
+  if ($ignore) return array();
 
   $attr2regexes = pagsPrepareAndTests($andTests, $groupKey, $lax);
 
