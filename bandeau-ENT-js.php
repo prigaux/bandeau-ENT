@@ -93,7 +93,11 @@ function checkAuthentication_raw($noCache, $haveTicket) {
       toggle_auth_checked_in_redirect();
     }
 
-    $isAuthenticated = phpCAS::isAuthenticated();
+    try {
+      $isAuthenticated = phpCAS::isAuthenticated();
+    } catch (Exception $e) {
+      // ignore
+    }
     $wasPreviouslyAuthenticated = false;
   } else {
     // add "auth_checked" in url before redirecting to CAS
