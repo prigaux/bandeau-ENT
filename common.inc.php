@@ -78,7 +78,7 @@ function url_maybe_adapt_idp($url, $idpAuthnRequest_url) {
 
 function enhance_url($url, $appId, $options) {
     global $ent_base_url, $cas_login_url;
-    if (@$app['useExternalURLStats'])
+    if (@$options['useExternalURLStats'])
         $url = "$ent_base_url/ExternalURLStats?fname=$appId&service=" . urlencode($url);
 
     if (@$options['force_CAS'])
