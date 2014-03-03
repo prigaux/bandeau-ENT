@@ -408,6 +408,7 @@ function installBandeau() {
 	    loadCSS(CONF.bandeau_ENT_url + "/bandeau-ENT-desktop.css", condition);
     }
 
+    if (!b_E.showSearch) addCSS('#portalPageBarSearch { display: none; }');
     var header = computeHeader();
     var menu = computeMenu(currentAppId);
     var help = computeHelp(currentAppId);

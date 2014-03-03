@@ -365,6 +365,14 @@ EOD;
 function computeBandeauHeaderLinks($person, $validApps) {
   $s = <<<EOD
     <div class='portalPageBarLinks'>
+
+      <div id='portalPageBarSearch'><span>
+        <form action='https://search-ent.univ-paris1.fr/' name='portalPageBarSearch'>
+          <input class='search' type='submit' value=''>
+          <input name='q' class='text' placeholder='Rechercher'>
+       </form>
+      </span></div>
+
       <div id='portalPageBarAccount'>
 	<a href='#'>
           <span>%s</span>
