@@ -367,7 +367,7 @@ function computeBandeauHeaderLinks($person, $validApps) {
     <div class='portalPageBarLinks'>
 
       <div id='portalPageBarSearch'><span>
-        <form action='https://search-ent.univ-paris1.fr/' name='portalPageBarSearch'>
+        <form action='https://search-ent.univ-paris1.fr/' name='portalPageBarSearch' target='_blank'>
           <input class='search' type='submit' value=''>
           <input name='q' class='text' placeholder='Rechercher'>
        </form>
