@@ -480,9 +480,13 @@ session_cache_limiter('private');
 session_cache_expire(0);
 
 if (@$_SERVER['HTTP_SHIB_IDENTITY_PROVIDER'] || @$_SERVER['HTTP_AJP_SHIB_IDENTITY_PROVIDER']) {
-  list ($isAuthenticated, $noCookies, $wasPreviouslyAuthenticated) = array(true, false, false);
+  $noCookies = false;
   $person = getShibPersonFromHeaders();
   $person = getLdapExternalPeopleInfo($person);
+  $is_old = false;
+} else if (@$_SERVER['HTTP_X_BANDEAU_ENT_PROXY_KEY']) {
+  $noCookies = false;
+  $person = array();
   $is_old = false;
 } else {
   $haveTicket = isset($_GET["ticket"]); // must be done before initPhpCAS which removes it
