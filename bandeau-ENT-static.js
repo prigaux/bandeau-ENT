@@ -341,6 +341,7 @@ function simulateClickElt(elt) {
 }
 
 function asyncLogout() {
+    removeLocalStorageCache();
     loadScript(CONF.bandeau_ENT_url + '/logout.php?callback=window.bandeau_ENT_onAsyncLogout');
     return false;
 }
@@ -475,6 +476,12 @@ function setLocalStorageCache() {
     localStorageSet("url", b_E.url);
     localStorageSet("time", now());
 }
+function removeLocalStorageCache() {
+    if (window.localStorage) {
+	mylog("removing cached bandeau from localStorage");
+	localStorageSet(b_E.localStorage_js_text_field, '');
+    }
+}
 
 function loadBandeauJs(params) {
     if (PARAMS.PHPSESSID && params == '')
@@ -544,10 +551,7 @@ if (!notFromLocalStorage && b_E.url !== localStorageGet('url')) {
 	onIdOrBody(bandeau_div_id(), function () { 
 	    set_div_innerHTML(bandeau_div_id(), '');
 	});
-	if (window.localStorage) {
-	    mylog("removing cached bandeau from localStorage");
-	    localStorageSet(b_E.localStorage_js_text_field, '');
-	}
+	removeLocalStorageCache();
     } else {
 	// checking wether we are logged in now
 	loadBandeauJs('');
