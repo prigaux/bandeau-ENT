@@ -28,6 +28,18 @@ Configuration
   <xsl:otherwise>
 ```
 
+### intégration dans une application via reverse proxy apache
+
+```apache
+RequestHeader unset  Accept-Encoding
+
+FilterDeclare replace
+FilterProvider replace SUBSTITUTE Content-Type $text/html
+FilterChain replace
+
+Substitute "s|</head>| <script type=\"text/javascript\">window.bandeau_ENT = { current: \"xxx\"}; </script><script src=\"https://bandeau-ENT.univ.fr/bandeau-ENT-loader.js\"></script> </head>|"
+```
+
 ### window.bandeau_ENT options
 
 * current, currentAppIds
