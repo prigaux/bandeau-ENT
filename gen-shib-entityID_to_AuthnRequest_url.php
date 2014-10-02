@@ -8,8 +8,16 @@ function curl_get_contents($url) {
   return curl_exec($ch);
 }
 
-function get_contents_and_parse($url) {
-  return new SimpleXMLElement(curl_get_contents($url));
+function get_contents_and_parse($url, $namespace) {
+  $xml = new SimpleXMLElement(curl_get_contents($url));
+  if ($namespace) { 
+    $ns = $xml->getNameSpaces();
+    if (isset($ns[$namespace])) {
+      $xml->registerXPathNamespace($namespace, $ns[$namespace]);
+      $xml = $xml->children($ns[$namespace]);
+    }
+  }
+  return $xml;
 }
 
 function get_entityID_and_AuthnRequest_url($e, &$r) {
@@ -30,11 +38,12 @@ function get_entityID_and_AuthnRequest_url($e, &$r) {
 function get_entityID_to_AuthnRequest_url($url_all, $url_cru) {
   $r = array();
 
-  $xml_all = get_contents_and_parse($url_all);
+  $xml_all = get_contents_and_parse($url_all, 'md');
+
   foreach ($xml_all->EntityDescriptor as $e) {
     get_entityID_and_AuthnRequest_url($e, $r);
   }
-  get_entityID_and_AuthnRequest_url(get_contents_and_parse($url_cru), $r); 
+  get_entityID_and_AuthnRequest_url(get_contents_and_parse($url_cru, null), $r); 
   return $r;
 }
 
