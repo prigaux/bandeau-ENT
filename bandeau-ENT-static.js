@@ -281,6 +281,11 @@ function loadCSS (url, media) {
     head().appendChild(elt);
 };
 
+function unloadCSS(url) {
+    var elt = simpleQuerySelector('link[href="' + url + '"]');
+    if (elt) elt.parentNode.removeChild(elt);
+}
+
 function addCSS(css) {
     var elt = document.createElement('style');
     elt.setAttribute("type", 'text/css');
@@ -306,7 +311,14 @@ function loadSpecificCss() {
 	if (typeof v === "string")
 	    loadCSS(v);
     }
+}
 
+function unloadSpecificCss() {
+    if (window['cssToLoadIfInsideIframe']) {
+	var v = window['cssToLoadIfInsideIframe'];
+	if (typeof v === "string")
+	    unloadCSS(v);
+    }
 }
 
 function find_DOM_elt(elt_spec) {
@@ -548,6 +560,7 @@ if (!notFromLocalStorage && b_E.url !== localStorageGet('url')) {
     // disabled for now
 
     if (notFromLocalStorage) {
+	unloadSpecificCss();
 	onIdOrBody(bandeau_div_id(), function () { 
 	    set_div_innerHTML(bandeau_div_id(), '');
 	});
