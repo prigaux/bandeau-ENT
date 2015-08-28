@@ -1,4 +1,4 @@
-<?
+<?php
 
 session_cache_limiter('');
 $now = time();

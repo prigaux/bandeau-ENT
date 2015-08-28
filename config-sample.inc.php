@@ -1,4 +1,4 @@
-<?
+<?php
 
 $ldap_server = 'ldap://ldap.univ.fr ldap://ldap2.univ.fr';
 $ldap_bind_dn = 'cn=bandeau-ent,ou=admin,dc=univ,dc=fr';

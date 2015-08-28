@@ -1,4 +1,4 @@
-<?
+<?php
 
 function simplexml_get_string_array($iterator) {
   $r = array();
