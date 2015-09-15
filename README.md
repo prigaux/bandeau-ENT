@@ -33,9 +33,7 @@ Configuration
 ```apache
 RequestHeader unset  Accept-Encoding
 
-FilterDeclare replace
-FilterProvider replace SUBSTITUTE Content-Type $text/html
-FilterChain replace
+AddOutputFilterByType SUBSTITUTE text/html
 
 Substitute "s|</head>| <script type=\"text/javascript\">window.bandeau_ENT = { current: \"xxx\"}; </script><script async src=\"https://bandeau-ENT.univ.fr/bandeau-ENT-loader.js\"></script> </head>|"
 ```
