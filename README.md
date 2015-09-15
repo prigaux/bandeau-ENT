@@ -14,7 +14,7 @@ Configuration
 
 ```html
 <script> window.bandeau_ENT = { current: 'xxx' } </script>
-<script src="https://bandeau-ENT.univ.fr/bandeau-ENT-loader.js"></script>
+<script async src="https://bandeau-ENT.univ.fr/bandeau-ENT-loader.js"></script>
 ```
 
 * to enable links in uportal to go out of uportal, you can use bandeau-ENT ```redirect.php``` on iframes:
@@ -37,7 +37,7 @@ FilterDeclare replace
 FilterProvider replace SUBSTITUTE Content-Type $text/html
 FilterChain replace
 
-Substitute "s|</head>| <script type=\"text/javascript\">window.bandeau_ENT = { current: \"xxx\"}; </script><script src=\"https://bandeau-ENT.univ.fr/bandeau-ENT-loader.js\"></script> </head>|"
+Substitute "s|</head>| <script type=\"text/javascript\">window.bandeau_ENT = { current: \"xxx\"}; </script><script async src=\"https://bandeau-ENT.univ.fr/bandeau-ENT-loader.js\"></script> </head>|"
 ```
 
 ### window.bandeau_ENT options
